@@ -1,0 +1,5 @@
+*.tar.gz
+*.zip
+*.log
+elasticsearch-7.17.9/
+neo4j-community-4.4.0/

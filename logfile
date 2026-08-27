@@ -1,0 +1,16 @@
+2026-07-23 20:10:03.441 PKT [29054] LOG:  starting PostgreSQL 18.2 on aarch64-unknown-linux-android, compiled by Android (13989888, +pgo, +bolt, +lto, +mlgo, based on r563880c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 5e96669f06077099aa41290cdb4c5e6fa0f59349), 64-bit
+2026-07-23 20:10:03.444 PKT [29054] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-07-23 20:10:03.451 PKT [29054] LOG:  listening on Unix socket "/data/data/com.termux/files/usr/tmp/.s.PGSQL.5432"
+2026-07-23 20:10:03.621 PKT [29064] LOG:  database system was interrupted; last known up at 2026-07-23 12:25:47 PKT
+2026-07-23 20:10:03.751 PKT [29064] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-07-23 20:10:03.751 PKT [29066] FATAL:  the database system is starting up
+2026-07-23 20:10:03.760 PKT [29064] LOG:  redo starts at 0/206BCB8
+2026-07-23 20:10:03.760 PKT [29064] LOG:  invalid record length at 0/206BDF8: expected at least 24, got 0
+2026-07-23 20:10:03.760 PKT [29064] LOG:  redo done at 0/206BDC0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-07-23 20:10:03.778 PKT [29062] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-07-23 20:10:03.798 PKT [29062] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/206BDF8, redo lsn=0/206BDF8
+2026-07-23 20:10:03.837 PKT [29054] LOG:  database system is ready to accept connections
+2026-07-23 20:12:05.017 PKT [29976] ERROR:  database "fx_master_db" already exists
+2026-07-23 20:12:05.017 PKT [29976] STATEMENT:  CREATE DATABASE fx_master_db;
+2026-07-23 20:33:07.739 PKT [29062] LOG:  checkpoint starting: time
+2026-07-23 20:33:08.159 PKT [29062] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 0 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.377 s, sync=0.002 s, total=0.424 s; sync files=2, longest=0.001 s, average=0.001 s; distance=24 kB, estimate=24 kB; lsn=0/2071F28, redo lsn=0/2071ED0

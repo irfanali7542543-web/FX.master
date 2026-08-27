@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FX Master Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header">FX Master</div>
+    <div class="signal-box">
+        <h3>Live Signals Feed:</h3>
+        <ul>
+            {% for signal in signals %}
+                <li>{{ signal }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+
