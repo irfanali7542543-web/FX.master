@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - Video Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Feed Container */
+        .feed-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 60px);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+
+        .video-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Overlay Details (Name & Caption) */
+        .video-info {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            right: 80px;
+            z-index: 10;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .username {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .caption {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Right Side Action Buttons (TikTok Style) */
+        .action-buttons {
+            position: absolute;
+            right: 12px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            z-index: 10;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .icon-circle {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 4px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .action-btn span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Profile Avatar with Plus */
+        .profile-badge {
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .profile-badge img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+
+        .badge-plus {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fe2c55;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Bottom Navbar */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #222;
+            z-index: 100;
+        }
+
+        .nav-item {
+            color: #888;
+            text-decoration: none;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-item.active {
+            color: #fff;
+        }
+
+        .upload-plus-btn {
+            background: #fe2c55;
+            color: white;
+            width: 42px;
+            height: 26px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* No Videos State */
+        .no-videos {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="feed-container">
+        <!-- یہ لوپ آپ کے ڈیٹا بیس یا ویڈیوز کی لسٹ کو یہاں شو کرے گا -->
+        {% if videos %}
+            {% for video in videos %}
+            <div class="video-card">
+                <video src="{{ video.url }}" loop playsinline onclick="this.paused ? this.play() : this.pause()"></video>
+                
+                <!-- یوزر اور کیپشن -->
+                <div class="video-info">
+                    <div class="username">@{{ video.username | default('fx_trader') }}</div>
+                    <div class="caption">{{ video.caption | default('FX Master Live Trade #trading') }}</div>
+                </div>
+
+                <!-- ٹک ٹاک اسٹائل دائیں طرف کے گول بٹنز -->
+                <div class="action-buttons">
+                    <div class="profile-badge">
+                        <img src="https://via.placeholder.com/45" alt="User">
+                        <div class="badge-plus">+</div>
+                    </div>
+                    
+                    <button class="action-btn" onclick="likeVideo(this)">
+                        <div class="icon-circle">❤️</div>
+                        <span class="like-count">12.5K</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle">💬</div>
+                        <span>743</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle">⭐</div>
+                        <span>568</span>
+                    </button>
+
+                    <button class="action-btn">
+                        <div class="icon-circle">↗️</div>
+                        <span>202</span>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-videos">
+                <p>No videos yet! Click '+' below to upload your first video.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- نیچے والا نیویگیشن بار -->
+    <div class="navbar">
+        <a href="/" class="nav-item active">
+            <span>🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="/friends" class="nav-item">
+            <span>👥</span>
+            <span>Friends</span>
+        </a>
+        <a href="/upload" class="nav-item">
+            <div class="upload-plus-btn">+</div>
+        </a>
+        <a href="/inbox" class="nav-item">
+            <span>💬</span>
+            <span>Inbox</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <span>👤</span>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <script>
+        // آٹو پلے اور اسکرول کا فنکشن تاکہ ٹک ٹاک جیسا مزہ آئے
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (video) {
+                    if (entry.isIntersecting) {
+                        video.play().catch(e => console.log("Autoplay blocked"));
+                    } else {
+                        video.pause();
+                    }
+                }
+            });
+        }, { threshold: 0.6 });
+
+        document.querySelectorAll('.video-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        function likeVideo(btn) {
+            const countSpan = btn.querySelector('.like-count');
+            let text = countSpan.innerText;
+            // ساده لائक انکریمنٹ ایفیکٹ
+            btn.querySelector('.icon-circle').style.transform = 'scale(1.2)';
+            setTimeout(() => { btn.querySelector('.icon-circle').style.transform = 'scale(1)'; }, 200);
+        }
+    </script>
+</body>
+</html>
+

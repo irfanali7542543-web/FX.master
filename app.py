@@ -1,36 +1,59 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash
+from supabase import create_client, Client
 
 app = Flask(__name__)
+app.secret_key = 'fx_master_secret_key'
 
-# ویڈیوز کو ہمیشہ کے لیے محفوظ کرنے کا فولڈر
-UPLOAD_FOLDER = 'static/uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Yahan apni Supabase ki asli URL aur Anon Key lagayein (jo aapke Supabase account mein hain)
+SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co"
+SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1"
 
-# فرضی یا ڈیٹا بیس لسٹ (اس کو آپ ڈیٹا بیس سے بھی جوڑ سکتے ہیں)
-posts = []
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
-def index():
-    # یہاں تمام پوسٹس ایک کے بعد ایک اوپر نیچے نظر آئیں گی
-    return render_template('index.html', posts=posts)
+def home():
+    try:
+        # Supabase database se videos fetch karna
+        response = supabase.table("videos").select("*").execute()
+        videos = response.data if response.data else []
+    except Exception as e:
+        videos = []
+    return render_template('index.html', videos=videos)
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_video():
-    if 'video' in request.files:
+    if request.method == 'POST':
+        if 'video' not in request.files:
+            flash('Koi video file select nahi ki gayi!')
+            return redirect(request.url)
+        
         file = request.files['video']
-        if file.filename != '':
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(filepath)
+        caption = request.form.get('caption', 'FX Master Trade')
+        
+        if file.filename == '':
+            flash('File ka naam khali hai')
+            return redirect(request.url)
             
-            # ویڈیو کی معلومات لسٹ میں محفوظ کرنا تاکہ وہ ہمیشہ رہے
-            posts.append({
-                'username': 'FX_Master',
-                'video_url': url_for('static', filename='uploads/' + file.filename),
-                'caption': request.form.get('caption', 'New trading session #fx')
-            })
-    return redirect(url_for('index'))
+        try:
+            file_bytes = file.read()
+            file_name = f"uploads/{os.urandom(8).hex()}_{file.filename}"
+            
+            # Supabase Storage mein video upload karna (ensure karein ke 'videos-bucket' naam ka bucket bana ho)
+            supabase.storage.from_("videos-bucket").upload(file_name, file_bytes, {"file": file.mimetype})
+            
+            # Public URL lena
+            public_url = supabase.storage.from_("videos-bucket").get_public_url(file_name)
+            
+            # Supabase database mein record save karna
+            supabase.table("videos").insert({"url": public_url, "caption": caption}).execute()
+            
+            return redirect(url_for('home'))
+        except Exception as e:
+            flash(f"Upload fail ho gaya: {str(e)}")
+            return redirect(request.url)
+            
+    return render_template('upload.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(debug=True)

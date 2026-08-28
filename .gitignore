@@ -3,3 +3,9 @@
 *.log
 elasticsearch-7.17.9/
 neo4j-community-4.4.0/
+.vercel
+.env*
+static/uploads/
+node_modules/
+*.mp4
+*.db
