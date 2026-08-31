@@ -17,19 +17,25 @@ def index():
         posts = []
     return render_template('index.html', posts=posts)
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    video_url = request.form.get('video_url')
-    if video_url:
-        try:
-            supabase.table('videos').insert({
-                "video_url": video_url,
-                "username": "forex_trader",
-                "caption": "FX Master Trading Video"
-            }).execute()
-        except Exception as e:
-            print("Error inserting to DB:", e)
-    return redirect(url_for('index'))
+    if request.method == 'POST':
+        video_url = request.form.get('video_url')
+        username = request.form.get('username', 'forex_trader')
+        caption = request.form.get('caption', 'FX Master Trading Video')
+        
+        if video_url:
+            try:
+                supabase.table('videos').insert({
+                    "video_url": video_url,
+                    "username": username,
+                    "caption": caption
+                }).execute()
+            except Exception as e:
+                print("Error inserting to DB:", e)
+        return redirect(url_for('index'))
+    
+    return render_template('upload.html')
 
 @app.route('/api/videos', methods=['GET'])
 def get_videos():
