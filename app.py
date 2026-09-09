@@ -1,3 +1,9 @@
+from flask import Flask, request, redirect, url_for
+import os
+
+app = Flask(__name__)
+
+
 @app.route('/upload', methods=['POST'])
 def upload():
     video_url = request.form.get('video_url')
