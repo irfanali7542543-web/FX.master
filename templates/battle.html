@@ -28,15 +28,15 @@
         .overlay h3 { font-size: 16px; margin-bottom: 6px; }
         .overlay p { font-size: 14px; opacity: 0.9; }
 
-        /* Bottom Navigation Bar */
+        /* Bottom Navigation Bar - Fixed at bottom */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 40; }
         .nav-item { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; background: none; border: none; }
         .nav-item.active { color: #fff; }
         .nav-center-btn { background: #fe2c55; color: #fff; border: none; width: 45px; height: 28px; border-radius: 8px; font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; text-decoration: none; }
 
-        /* Modals (Upload & Comments) */
+        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: #222; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: #222; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
         .modal-content h3 { font-size: 18px; color: #fff; }
         .modal-content input, .modal-content textarea { width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 6px; font-size: 14px; }
         .modal-btns { display: flex; justify-content: flex-end; gap: 10px; }
@@ -52,7 +52,7 @@
 <body>
 
     <div class="reel-container" id="videoContainer">
-        <!-- Video Element with ultra-fast reliable link -->
+        <!-- Video Element -->
         <video id="mainVideo" src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop playsinline></video>
 
         <!-- Right Sidebar -->
@@ -67,7 +67,7 @@
             </button>
             <button class="action-btn" onclick="openCommentModal()">
                 <div class="icon">💬</div>
-                <span id="commentCount">0</span>
+                <span id="commentCount">1</span>
             </button>
             <button class="action-btn" id="favBtn" onclick="toggleFav()">
                 <div class="icon">⭐</div>
@@ -90,7 +90,7 @@
     <div class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home')">🏠 Home</button>
         <button class="nav-item" onclick="switchTab('friends')">👥 Friends</button>
-        <a href="#" class="nav-center-btn" onclick="openUploadModal(event)">+</a>
+        <button class="nav-center-btn" onclick="openUploadModal(event)">+</button>
         <button class="nav-item" onclick="switchTab('inbox')">💬 Inbox</button>
         <button class="nav-item" onclick="switchTab('profile')">👤 Profile</button>
     </div>
@@ -103,7 +103,7 @@
             <input type="file" id="videoFile" accept="video/*">
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
-                <button class="btn-submit" onclick="uploadVideo()">Post</button>
+                <button class="btn-submit" onclick="submitVideoLocal()">Post</button>
             </div>
         </div>
     </div>
@@ -190,6 +190,40 @@
             document.getElementById('uploadModal').style.display = 'none';
         }
 
+        function submitVideoLocal() {
+            const titleInput = document.getElementById('videoTitle').value;
+            const fileInput = document.getElementById('videoFile');
+
+            if(fileInput.files.length === 0) {
+                alert('Please select a video file first!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const videoUrl = URL.createObjectURL(file);
+
+            // Set video source to selected local video and play
+            video.src = videoUrl;
+            video.load();
+            video.play();
+
+            // Update caption and reset counts
+            if(titleInput) {
+                document.getElementById('captionDisplay').innerText = titleInput;
+            }
+            document.getElementById('likeCount').innerText = '0';
+            document.getElementById('commentCount').innerText = '0';
+            document.getElementById('favCount').innerText = '0';
+            document.getElementById('shareCount').innerText = '0';
+            isLiked = false;
+            isFav = false;
+            document.getElementById('likeBtn').classList.remove('liked');
+            document.getElementById('favBtn').style.color = '#fff';
+
+            closeUploadModal();
+            alert('Video posted successfully and playing now!');
+        }
+
         function openCommentModal() {
             document.getElementById('commentModal').style.display = 'flex';
         }
@@ -208,7 +242,6 @@
             newItem.innerHTML = `<b>@you:</b> ${input.value}`;
             list.appendChild(newItem);
             
-            // Update comment count
             const countSpan = document.getElementById('commentCount');
             countSpan.innerText = parseInt(countSpan.innerText) + 1;
             input.value = '';
@@ -224,30 +257,6 @@
             if(tab !== 'home') {
                 alert('Switched to ' + tab);
             }
-        }
-
-        function uploadVideo() {
-            const title = document.getElementById('videoTitle').value;
-            const fileInput = document.getElementById('videoFile');
-            if(fileInput.files.length === 0) {
-                alert('Please select a video file first!');
-                return;
-            }
-
-            if(title) {
-                document.getElementById('captionDisplay').innerText = title;
-            }
-            document.getElementById('likeCount').innerText = '0';
-            document.getElementById('commentCount').innerText = '1'; // default comment count
-            document.getElementById('favCount').innerText = '0';
-            document.getElementById('shareCount').innerText = '0';
-            isLiked = false;
-            isFav = false;
-            document.getElementById('likeBtn').classList.remove('liked');
-            document.getElementById('favBtn').style.color = '#fff';
-
-            closeUploadModal();
-            alert('Video posted successfully!');
         }
     </script>
 </body>
