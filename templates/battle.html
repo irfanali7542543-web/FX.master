@@ -1,1 +1,23 @@
-<video src="{{ url_for('static', filename=current_video) }}" controls autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; }
+        .video-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .overlay { position: absolute; bottom: 80px; left: 15px; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video src="{{ url_for('static', filename=current_video) }}" controls autoplay playsinline></video>
+        <div class="overlay">
+            <h3>@fx_trader</h3>
+            <p>FX Master Live Trade #trading</p>
+        </div>
+    </div>
+</body>
+</html>
