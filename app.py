@@ -1,32 +1,78 @@
-import os
 from flask import Flask, render_template, request, redirect, url_for
-from werkzeug.utils import secure_filename
+from supabase import create_client, Client
+import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Default sample video jab tak koi apni video upload na kare
-current_video_path = "https://www.w3schools.com/html/mov_bbb.mp4"
+# Yahan apni Supabase ki details dalen
+SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co"
+SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1"
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
-def home():
-    return render_template('battle.html', current_video=current_video_path)
+def index():
+    try:
+        response = supabase.table('videos').select("*").order('id', desc=True).execute()
+        videos_list = response.data if response.data else []
+    except Exception as e:
+        videos_list = []
+        
+    return render_template('index.html', videos=videos_list)
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_video():
-    global current_video_path
-    if 'videoFile' in request.files:
-        file = request.files['videoFile']
-        if file.filename != '':
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            # Set the path to the newly uploaded video in static folder
-            current_video_path = url_for('static', filename=f'uploads/{filename}')
-    return redirect(url_for('home'))
+    if request.method == 'POST':
+        if 'video' not in request.files:
+            return redirect(url_for('index'))
+        
+        video_file = request.files['video']
+        caption = request.form.get('caption', 'FX Master Signal')
+        username = request.form.get('username', 'fx_trader')
+        
+        if video_file.filename == '':
+            return redirect(url_for('index'))
+        
+        try:
+            file_path = f"public/{video_file.filename}"
+            file_bytes = video_file.read()
+            
+            supabase.storage.from_('videos_bucket').upload(
+                path=file_path, 
+                file=file_bytes, 
+                file_options={"content-type": "video/mp4"}
+            )
+            
+            video_url = supabase.storage.from_('videos_bucket').get_public_url(file_path)
+            
+            supabase.table('videos').insert({
+                "url": video_url, 
+                "caption": caption, 
+                "username": username
+            }).execute()
+            
+        except Exception as e:
+            print(f"Error: {e}")
+            
+        return redirect(url_for('index'))
+    
+    return render_template('upload.html')
+
+@app.route('/inbox')
+def inbox():
+    return render_template('inbox.html')
+
+@app.route('/friends')
+def friends():
+    return render_template('friends.html')
+
+@app.route('/profile')
+def profile():
+    try:
+        response = supabase.table('videos').select("*").order('id', desc=True).execute()
+        videos_list = response.data if response.data else []
+    except Exception as e:
+        videos_list = []
+    return render_template('profile.html', videos=videos_list)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
