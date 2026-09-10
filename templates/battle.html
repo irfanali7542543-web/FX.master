@@ -30,30 +30,34 @@
 
         /* Bottom Navigation Bar */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 40; }
-        .nav-item { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .nav-item { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; background: none; border: none; }
         .nav-item.active { color: #fff; }
         .nav-center-btn { background: #fe2c55; color: #fff; border: none; width: 45px; height: 28px; border-radius: 8px; font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; text-decoration: none; }
 
-        /* Upload Modal Popup */
-        #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: #222; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
+        /* Modals (Upload & Comments) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: #222; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; max-height: 80vh; overflow-y: auto; }
         .modal-content h3 { font-size: 18px; color: #fff; }
         .modal-content input, .modal-content textarea { width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 6px; font-size: 14px; }
         .modal-btns { display: flex; justify-content: flex-end; gap: 10px; }
         .modal-btns button { padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-cancel { background: #444; color: #fff; }
         .btn-submit { background: #fe2c55; color: #fff; }
+
+        /* Comments List */
+        .comments-list { display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; text-align: left; }
+        .comment-item { background: #333; padding: 8px; border-radius: 6px; font-size: 13px; }
     </style>
 </head>
 <body>
 
     <div class="reel-container" id="videoContainer">
-        <!-- Video Element -->
-        <video id="mainVideo" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" autoplay loop playsinline></video>
+        <!-- Video Element with ultra-fast reliable link -->
+        <video id="mainVideo" src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop playsinline></video>
 
-        <!-- Right Sidebar (Like, Comment, Favorite, Share starting from 0) -->
+        <!-- Right Sidebar -->
         <div class="sidebar">
-            <div class="action-btn profile-icon" onclick="alert('Profile clicked')">
+            <div class="action-btn profile-icon" onclick="openProfile()">
                 <div class="icon">👤</div>
                 <div class="add-badge">+</div>
             </div>
@@ -61,7 +65,7 @@
                 <div class="icon" id="likeIcon">❤️</div>
                 <span id="likeCount">0</span>
             </button>
-            <button class="action-btn" onclick="alert('Comments section opened!')">
+            <button class="action-btn" onclick="openCommentModal()">
                 <div class="icon">💬</div>
                 <span id="commentCount">0</span>
             </button>
@@ -84,15 +88,15 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <a href="/" class="nav-item active">🏠 Home</a>
-        <a href="#" class="nav-item" onclick="alert('Friends feed')">👥 Friends</a>
+        <button class="nav-item active" onclick="switchTab('home')">🏠 Home</button>
+        <button class="nav-item" onclick="switchTab('friends')">👥 Friends</button>
         <a href="#" class="nav-center-btn" onclick="openUploadModal(event)">+</a>
-        <a href="#" class="nav-item" onclick="alert('Inbox messages')">💬 Inbox</a>
-        <a href="#" class="nav-item" onclick="alert('Profile page')">👤 Profile</a>
+        <button class="nav-item" onclick="switchTab('inbox')">💬 Inbox</button>
+        <button class="nav-item" onclick="switchTab('profile')">👤 Profile</button>
     </div>
 
     <!-- Upload Popup Modal -->
-    <div id="uploadModal">
+    <div id="uploadModal" class="modal">
         <div class="modal-content">
             <h3>Post New Trading Video</h3>
             <input type="text" id="videoTitle" placeholder="Enter caption / hashtags...">
@@ -100,6 +104,21 @@
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
                 <button class="btn-submit" onclick="uploadVideo()">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Popup Modal -->
+    <div id="commentModal" class="modal">
+        <div class="modal-content">
+            <h3>Comments</h3>
+            <div class="comments-list" id="commentsList">
+                <div class="comment-item"><b>@crypto_king:</b> Awesome trade setup! 🔥</div>
+            </div>
+            <input type="text" id="newCommentInput" placeholder="Add a comment...">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeCommentModal()">Close</button>
+                <button class="btn-submit" onclick="addComment()">Post</button>
             </div>
         </div>
     </div>
@@ -171,6 +190,42 @@
             document.getElementById('uploadModal').style.display = 'none';
         }
 
+        function openCommentModal() {
+            document.getElementById('commentModal').style.display = 'flex';
+        }
+
+        function closeCommentModal() {
+            document.getElementById('commentModal').style.display = 'none';
+        }
+
+        function addComment() {
+            const input = document.getElementById('newCommentInput');
+            if(!input.value.trim()) return;
+            
+            const list = document.getElementById('commentsList');
+            const newItem = document.createElement('div');
+            newItem.className = 'comment-item';
+            newItem.innerHTML = `<b>@you:</b> ${input.value}`;
+            list.appendChild(newItem);
+            
+            // Update comment count
+            const countSpan = document.getElementById('commentCount');
+            countSpan.innerText = parseInt(countSpan.innerText) + 1;
+            input.value = '';
+        }
+
+        function openProfile() {
+            alert('Opening FX Trader Profile');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            if(tab !== 'home') {
+                alert('Switched to ' + tab);
+            }
+        }
+
         function uploadVideo() {
             const title = document.getElementById('videoTitle').value;
             const fileInput = document.getElementById('videoFile');
@@ -179,12 +234,11 @@
                 return;
             }
 
-            // Update caption dynamically and reset counts to 0 for the new post
             if(title) {
                 document.getElementById('captionDisplay').innerText = title;
             }
             document.getElementById('likeCount').innerText = '0';
-            document.getElementById('commentCount').innerText = '0';
+            document.getElementById('commentCount').innerText = '1'; // default comment count
             document.getElementById('favCount').innerText = '0';
             document.getElementById('shareCount').innerText = '0';
             isLiked = false;
