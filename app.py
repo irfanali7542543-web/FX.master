@@ -1,3 +1,24 @@
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from supabase import create_client, Client
+import os
+
+app = Flask(__name__)
+
+# Yahan apni asli Supabase URL aur Key dal dein
+SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co"
+SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1"
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+@app.route('/')
+def index():
+    try:
+        response = supabase.table('videos').select("*").order('id', desc=True).execute()
+        videos_list = response.data if response.data else []
+    except Exception as e:
+        videos_list = []
+    
+    return render_template('index.html', videos=videos_list)
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_video():
     if request.method == 'POST':
@@ -36,3 +57,18 @@ def upload_video():
             return jsonify({'success': False, 'error': str(e)})
             
     return render_template('upload.html')
+
+@app.route('/inbox')
+def inbox():
+    return render_template('inbox.html')
+
+@app.route('/friends')
+def friends():
+    return render_template('friends.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
