@@ -1,77 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Video - FX Master</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .upload-box {
-            background: #111;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 10px rgba(255,0,80,0.3);
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #ff0050;
-        }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: none;
-        }
-        input[type="file"], input[type="text"] {
-            background: #222;
-            color: #fff;
-        }
-        button {
-            background: #ff0050;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #aaa;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
+async function uploadVideo(event) {
+    event.preventDefault();
+    const spinner = document.getElementById('loading-spinner'); // Aapke spinner ki ID
+    spinner.style.display = 'block'; // Gol daira shuru
 
-    <div class="upload-box">
-        <h2>Upload FX Signal</h2>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <label>Select Video:</label>
-            <input type="file" name="video" accept="video/mp4" required>
-            
-            <label>Username:</label>
-            <input type="text" name="username" value="fx_trader" required>
-            
-            <label>Caption / Signal info:</label>
-            <input type="text" name="caption" placeholder="FX Master Live Trade #trading" required>
-            
-            <button type="submit">Upload Video</button>
-        </form>
-        <a href="/" class="back-btn">Back to Home</a>
-    </div>
+    const formData = new FormData(document.getElementById('upload-form'));
 
-</body>
-</html>
+    try {
+        let response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+        });
+        let result = await response.json();
+        
+        if (result.success) {
+            // Feed par redirect ya naya video feed mein add karein
+            location.reload(); 
+        } else {
+            alert('Upload fail ho gaya: ' + result.error);
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Kuch masla ho gaya, dobara koshish karein.');
+    } finally {
+        // Yeh block chalega hi chalega, chahe success ho ya error, gol daira gayab!
+        spinner.style.display = 'none';
+    }
+}
