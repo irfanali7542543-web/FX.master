@@ -8,28 +8,29 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #000; color: #fff; font-family: sans-serif; overflow: hidden; height: 100vh; }
         
-        .reel-container { position: relative; width: 100vw; height: calc(100vh - 60px); display: flex; justify-content: center; align-items: center; background: #111; cursor: pointer; }
-        video { width: 100%; height: 100%; object-fit: cover; }
+        .reel-container { position: relative; width: 100vw; height: calc(100vh - 60px); display: flex; justify-content: center; align-items: center; background: #111; }
+        
+        /* Video styling - No default controls to block clicks */
+        video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
 
         /* Right Sidebar Actions */
-        .sidebar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
-        .action-btn { background: none; border: none; color: #fff; text-align: center; cursor: pointer; font-size: 12px; }
-        .icon { width: 40px; height: 40px; background: rgba(0,0,0,0.4); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 4px; transition: transform 0.2s; }
-        .action-btn:active .icon { transform: scale(1.2); }
+        .sidebar { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 30; }
+        .action-btn { background: none; border: none; color: #fff; text-align: center; cursor: pointer; font-size: 12px; pointer-events: auto; }
+        .icon { width: 40px; height: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 4px; }
         .liked { color: #fe2c55 !important; }
-        .liked .icon { background: rgba(254,44,85,0.2); }
+        .liked .icon { background: rgba(254,44,85,0.3); }
 
         /* Profile icon with plus */
         .profile-icon { position: relative; }
         .profile-icon .add-badge { position: absolute; bottom: -2px; right: 50%; background: #fe2c55; width: 18px; height: 18px; border-radius: 50%; font-size: 14px; display: flex; justify-content: center; align-items: center; font-weight: bold; transform: translateX(50%); }
 
         /* Bottom Info Overlay */
-        .overlay { position: absolute; bottom: 20px; left: 15px; right: 80px; z-index: 10; text-shadow: 0 1px 2px rgba(0,0,0,0.8); pointer-events: none; }
+        .overlay { position: absolute; bottom: 20px; left: 15px; right: 80px; z-index: 20; text-shadow: 0 1px 2px rgba(0,0,0,0.8); pointer-events: none; }
         .overlay h3 { font-size: 16px; margin-bottom: 6px; }
         .overlay p { font-size: 14px; opacity: 0.9; }
 
         /* Bottom Navigation Bar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 20; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 40; }
         .nav-item { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
         .nav-item.active { color: #fff; }
         .nav-center-btn { background: #fe2c55; color: #fff; border: none; width: 45px; height: 28px; border-radius: 8px; font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; cursor: pointer; text-decoration: none; }
@@ -40,7 +41,7 @@
         .modal-content h3 { font-size: 18px; color: #fff; }
         .modal-content input, .modal-content textarea { width: 100%; padding: 10px; background: #333; border: 1px solid #444; color: #fff; border-radius: 6px; font-size: 14px; }
         .modal-btns { display: flex; justify-content: flex-end; gap: 10px; }
-        .modal-btns button { padding: 8px 16px; border: none; border-radius: 6px; cursor: font-weight: bold; cursor: pointer; }
+        .modal-btns button { padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-cancel { background: #444; color: #fff; }
         .btn-submit { background: #fe2c55; color: #fff; }
     </style>
@@ -48,12 +49,12 @@
 <body>
 
     <div class="reel-container" id="videoContainer">
-        <!-- Video Element -->
-        <video id="mainVideo" src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video>
+        <!-- Video Element without default controls -->
+        <video id="mainVideo" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" autoplay loop playsinline></video>
 
         <!-- Right Sidebar (Like, Comment, Favorite, Share) -->
         <div class="sidebar">
-            <div class="action-btn profile-icon">
+            <div class="action-btn profile-icon" onclick="alert('Profile clicked')">
                 <div class="icon">👤</div>
                 <div class="add-badge">+</div>
             </div>
@@ -61,7 +62,7 @@
                 <div class="icon" id="likeIcon">❤️</div>
                 <span id="likeCount">12.5K</span>
             </button>
-            <button class="action-btn" onclick="alert('Comments section coming up!')">
+            <button class="action-btn" onclick="alert('Comments section opened!')">
                 <div class="icon">💬</div>
                 <span>743</span>
             </button>
@@ -85,10 +86,10 @@
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
         <a href="/" class="nav-item active">🏠 Home</a>
-        <a href="#" class="nav-item" onclick="alert('Friends feed coming soon!')">👥 Friends</a>
+        <a href="#" class="nav-item" onclick="alert('Friends feed')">👥 Friends</a>
         <a href="#" class="nav-center-btn" onclick="openUploadModal(event)">+</a>
-        <a href="#" class="nav-item" onclick="alert('No new messages')">💬 Inbox</a>
-        <a href="#" class="nav-item" onclick="alert('Profile settings')">👤 Profile</a>
+        <a href="#" class="nav-item" onclick="alert('Inbox messages')">💬 Inbox</a>
+        <a href="#" class="nav-item" onclick="alert('Profile page')">👤 Profile</a>
     </div>
 
     <!-- Upload Popup Modal -->
@@ -108,27 +109,23 @@
         const video = document.getElementById('mainVideo');
         const container = document.getElementById('videoContainer');
 
-        // Play/Pause on tapping the video
+        // Play/Pause on tapping the video background
         container.addEventListener('click', function(e) {
-            // Prevent triggering if clicked on buttons
-            if(e.target.closest('.sidebar') || e.target.closest('.bottom-nav') || e.target.closest('#uploadModal')) return;
-            
-            if (video.paused) {
+            if(video.paused) {
                 video.play();
             } else {
                 video.pause();
             }
         });
 
-        // Auto play on load
+        // Ensure video plays on load
         window.addEventListener('load', () => {
-            video.play().catch(error => {
-                console.log("Autoplay prevented:", error);
-            });
+            video.play().catch(err => console.log("Autoplay blocked:", err));
         });
 
         let isLiked = false;
         function toggleLike() {
+            event.stopPropagation();
             isLiked = !isLiked;
             const btn = document.getElementById('likeBtn');
             const countSpan = document.getElementById('likeCount');
@@ -143,6 +140,7 @@
 
         let isFav = false;
         function toggleFav() {
+            event.stopPropagation();
             isFav = !isFav;
             const btn = document.getElementById('favBtn');
             const countSpan = document.getElementById('favCount');
@@ -156,11 +154,9 @@
         }
 
         function shareVideo() {
+            event.stopPropagation();
             if (navigator.share) {
-                navigator.share({
-                    title: 'FX Master Reel',
-                    url: window.location.href
-                }).catch(console.error);
+                navigator.share({ title: 'FX Master Reel', url: window.location.href }).catch(console.error);
             } else {
                 alert('Link copied to clipboard!');
             }
@@ -168,6 +164,7 @@
 
         function openUploadModal(e) {
             e.preventDefault();
+            e.stopPropagation();
             document.getElementById('uploadModal').style.display = 'flex';
         }
 
@@ -182,7 +179,7 @@
                 alert('Please select a video file first!');
                 return;
             }
-            alert('Video "' + (title || 'Untitled') + '" uploaded successfully! (Mock Action)');
+            alert('Video "' + (title || 'Untitled') + '" posted successfully!');
             closeUploadModal();
         }
     </script>
