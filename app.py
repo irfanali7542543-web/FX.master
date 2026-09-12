@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-# Video list jo Vercel par smoothly chalegi
+# Sample video list taake feed khali na dikhe
 videos_db = [
     {
         "id": 1,
@@ -26,7 +26,7 @@ def upload_video():
             "id": len(videos_db) + 1,
             "caption": caption,
             "url": video_url,
-            "username": "@fx_trader"
+            "username": "@fx_user"
         }
         videos_db.insert(0, new_video)
         return redirect(url_for('home'))
@@ -46,4 +46,4 @@ def profile():
     return render_template('profile.html')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
