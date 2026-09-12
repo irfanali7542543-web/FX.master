@@ -17,7 +17,8 @@
         
         .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 10; }
         .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 12px; }
-        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 3px; border: 1px solid rgba(255,255,255,0.2); }
+        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 3px; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.1s; }
+        .icon-btn:active { transform: scale(0.85); }
         .profile-badge { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 5px; }
         .profile-badge img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -60,10 +61,11 @@
             feedContainer.innerHTML = '<div class="no-video"><h2>No videos yet!</h2><p>Click "+" below to upload.</p></div>';
         } else {
             allVideos.forEach((video, index) => {
+                let vId = video.id || index;
                 let div = document.createElement('div');
                 div.className = 'video-container';
-                // First video plays with sound by default, others muted until scrolled
                 let isFirst = (index === 0);
+                
                 div.innerHTML = `
                     <video src="${video.url}" ${isFirst ? 'autoplay' : ''} loop playsinline preload="auto" onclick="togglePlay(this)"></video>
                     <div class="footer">
@@ -74,19 +76,19 @@
                         <div class="profile-badge">
                             <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile">
                         </div>
-                        <div class="sidebar-item" onclick="likeVideo(this)">
-                            <div class="icon-btn">❤️</div>
-                            <span>${video.likes || 12}</span>
+                        <div class="sidebar-item" onclick="handleLike('${vId}')">
+                            <div class="icon-btn" id="like-icon-${vId}">❤️</div>
+                            <span id="like-count-${vId}">${video.likes || 12}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Comments section')">
+                        <div class="sidebar-item" onclick="handleComment('${vId}')">
                             <div class="icon-btn">💬</div>
-                            <span>${video.comments || 4}</span>
+                            <span id="comment-count-${vId}">${video.comments || 4}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Saved to favorites!')">
-                            <div class="icon-btn">⭐</div>
-                            <span>${video.saved || 2}</span>
+                        <div class="sidebar-item" onclick="handleSave('${vId}')">
+                            <div class="icon-btn" id="save-icon-${vId}">⭐</div>
+                            <span id="save-count-${vId}">${video.saved || 2}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Video link copied!')">
+                        <div class="sidebar-item" onclick="handleShare()">
                             <div class="icon-btn">↗️</div>
                             <span>Share</span>
                         </div>
@@ -100,12 +102,46 @@
             if (vid.paused) { vid.play(); } else { vid.pause(); }
         }
 
-        function likeVideo(element) {
-            let span = element.nextElementSibling;
-            span.innerText = parseInt(span.innerText) + 1;
+        function handleLike(id) {
+            let countSpan = document.getElementById(`like-count-${id}`);
+            let icon = document.getElementById(`like-icon-${id}`);
+            let currentLikes = parseInt(countSpan.innerText) || 0;
+            
+            if(icon.style.color === 'rgb(255, 0, 80)') {
+                countSpan.innerText = currentLikes - 1;
+                icon.style.color = '#fff';
+            } else {
+                countSpan.innerText = currentLikes + 1;
+                icon.style.color = '#ff0050';
+            }
         }
 
-        // Intersection Observer to handle automatic play/pause and sound per video on scroll
+        function handleComment(id) {
+            let userComment = prompt("Write a comment:");
+            if(userComment && userComment.trim() !== "") {
+                let comSpan = document.getElementById(`comment-count-${id}`);
+                let currentComs = parseInt(comSpan.innerText) || 0;
+                comSpan.innerText = currentComs + 1;
+                alert("Comment posted successfully!");
+            }
+        }
+
+        function handleSave(id) {
+            let saveSpan = document.getElementById(`save-count-${id}`);
+            let currentSaves = parseInt(saveSpan.innerText) || 0;
+            saveSpan.innerText = currentSaves + 1;
+            alert("Video saved to favorites!");
+        }
+
+        function handleShare() {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Video link copied to clipboard!");
+            } else {
+                alert("Share link ready!");
+            }
+        }
+
         const observerOptions = {
             root: document.getElementById('videoFeed'),
             threshold: 0.6
@@ -116,11 +152,11 @@
                 const video = entry.target.querySelector('video');
                 if (video) {
                     if (entry.isIntersecting) {
-                        video.muted = false; // Unmute current visible video automatically
+                        video.muted = false;
                         video.play().catch(e => console.log(e));
                     } else {
                         video.pause();
-                        video.muted = true; // Mute hidden video
+                        video.muted = true;
                     }
                 }
             });
