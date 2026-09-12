@@ -1,10 +1,9 @@
-import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
-# In-memory storage for serverless environment compatibility
-videos_db = [
+# List to store uploaded videos in memory temporarily
+videos_list = [
     {
         "id": 1,
         "caption": "FX Master Live Trade #trading #crypto",
@@ -15,30 +14,22 @@ videos_db = [
 
 @app.route('/')
 def home():
-    return render_template('index.html', videos=videos_db)
+    return render_template('index.html', videos=videos_list)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_video():
     if request.method == 'POST':
-        caption = request.form.get('caption', 'FX Master Trade')
-        video_file = request.files.get('video')
-        
-        # For serverless, if a file is uploaded we can use a placeholder or handle blob storage
-        # Here we add it to our list with a default sample or uploaded name
+        caption = request.form.get('caption', 'FX Master Video')
+        # Add video to the feed list dynamically
         new_video = {
-            "id": len(videos_db) + 1,
+            "id": len(videos_list) + 1,
             "caption": caption,
             "url": "https://www.w3schools.com/html/mov_bbb.mp4",
             "username": "@fx_trader"
         }
-        videos_db.insert(0, new_video)
+        videos_list.insert(0, new_video)
         return redirect(url_for('home'))
-        
     return render_template('upload.html')
-
-@app.route('/api/videos', methods=['GET'])
-def get_videos():
-    return jsonify(videos_db)
 
 @app.route('/inbox')
 def inbox():
