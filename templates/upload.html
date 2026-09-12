@@ -17,21 +17,25 @@
 <body>
     <h2>Upload Video from Gallery</h2>
     <form id="uploadForm">
-        <input type="text" id="caption" placeholder="Enter video caption / hashtags..." required>
+        <input type="text" id="caption" placeholder="Enter video caption / hashtags...">
         <input type="file" id="videoFile" accept="video/*" required>
-        <p>Apni mobile gallery se koi bhi video select karein.</p>
+        <p>Apni mobile gallery se video select karein.</p>
         <button type="button" onclick="handleUpload()">Post Video</button>
     </form>
     <a href="/" class="back">← Back to Home</a>
 
     <script>
         function handleUpload() {
-            const caption = document.getElementById('caption').value;
+            let caption = document.getElementById('caption').value.trim();
             const fileInput = document.getElementById('videoFile');
             
-            if(!caption || fileInput.files.length === 0) {
-                alert('Please fill caption and select a video!');
+            if(fileInput.files.length === 0) {
+                alert('Please select a video file first!');
                 return;
+            }
+
+            if(caption === '') {
+                caption = "FX Master Video #trending";
             }
 
             const file = fileInput.files[0];
@@ -46,9 +50,9 @@
                     caption: caption,
                     url: base64Video,
                     username: "@fx_user",
-                    likes: 12,
-                    comments: 3,
-                    saved: 1
+                    likes: 15,
+                    comments: 4,
+                    saved: 2
                 });
 
                 localStorage.setItem('fx_videos', JSON.stringify(videos));
