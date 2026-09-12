@@ -25,11 +25,18 @@ def upload_video():
         caption = request.form.get('caption', 'FX Master Video')
         file = request.files.get('video_file')
         
-        if file and file.filename != '':
-            file_bytes = file.read()
-            encoded_video = base64.b64encode(file_bytes).decode('utf-8')
-            video_url = f"data:video/mp4;base64,{encoded_video}"
-        else:
+        try:
+            if file and file.filename != '':
+                file_bytes = file.read()
+                # Limit size check for Vercel stability
+                if len(file_bytes) < 4500000:
+                    encoded_video = base64.b64encode(file_bytes).decode('utf-8')
+                    video_url = f"data:video/mp4;base64,{encoded_video}"
+                else:
+                    video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
+            else:
+                video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
+        except Exception:
             video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
         
         new_video = {
@@ -37,9 +44,9 @@ def upload_video():
             "caption": caption,
             "url": video_url,
             "username": "@fx_user",
-            "likes": 12,
-            "comments": 2,
-            "saved": 1
+            "likes": 15,
+            "comments": 3,
+            "saved": 2
         }
         videos_db.insert(0, new_video)
         return redirect(url_for('home'))

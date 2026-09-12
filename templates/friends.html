@@ -1,5 +1,29 @@
 <!DOCTYPE html>
-<html lang="en"><head><title>Friends</title></head>
-<body style="background:#000;color:#fff;text-align:center;padding-top:50px;">
-    <h2>Friends Feed</h2><p>No friends online</p><br><a href="/" style="color:#fff;">Home</a>
-</body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends - FX Master</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+        h2 { border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .friend-item { display: flex; align-items: center; gap: 15px; margin-top: 15px; background: #111; padding: 10px; border-radius: 8px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; }
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; background: #000; padding: 12px 0; border-top: 1px solid #222; z-index: 100; }
+        .nav a { color: #888; text-decoration: none; font-size: 14px; font-weight: bold; }
+        .nav a.active { color: #fff; }
+        .nav .plus { background: #ff0050; color: #fff; padding: 4px 16px; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <h2>Friends Activity</h2>
+    <div class="friend-item"><div class="avatar"></div><div><h4>@crypto_king</h4><p>Started following you</p></div></div>
+    <div class="friend-item"><div class="avatar"></div><div><h4>@trader_pro</h4><p>Liked your video</p></div></div>
+    <div class="nav">
+        <a href="/">Home</a>
+        <a href="/friends" class="active">Friends</a>
+        <a href="/upload" class="plus">+</a>
+        <a href="/inbox">Inbox</a>
+        <a href="/profile">Profile</a>
+    </div>
+</body>
+</html>
