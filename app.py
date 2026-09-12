@@ -1,14 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
+import base64
 
 app = Flask(__name__)
 
-# Sample video list taake feed khali na dikhe
 videos_db = [
     {
         "id": 1,
         "caption": "FX Master Live Trade #trading #crypto",
         "url": "https://www.w3schools.com/html/mov_bbb.mp4",
-        "username": "@fx_trader"
+        "username": "@fx_trader",
+        "likes": 942,
+        "comments": 45,
+        "saved": 33
     }
 ]
 
@@ -20,13 +23,23 @@ def home():
 def upload_video():
     if request.method == 'POST':
         caption = request.form.get('caption', 'FX Master Video')
-        video_url = request.form.get('video_url', 'https://www.w3schools.com/html/mov_bbb.mp4')
+        file = request.files.get('video_file')
+        
+        if file and file.filename != '':
+            file_bytes = file.read()
+            encoded_video = base64.b64encode(file_bytes).decode('utf-8')
+            video_url = f"data:video/mp4;base64,{encoded_video}"
+        else:
+            video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
         
         new_video = {
             "id": len(videos_db) + 1,
             "caption": caption,
             "url": video_url,
-            "username": "@fx_user"
+            "username": "@fx_user",
+            "likes": 12,
+            "comments": 2,
+            "saved": 1
         }
         videos_db.insert(0, new_video)
         return redirect(url_for('home'))
