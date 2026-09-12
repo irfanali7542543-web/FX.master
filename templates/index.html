@@ -17,8 +17,7 @@
         
         .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 10; }
         .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 12px; }
-        .icon-btn { width: 48px; height: 48px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.1s; }
-        .icon-btn:active { transform: scale(0.9); }
+        .icon-btn { width: 48px; height: 48px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.2); }
         .profile-badge { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 6px; }
         .profile-badge img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -26,42 +25,12 @@
         .nav a { color: #888; text-decoration: none; font-size: 14px; font-weight: bold; }
         .nav a.active { color: #fff; }
         .nav .plus { background: #ff0050; color: #fff; padding: 4px 16px; border-radius: 6px; font-weight: bold; }
+        .no-video { text-align: center; color: #777; position: absolute; z-index: 10; }
     </style>
 </head>
 <body>
-    <div class="feed">
-        {% for video in videos %}
-        <div class="video-container">
-            <video src="{{ video.url }}" autoplay loop muted playsinline onclick="togglePlay(this)"></video>
-            
-            <div class="footer">
-                <h3>{{ video.username }}</h3>
-                <p>{{ video.caption }}</p>
-            </div>
-
-            <div class="sidebar">
-                <div class="profile-badge">
-                    <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile">
-                </div>
-                <div class="sidebar-item" onclick="likeVideo(this)">
-                    <div class="icon-btn" id="like-icon">❤️</div>
-                    <span id="like-count">{{ video.likes }}</span>
-                </div>
-                <div class="sidebar-item" onclick="alert('Comments feature coming soon!')">
-                    <div class="icon-btn">💬</div>
-                    <span>{{ video.comments }}</span>
-                </div>
-                <div class="sidebar-item" onclick="alert('Video saved to favorites!')">
-                    <div class="icon-btn">⭐</div>
-                    <span>{{ video.saved }}</span>
-                </div>
-                <div class="sidebar-item" onclick="alert('Share link copied!')">
-                    <div class="icon-btn">↗️</div>
-                    <span>Share</span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+    <div class="feed" id="videoFeed">
+        <!-- Videos will load here dynamically -->
     </div>
 
     <div class="nav">
@@ -73,20 +42,68 @@
     </div>
 
     <script>
-        function togglePlay(vid) {
-            if (vid.paused) {
-                vid.play();
-            } else {
-                vid.pause();
+        const defaultVideos = [
+            {
+                id: 1,
+                caption: "Welcome to FX Master #shorts #trending",
+                url: "https://www.w3schools.com/html/mov_bbb.mp4",
+                username: "@fx_master",
+                likes: 1240,
+                comments: 85,
+                saved: 42
             }
+        ];
+
+        let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+        let allVideos = [...localVideos, ...defaultVideos];
+
+        const feedContainer = document.getElementById('videoFeed');
+
+        if (allVideos.length === 0) {
+            feedContainer.innerHTML = '<div class="no-video"><h2>No videos yet!</h2><p>Click "+" below to upload.</p></div>';
+        } else {
+            allVideos.forEach(video => {
+                let div = document.createElement('div');
+                div.className = 'video-container';
+                div.innerHTML = `
+                    <video src="${video.url}" autoplay loop muted playsinline onclick="togglePlay(this)"></video>
+                    <div class="footer">
+                        <h3>${video.username}</h3>
+                        <p>${video.caption}</p>
+                    </div>
+                    <div class="sidebar">
+                        <div class="profile-badge">
+                            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile">
+                        </div>
+                        <div class="sidebar-item" onclick="likeVideo(this)">
+                            <div class="icon-btn">❤️</div>
+                            <span>${video.likes}</span>
+                        </div>
+                        <div class="sidebar-item" onclick="alert('Comments section')">
+                            <div class="icon-btn">💬</div>
+                            <span>${video.comments}</span>
+                        </div>
+                        <div class="sidebar-item" onclick="alert('Saved!')">
+                            <div class="icon-btn">⭐</div>
+                            <span>${video.saved}</span>
+                        </div>
+                        <div class="sidebar-item" onclick="alert('Link copied!')">
+                            <div class="icon-btn">↗️</div>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                `;
+                feedContainer.appendChild(div);
+            });
         }
+
+        function togglePlay(vid) {
+            if (vid.paused) { vid.play(); } else { vid.pause(); }
+        }
+
         function likeVideo(element) {
-            let countSpan = element.querySelector('#like-count');
-            let icon = element.querySelector('#like-icon');
-            let current = parseInt(countSpan.innerText);
-            countSpan.innerText = current + 1;
-            icon.style.transform = 'scale(1.3)';
-            setTimeout(() => { icon.style.transform = 'scale(1)'; }, 200);
+            let span = element.nextElementSibling;
+            span.innerText = parseInt(span.innerText) + 1;
         }
     </script>
 </body>

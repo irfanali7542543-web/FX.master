@@ -8,19 +8,55 @@
         body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
         form { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin-left: auto; margin-right: auto; }
         input, button { padding: 14px; font-size: 16px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; }
+        input[type="file"] { background: #222; cursor: pointer; }
         button { background: #ff0050; border: none; font-weight: bold; cursor: pointer; }
         .back { color: #888; text-decoration: none; margin-top: 20px; display: inline-block; }
         p { color: #aaa; font-size: 13px; }
     </style>
 </head>
 <body>
-    <h2>Post New Video</h2>
-    <form method="POST">
-        <input type="text" name="caption" placeholder="Enter video caption / hashtags..." required>
-        <input type="text" name="video_url" placeholder="Paste Video Direct URL (.mp4)" required>
-        <p>Tip: Aap koi bhi direct .mp4 video link yahan paste kar sakte hain taake wo foran feed mein chal jaye.</p>
-        <button type="submit">Post Video</button>
+    <h2>Upload Video from Gallery</h2>
+    <form id="uploadForm">
+        <input type="text" id="caption" placeholder="Enter video caption / hashtags..." required>
+        <input type="file" id="videoFile" accept="video/*" required>
+        <p>Apni mobile gallery se koi bhi video select karein.</p>
+        <button type="button" onclick="handleUpload()">Post Video</button>
     </form>
     <a href="/" class="back">← Back to Home</a>
+
+    <script>
+        function handleUpload() {
+            const caption = document.getElementById('caption').value;
+            const fileInput = document.getElementById('videoFile');
+            
+            if(!caption || fileInput.files.length === 0) {
+                alert('Please fill caption and select a video!');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const base64Video = e.target.result;
+                let videos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+                
+                videos.unshift({
+                    id: Date.now(),
+                    caption: caption,
+                    url: base64Video,
+                    username: "@fx_user",
+                    likes: 12,
+                    comments: 3,
+                    saved: 1
+                });
+
+                localStorage.setItem('fx_videos', JSON.stringify(videos));
+                window.location.href = '/';
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
 </body>
 </html>
