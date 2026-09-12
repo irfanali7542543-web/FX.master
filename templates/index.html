@@ -6,7 +6,7 @@
     <title>FX Master</title>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
-        .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
         .video-container { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; background: #000; }
         
         video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
@@ -26,13 +26,9 @@
         .nav a.active { color: #fff; }
         .nav .plus { background: #ff0050; color: #fff; padding: 4px 16px; border-radius: 6px; font-weight: bold; }
         .no-video { text-align: center; color: #777; position: absolute; z-index: 10; }
-        
-        /* Sound Toggle Overlay */
-        .sound-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 8px 14px; border-radius: 20px; font-size: 13px; z-index: 20; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
-    <div class="sound-badge" onclick="toggleGlobalSound()" id="soundBtn">🔇 Tap to Unmute</div>
     <div class="feed" id="videoFeed"></div>
 
     <div class="nav">
@@ -63,11 +59,13 @@
         if (allVideos.length === 0) {
             feedContainer.innerHTML = '<div class="no-video"><h2>No videos yet!</h2><p>Click "+" below to upload.</p></div>';
         } else {
-            allVideos.forEach(video => {
+            allVideos.forEach((video, index) => {
                 let div = document.createElement('div');
                 div.className = 'video-container';
+                // First video plays with sound by default, others muted until scrolled
+                let isFirst = (index === 0);
                 div.innerHTML = `
-                    <video src="${video.url}" autoplay loop playsinline onclick="togglePlay(this)"></video>
+                    <video src="${video.url}" ${isFirst ? 'autoplay' : ''} loop playsinline preload="auto" onclick="togglePlay(this)"></video>
                     <div class="footer">
                         <h3>${video.username || '@fx_user'}</h3>
                         <p>${video.caption || 'FX Master Video'}</p>
@@ -80,7 +78,7 @@
                             <div class="icon-btn">❤️</div>
                             <span>${video.likes || 12}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Comments: Looking good!')">
+                        <div class="sidebar-item" onclick="alert('Comments section')">
                             <div class="icon-btn">💬</div>
                             <span>${video.comments || 4}</span>
                         </div>
@@ -107,18 +105,30 @@
             span.innerText = parseInt(span.innerText) + 1;
         }
 
-        let isMuted = true;
-        function toggleGlobalSound() {
-            isMuted = !isMuted;
-            const videos = document.querySelectorAll('video');
-            videos.forEach(v => { v.muted = isMuted; });
-            const btn = document.getElementById('soundBtn');
-            if(isMuted) {
-                btn.innerHTML = "🔇 Tap to Unmute";
-            } else {
-                btn.innerHTML = "🔊 Sound ON";
-            }
-        }
+        // Intersection Observer to handle automatic play/pause and sound per video on scroll
+        const observerOptions = {
+            root: document.getElementById('videoFeed'),
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (video) {
+                    if (entry.isIntersecting) {
+                        video.muted = false; // Unmute current visible video automatically
+                        video.play().catch(e => console.log(e));
+                    } else {
+                        video.pause();
+                        video.muted = true; // Mute hidden video
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.video-container').forEach(container => {
+            observer.observe(container);
+        });
     </script>
 </body>
 </html>
