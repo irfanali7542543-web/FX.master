@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-import base64
 
 app = Flask(__name__)
 
@@ -23,21 +22,7 @@ def home():
 def upload_video():
     if request.method == 'POST':
         caption = request.form.get('caption', 'FX Master Video')
-        file = request.files.get('video_file')
-        
-        try:
-            if file and file.filename != '':
-                file_bytes = file.read()
-                # Limit size check for Vercel stability
-                if len(file_bytes) < 4500000:
-                    encoded_video = base64.b64encode(file_bytes).decode('utf-8')
-                    video_url = f"data:video/mp4;base64,{encoded_video}"
-                else:
-                    video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
-            else:
-                video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
-        except Exception:
-            video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
+        video_url = request.form.get('video_url', 'https://www.w3schools.com/html/mov_bbb.mp4')
         
         new_video = {
             "id": len(videos_db) + 1,
