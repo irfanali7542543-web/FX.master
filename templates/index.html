@@ -15,11 +15,10 @@
         .footer h3 { margin: 0 0 5px 0; font-size: 16px; }
         .footer p { margin: 0; font-size: 14px; word-break: break-word; }
         
-        .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 10; }
-        .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 12px; }
-        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 3px; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.1s; }
-        .icon-btn:active { transform: scale(0.85); }
-        .profile-badge { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 5px; }
+        .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 10; }
+        .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 11px; z-index: 15; user-select: none; }
+        .icon-btn { width: 44px; height: 44px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; margin-bottom: 2px; border: 1px solid rgba(255,255,255,0.2); }
+        .profile-badge { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 2px; }
         .profile-badge img { width: 100%; height: 100%; object-fit: cover; }
 
         .nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; padding: 12px 0; border-top: 1px solid #222; z-index: 100; }
@@ -43,17 +42,30 @@
     <script>
         const defaultVideos = [
             {
-                id: 1,
+                id: "def_1",
                 caption: "FX Master Comedy #funny #trending",
                 url: "https://www.w3schools.com/html/mov_bbb.mp4",
                 username: "@fx_master",
                 likes: 1240,
                 comments: 85,
+                reposts: 12,
                 saved: 42
             }
         ];
 
         let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+        // Ensure local videos have proper IDs and counts
+        localVideos = localVideos.map((v, idx) => ({
+            id: v.id || `local_${idx}`,
+            caption: v.caption || "FX Master Video",
+            url: v.url,
+            username: v.username || "@fx_user",
+            likes: v.likes || 10,
+            comments: v.comments || 2,
+            reposts: v.reposts || 1,
+            saved: v.saved || 3
+        }));
+
         let allVideos = [...localVideos, ...defaultVideos];
         const feedContainer = document.getElementById('videoFeed');
 
@@ -61,7 +73,7 @@
             feedContainer.innerHTML = '<div class="no-video"><h2>No videos yet!</h2><p>Click "+" below to upload.</p></div>';
         } else {
             allVideos.forEach((video, index) => {
-                let vId = video.id || index;
+                let vId = video.id;
                 let div = document.createElement('div');
                 div.className = 'video-container';
                 let isFirst = (index === 0);
@@ -69,26 +81,30 @@
                 div.innerHTML = `
                     <video src="${video.url}" ${isFirst ? 'autoplay' : ''} loop playsinline preload="auto" onclick="togglePlay(this)"></video>
                     <div class="footer">
-                        <h3>${video.username || '@fx_user'}</h3>
-                        <p>${video.caption || 'FX Master Video'}</p>
+                        <h3>${video.username}</h3>
+                        <p>${video.caption}</p>
                     </div>
                     <div class="sidebar">
                         <div class="profile-badge">
                             <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile">
                         </div>
-                        <div class="sidebar-item" onclick="handleLike('${vId}')">
+                        <div class="sidebar-item" onclick="handleAction('${vId}', 'like')">
                             <div class="icon-btn" id="like-icon-${vId}">❤️</div>
-                            <span id="like-count-${vId}">${video.likes || 12}</span>
+                            <span id="like-count-${vId}">${video.likes}</span>
                         </div>
-                        <div class="sidebar-item" onclick="handleComment('${vId}')">
+                        <div class="sidebar-item" onclick="handleAction('${vId}', 'comment')">
                             <div class="icon-btn">💬</div>
-                            <span id="comment-count-${vId}">${video.comments || 4}</span>
+                            <span id="comment-count-${vId}">${video.comments}</span>
                         </div>
-                        <div class="sidebar-item" onclick="handleSave('${vId}')">
+                        <div class="sidebar-item" onclick="handleAction('${vId}', 'repost')">
+                            <div class="icon-btn">🔁</div>
+                            <span id="repost-count-${vId}">${video.reposts}</span>
+                        </div>
+                        <div class="sidebar-item" onclick="handleAction('${vId}', 'save')">
                             <div class="icon-btn" id="save-icon-${vId}">⭐</div>
-                            <span id="save-count-${vId}">${video.saved || 2}</span>
+                            <span id="save-count-${vId}">${video.saved}</span>
                         </div>
-                        <div class="sidebar-item" onclick="handleShare()">
+                        <div class="sidebar-item" onclick="handleAction('${vId}', 'share')">
                             <div class="icon-btn">↗️</div>
                             <span>Share</span>
                         </div>
@@ -102,43 +118,49 @@
             if (vid.paused) { vid.play(); } else { vid.pause(); }
         }
 
-        function handleLike(id) {
-            let countSpan = document.getElementById(`like-count-${id}`);
-            let icon = document.getElementById(`like-icon-${id}`);
-            let currentLikes = parseInt(countSpan.innerText) || 0;
-            
-            if(icon.style.color === 'rgb(255, 0, 80)') {
-                countSpan.innerText = currentLikes - 1;
-                icon.style.color = '#fff';
-            } else {
-                countSpan.innerText = currentLikes + 1;
-                icon.style.color = '#ff0050';
-            }
-        }
-
-        function handleComment(id) {
-            let userComment = prompt("Write a comment:");
-            if(userComment && userComment.trim() !== "") {
-                let comSpan = document.getElementById(`comment-count-${id}`);
-                let currentComs = parseInt(comSpan.innerText) || 0;
-                comSpan.innerText = currentComs + 1;
-                alert("Comment posted successfully!");
-            }
-        }
-
-        function handleSave(id) {
-            let saveSpan = document.getElementById(`save-count-${id}`);
-            let currentSaves = parseInt(saveSpan.innerText) || 0;
-            saveSpan.innerText = currentSaves + 1;
-            alert("Video saved to favorites!");
-        }
-
-        function handleShare() {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Video link copied to clipboard!");
-            } else {
-                alert("Share link ready!");
+        function handleAction(id, type) {
+            if (type === 'like') {
+                let countSpan = document.getElementById(`like-count-${id}`);
+                let icon = document.getElementById(`like-icon-${id}`);
+                let val = parseInt(countSpan.innerText) || 0;
+                if(icon.style.filter === 'grayscale(1)') {
+                    countSpan.innerText = val + 1;
+                    icon.style.filter = 'none';
+                    icon.style.transform = 'scale(1.2)';
+                    setTimeout(() => icon.style.transform = 'scale(1)', 200);
+                } else {
+                    countSpan.innerText = Math.max(0, val - 1);
+                    icon.style.filter = 'grayscale(1)';
+                }
+            } 
+            else if (type === 'comment') {
+                let c = prompt("Write a comment:");
+                if(c && c.trim() !== "") {
+                    let span = document.getElementById(`comment-count-${id}`);
+                    span.innerText = (parseInt(span.innerText) || 0) + 1;
+                    alert("Comment posted successfully!");
+                }
+            } 
+            else if (type === 'repost') {
+                let span = document.getElementById(`repost-count-${id}`);
+                span.innerText = (parseInt(span.innerText) || 0) + 1;
+                alert("Video reposted to your profile!");
+            } 
+            else if (type === 'save') {
+                let span = document.getElementById(`save-count-${id}`);
+                let icon = document.getElementById(`save-icon-${id}`);
+                let val = parseInt(span.innerText) || 0;
+                span.innerText = val + 1;
+                icon.style.color = '#ffaa00';
+                alert("Saved to favorites!");
+            } 
+            else if (type === 'share') {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("Link copied to clipboard!");
+                } else {
+                    alert("Share link ready!");
+                }
             }
         }
 
