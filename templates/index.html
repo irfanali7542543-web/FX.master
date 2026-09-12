@@ -7,24 +7,28 @@
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
         .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .video-container { height: 100vh; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; background: #111; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .footer { position: absolute; bottom: 65px; left: 15px; z-index: 10; max-width: 75%; }
+        .video-container { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; background: #000; }
+        
+        /* Video proper fit to avoid black boxes */
+        video { width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 1; }
+        
+        /* Footer text overlay */
+        .footer { position: absolute; bottom: 70px; left: 15px; z-index: 10; max-width: 75%; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         .footer h3 { margin: 0 0 5px 0; font-size: 16px; }
         .footer p { margin: 0; font-size: 14px; word-break: break-word; }
         
-        /* Right Side Action Buttons */
-        .sidebar { position: absolute; right: 15px; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
+        /* Right Side Action Buttons fixed properly */
+        .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 10; }
         .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 12px; }
-        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 3px; border: 1px solid rgba(255,255,255,0.2); }
-        .profile-badge { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 5px; }
+        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.2); }
+        .profile-badge { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 6px; }
         .profile-badge img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Bottom Nav */
+        /* Bottom Navigation Bar */
         .nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; padding: 12px 0; border-top: 1px solid #222; z-index: 100; }
-        .nav a { color: #aaa; text-decoration: none; font-size: 14px; font-weight: bold; }
+        .nav a { color: #888; text-decoration: none; font-size: 14px; font-weight: bold; }
         .nav a.active { color: #fff; }
-        .nav .plus { background: #ff0050; color: #fff; padding: 4px 14px; border-radius: 6px; font-weight: bold; }
+        .nav .plus { background: #ff0050; color: #fff; padding: 4px 16px; border-radius: 6px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -42,19 +46,19 @@
                 <div class="profile-badge">
                     <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile">
                 </div>
-                <div class="sidebar-item">
+                <div class="sidebar-item" onclick="alert('Liked!')">
                     <div class="icon-btn">❤️</div>
                     <span>{{ video.likes }}</span>
                 </div>
-                <div class="sidebar-item">
+                <div class="sidebar-item" onclick="alert('Comments section')">
                     <div class="icon-btn">💬</div>
                     <span>{{ video.comments }}</span>
                 </div>
-                <div class="sidebar-item">
+                <div class="sidebar-item" onclick="alert('Saved to favorites!')">
                     <div class="icon-btn">⭐</div>
                     <span>{{ video.saved }}</span>
                 </div>
-                <div class="sidebar-item">
+                <div class="sidebar-item" onclick="alert('Link copied for sharing!')">
                     <div class="icon-btn">↗️</div>
                     <span>Share</span>
                 </div>
