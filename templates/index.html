@@ -15,10 +15,10 @@
         .footer h3 { margin: 0 0 5px 0; font-size: 16px; }
         .footer p { margin: 0; font-size: 14px; word-break: break-word; }
         
-        .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 10; }
+        .sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 10; }
         .sidebar-item { text-align: center; cursor: pointer; color: #fff; font-size: 12px; }
-        .icon-btn { width: 48px; height: 48px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.2); }
-        .profile-badge { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 6px; }
+        .icon-btn { width: 45px; height: 45px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; margin-bottom: 3px; border: 1px solid rgba(255,255,255,0.2); }
+        .profile-badge { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #fff; overflow: hidden; background: #333; margin-bottom: 5px; }
         .profile-badge img { width: 100%; height: 100%; object-fit: cover; }
 
         .nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; padding: 12px 0; border-top: 1px solid #222; z-index: 100; }
@@ -26,12 +26,14 @@
         .nav a.active { color: #fff; }
         .nav .plus { background: #ff0050; color: #fff; padding: 4px 16px; border-radius: 6px; font-weight: bold; }
         .no-video { text-align: center; color: #777; position: absolute; z-index: 10; }
+        
+        /* Sound Toggle Overlay */
+        .sound-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 8px 14px; border-radius: 20px; font-size: 13px; z-index: 20; cursor: pointer; border: 1px solid rgba(255,255,255,0.3); }
     </style>
 </head>
 <body>
-    <div class="feed" id="videoFeed">
-        <!-- Videos will load here dynamically -->
-    </div>
+    <div class="sound-badge" onclick="toggleGlobalSound()" id="soundBtn">🔇 Tap to Unmute</div>
+    <div class="feed" id="videoFeed"></div>
 
     <div class="nav">
         <a href="/" class="active">Home</a>
@@ -45,7 +47,7 @@
         const defaultVideos = [
             {
                 id: 1,
-                caption: "Welcome to FX Master #shorts #trending",
+                caption: "FX Master Comedy #funny #trending",
                 url: "https://www.w3schools.com/html/mov_bbb.mp4",
                 username: "@fx_master",
                 likes: 1240,
@@ -56,7 +58,6 @@
 
         let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
         let allVideos = [...localVideos, ...defaultVideos];
-
         const feedContainer = document.getElementById('videoFeed');
 
         if (allVideos.length === 0) {
@@ -66,10 +67,10 @@
                 let div = document.createElement('div');
                 div.className = 'video-container';
                 div.innerHTML = `
-                    <video src="${video.url}" autoplay loop muted playsinline onclick="togglePlay(this)"></video>
+                    <video src="${video.url}" autoplay loop playsinline onclick="togglePlay(this)"></video>
                     <div class="footer">
-                        <h3>${video.username}</h3>
-                        <p>${video.caption}</p>
+                        <h3>${video.username || '@fx_user'}</h3>
+                        <p>${video.caption || 'FX Master Video'}</p>
                     </div>
                     <div class="sidebar">
                         <div class="profile-badge">
@@ -77,17 +78,17 @@
                         </div>
                         <div class="sidebar-item" onclick="likeVideo(this)">
                             <div class="icon-btn">❤️</div>
-                            <span>${video.likes}</span>
+                            <span>${video.likes || 12}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Comments section')">
+                        <div class="sidebar-item" onclick="alert('Comments: Looking good!')">
                             <div class="icon-btn">💬</div>
-                            <span>${video.comments}</span>
+                            <span>${video.comments || 4}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Saved!')">
+                        <div class="sidebar-item" onclick="alert('Saved to favorites!')">
                             <div class="icon-btn">⭐</div>
-                            <span>${video.saved}</span>
+                            <span>${video.saved || 2}</span>
                         </div>
-                        <div class="sidebar-item" onclick="alert('Link copied!')">
+                        <div class="sidebar-item" onclick="alert('Video link copied!')">
                             <div class="icon-btn">↗️</div>
                             <span>Share</span>
                         </div>
@@ -104,6 +105,19 @@
         function likeVideo(element) {
             let span = element.nextElementSibling;
             span.innerText = parseInt(span.innerText) + 1;
+        }
+
+        let isMuted = true;
+        function toggleGlobalSound() {
+            isMuted = !isMuted;
+            const videos = document.querySelectorAll('video');
+            videos.forEach(v => { v.muted = isMuted; });
+            const btn = document.getElementById('soundBtn');
+            if(isMuted) {
+                btn.innerHTML = "🔇 Tap to Unmute";
+            } else {
+                btn.innerHTML = "🔊 Sound ON";
+            }
         }
     </script>
 </body>
