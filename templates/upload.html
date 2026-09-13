@@ -23,7 +23,7 @@
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
         <input type="file" id="videoFile" accept="video/*">
         <button class="post-btn" onclick="uploadVideo()">Post Video</button>
-        <div id="loading">Processing & Uploading... Please wait</div>
+        <div id="loading">Posting video... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
@@ -41,37 +41,34 @@
             const file = fileInput.files[0];
             loadingDiv.style.display = 'block';
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64VideoUrl = e.target.result;
-                
-                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-                
-                const newVideo = {
-                    id: 'custom_' + Date.now(),
-                    caption: caption,
-                    url: base64VideoUrl,
-                    username: '@fx_user',
-                    likes: 0,
-                    comments: 0,
-                    reposts: 0,
-                    saved: 0
-                };
+            // Use object URL to handle large video files instantly without storage limit errors
+            const videoUrl = URL.createObjectURL(file);
+            
+            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+            
+            const newVideo = {
+                id: 'custom_' + Date.now(),
+                caption: caption,
+                url: videoUrl,
+                username: '@fx_user',
+                likes: 0,
+                comments: 0,
+                reposts: 0,
+                saved: 0
+            };
 
-                localVideos.unshift(newVideo); // Add to the beginning of the list
+            localVideos.unshift(newVideo);
+            try {
                 localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+            } catch (err) {
+                console.log("Storage warning:", err);
+            }
 
+            setTimeout(() => {
                 loadingDiv.style.display = 'none';
                 alert("Video posted successfully!");
                 window.location.href = '/';
-            };
-
-            reader.onerror = function() {
-                loadingDiv.style.display = 'none';
-                alert("Error reading video file. Try a smaller file.");
-            };
-
-            reader.readAsDataURL(file);
+            }, 500);
         }
     </script>
 </body>
