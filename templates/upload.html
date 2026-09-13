@@ -9,81 +9,51 @@
         .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
         h2 { margin-bottom: 20px; font-size: 22px; color: #fff; }
         input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        input[type="file"] { width: 100%; padding: 10px; margin-bottom: 20px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; cursor: pointer; }
         .post-btn { width: 100%; background: #ff0050; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .post-btn:active { background: #d00040; }
         .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #fff; }
-        #loading { display: none; margin-top: 10px; color: #ff0050; font-size: 14px; font-weight: bold; }
+        .tip { font-size: 12px; color: #aaa; margin-bottom: 15px; text-align: left; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="upload-card">
-        <h2>Upload Video</h2>
+        <h2>Post New Video</h2>
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
-        <input type="file" id="videoFile" accept="video/*">
-        <button class="post-btn" onclick="uploadVideo()">Post Video</button>
-        <div id="loading">Processing Video... Please wait</div>
+        <input type="text" id="videoUrlInput" placeholder="Paste Video Direct URL (.mp4)...">
+        <div class="tip">Tip: Aap koi bhi direct .mp4 video link yahan paste kar sakte hain taake wo foran feed mein chal jaye aur sound ke sath chale.</div>
+        <button class="post-btn" onclick="postVideo()">Post Video</button>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
     <script>
-        function uploadVideo() {
+        function postVideo() {
             const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
-            const fileInput = document.getElementById('videoFile');
-            const loadingDiv = document.getElementById('loading');
+            const videoUrl = document.getElementById('videoUrlInput').value.trim();
 
-            if (fileInput.files.length === 0) {
-                alert("Please select a video file!");
+            if (!videoUrl) {
+                alert("Please paste a direct video URL (.mp4)!");
                 return;
             }
 
-            const file = fileInput.files[0];
+            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
             
-            // Limit file size to prevent browser storage crash (Max 15MB)
-            if (file.size > 15 * 1024 * 1024) {
-                alert("Video size is too large! Please select a smaller video under 15MB.");
-                return;
-            }
-
-            loadingDiv.style.display = 'block';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result;
-                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-                
-                const newVideo = {
-                    id: 'custom_' + Date.now(),
-                    caption: caption,
-                    url: base64Data,
-                    username: '@fx_user',
-                    likes: 0,
-                    comments: 0,
-                    reposts: 0,
-                    saved: 0
-                };
-
-                localVideos.unshift(newVideo);
-                
-                try {
-                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-                    setTimeout(() => {
-                        loadingDiv.style.display = 'none';
-                        window.location.href = '/';
-                    }, 500);
-                } catch (err) {
-                    loadingDiv.style.display = 'none';
-                    alert("Storage full! Please clear some data or use a smaller video.");
-                }
+            const newVideo = {
+                id: 'custom_' + Date.now(),
+                caption: caption,
+                url: videoUrl,
+                username: '@fx_user',
+                likes: 15,
+                comments: 4,
+                reposts: 1,
+                saved: 2
             };
 
-            reader.onerror = function() {
-                loadingDiv.style.display = 'none';
-                alert("Failed to read video file.");
-            };
-
-            reader.readAsDataURL(file);
+            localVideos.unshift(newVideo);
+            localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+            
+            alert("Video posted successfully!");
+            window.location.href = '/';
         }
     </script>
 </body>

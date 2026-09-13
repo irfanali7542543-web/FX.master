@@ -9,32 +9,43 @@
         .feed-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
         .video-card { height: 100vh; scroll-snap-align: start; position: relative; display: flex; justify-content: center; align-items: center; background: #000; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .footer { position: absolute; bottom: 60px; left: 15px; z-index: 10; }
+        .footer { position: absolute; bottom: 60px; left: 15px; z-index: 10; width: 70%; }
         .username { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         .caption { font-size: 14px; opacity: 0.9; }
         .sidebar { position: absolute; right: 15px; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 15px; z-index: 10; }
         .action-btn { background: rgba(0,0,0,0.4); border: none; color: #fff; border-radius: 50%; width: 45px; height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
         .action-btn span { font-size: 11px; margin-top: 2px; }
+        .avatar-container { position: relative; margin-bottom: 5px; }
+        .avatar { width: 45px; height: 45px; border-radius: 50%; background: #555; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .follow-badge { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); background: #ff0050; color: #fff; width: 18px; height: 18px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .navbar { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: #000; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         .nav-item { color: #888; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: #fff; }
         .plus-btn { background: #ff0050; color: #fff; width: 35px; height: 25px; border-radius: 6px; font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .sound-toggle { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid #fff; padding: 8px 12px; border-radius: 20px; cursor: pointer; z-index: 20; font-size: 12px; }
     </style>
 </head>
 <body>
 
+    <button class="sound-toggle" onclick="toggleAudio()">🔊 Tap to Unmute Sound</button>
+
     <div class="feed-container" id="videoFeed">
         <div class="video-card">
-            <video src="https://www.w3schools.com/html/mov_bbb.mp4" autoplay loop muted playsinline></video>
+            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video>
             <div class="footer">
                 <div class="username">@fx_master</div>
                 <div class="caption">FX Master Comedy & Trading #trending</div>
             </div>
             <div class="sidebar">
-                <button class="action-btn" onclick="alert('Liked!')">❤️ <span>120</span></button>
-                <button class="action-btn" onclick="let c=prompt('Write a comment:'); if(c) alert('Comment added!');">💬 <span>45</span></button>
-                <button class="action-btn" onclick="alert('Video reposted!')">🔁 <span>12</span></button>
-                <button class="action-btn" onclick="alert('Saved!')">⭐ <span>30</span></button>
+                <div class="avatar-container">
+                    <div class="avatar">👤</div>
+                    <div class="follow-badge">+</div>
+                </div>
+                <button class="action-btn" onclick="likeVideo(this)">❤️ <span class="like-count">120</span></button>
+                <button class="action-btn" onclick="commentVideo()">💬 <span class="comment-count">45</span></button>
+                <button class="action-btn" onclick="repostVideo()">🔁 <span class="repost-count">12</span></button>
+                <button class="action-btn" onclick="saveVideo()">⭐ <span class="save-count">30</span></button>
+                <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
             </div>
         </div>
     </div>
@@ -54,22 +65,74 @@
         localVideos.forEach(v => {
             const card = document.createElement('div');
             card.className = 'video-card';
-            
             card.innerHTML = `
-                <video src="${v.url}" autoplay loop muted playsinline onerror="this.onerror=null; this.src='https://www.w3schools.com/html/mov_bbb.mp4';"></video>
+                <video src="${v.url}" loop playsinline></video>
                 <div class="footer">
                     <div class="username">${v.username}</div>
                     <div class="caption">${v.caption}</div>
                 </div>
                 <div class="sidebar">
-                    <button class="action-btn" onclick="alert('Liked!')">❤️ <span>${v.likes || 10}</span></button>
-                    <button class="action-btn" onclick="let c=prompt('Write a comment:'); if(c) alert('Comment added!');">💬 <span>${v.comments || 2}</span></button>
-                    <button class="action-btn" onclick="alert('Video reposted!')">🔁 <span>${v.reposts || 1}</span></button>
-                    <button class="action-btn" onclick="alert('Saved!')">⭐ <span>${v.saved || 3}</span></button>
+                    <div class="avatar-container">
+                        <div class="avatar">👤</div>
+                        <div class="follow-badge">+</div>
+                    </div>
+                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span class="like-count">${v.likes || 15}</span></button>
+                    <button class="action-btn" onclick="commentVideo()">💬 <span class="comment-count">${v.comments || 4}</span></button>
+                    <button class="action-btn" onclick="repostVideo()">🔁 <span class="repost-count">${v.reposts || 1}</span></button>
+                    <button class="action-btn" onclick="saveVideo()">⭐ <span class="save-count">${v.saved || 2}</span></button>
+                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
                 </div>
             `;
             feed.prepend(card);
         });
+
+        // Autoplay and sound handler
+        let isMuted = true;
+        function toggleAudio() {
+            isMuted = !isMuted;
+            document.querySelectorAll('video').forEach(vid => {
+                vid.muted = isMuted;
+            });
+            document.querySelector('.sound-toggle').innerText = isMuted ? "🔊 Tap to Unmute Sound" : "🔇 Mute Sound";
+        }
+
+        // Intersection Observer to play visible video and pause others
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const vid = entry.target.querySelector('video');
+                if (vid) {
+                    if (entry.isIntersecting) {
+                        vid.muted = isMuted;
+                        vid.play().catch(e => console.log(e));
+                    } else {
+                        vid.pause();
+                    }
+                }
+            });
+        }, { threshold: 0.6 });
+
+        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
+
+        // Action button functions
+        function likeVideo(btn) {
+            const span = btn.querySelector('.like-count');
+            span.innerText = parseInt(span.innerText) + 1;
+            alert('Liked!');
+        }
+        function commentVideo() {
+            let c = prompt('Write a comment:');
+            if (c) alert('Comment added!');
+        }
+        function repostVideo() {
+            alert('Video reposted to your profile!');
+        }
+        function saveVideo() {
+            alert('Saved to favorites!');
+        }
+        function shareVideo() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
     </script>
 </body>
 </html>
