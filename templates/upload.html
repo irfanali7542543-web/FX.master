@@ -28,7 +28,6 @@
     </div>
 
     <script>
-        // Initialize IndexedDB for large video storage
         let db;
         const request = indexedDB.open('FXMasterDB', 1);
         
@@ -76,14 +75,12 @@
                     saved: 2
                 };
 
-                // Save to IndexedDB safely
                 if (db) {
                     const transaction = db.transaction(['videos'], 'readwrite');
                     const store = transaction.objectStore('videos');
                     store.put(newVideo);
 
                     transaction.oncomplete = function() {
-                        // Also store recent video IDs list in localStorage for quick index reference
                         let videoIds = JSON.parse(localStorage.getItem('fx_video_ids') || '[]');
                         videoIds.unshift(videoId);
                         localStorage.setItem('fx_video_ids', JSON.stringify(videoIds));

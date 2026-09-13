@@ -61,7 +61,6 @@
     <script>
         const feed = document.getElementById('videoFeed');
 
-        // Load custom gallery videos from IndexedDB
         const request = indexedDB.open('FXMasterDB', 1);
         request.onsuccess = function(event) {
             const db = event.target.result;
@@ -96,13 +95,11 @@
                         feed.prepend(card);
                     });
 
-                    // Re-observe videos after adding dynamic items
                     observeVideos();
                 };
             }
         };
 
-        // Global sound toggle handler
         let isMuted = true;
         function toggleAudio() {
             isMuted = !isMuted;
@@ -130,7 +127,6 @@
             document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
         }
 
-        // Action button functions
         function likeVideo(btn) {
             const span = btn.querySelector('.like-count');
             span.innerText = parseInt(span.innerText) + 1;
