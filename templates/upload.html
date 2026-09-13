@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="upload-card">
-        <h2>Upload from Gallery</h2>
+        <h2>Upload Video</h2>
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
         <input type="file" id="videoFile" accept="video/*">
         <button class="post-btn" onclick="uploadGalleryVideo()">Post Video</button>
@@ -39,24 +39,18 @@
             }
 
             const file = fileInput.files[0];
-            
-            // Limit file size to 10MB to avoid browser quota crash
-            if (file.size > 10 * 1024 * 1024) {
-                alert("Video size is too large for local storage! Please select a shorter video under 10MB.");
-                return;
-            }
-
             loadingDiv.style.display = 'block';
 
+            // Use FileReader to convert to safe local data or session storage reference
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64Data = e.target.result;
+                const videoDataUrl = e.target.result;
                 let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
                 
                 const newVideo = {
                     id: 'custom_' + Date.now(),
                     caption: caption,
-                    url: base64Data,
+                    url: videoDataUrl,
                     username: '@fx_user',
                     likes: 15,
                     comments: 4,
@@ -67,14 +61,23 @@
                 localVideos.unshift(newVideo);
                 
                 try {
+                    // Keep only last 5 videos to prevent storage overflow
+                    if (localVideos.length > 5) localVideos = localVideos.slice(0, 5);
                     localStorage.setItem('fx_videos', JSON.stringify(localVideos));
                     setTimeout(() => {
                         loadingDiv.style.display = 'none';
                         window.location.href = '/';
-                    }, 500);
+                    }, 300);
                 } catch (err) {
-                    loadingDiv.style.display = 'none';
-                    alert("Storage is full! Clear some browser data or use a smaller video.");
+                    // Fallback using Object URL if storage is completely exhausted
+                    const objectUrl = URL.createObjectURL(file);
+                    newVideo.url = objectUrl;
+                    localVideos[0] = newVideo;
+                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+                    setTimeout(() => {
+                        loadingDiv.style.display = 'none';
+                        window.location.href = '/';
+                    }, 300);
                 }
             };
 
