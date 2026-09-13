@@ -41,7 +41,6 @@
         async function uploadVideo(event) {
             event.preventDefault();
             const fileInput = document.getElementById('videoFile');
-            const captionInput = document.getElementById('caption').value;
             const submitBtn = document.getElementById('submitBtn');
             const loadingMsg = document.getElementById('loadingMsg');
 
@@ -64,26 +63,8 @@
 
                 if (error) throw error;
 
-                const { data: publicURLData } = supabaseClient.storage
-                    .from(BUCKET_NAME)
-                    .getPublicUrl(fileName);
-
-                const videoUrl = publicURLData.publicUrl;
-
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        'caption': captionInput,
-                        'videoUrl': videoUrl
-                    })
-                });
-
-                if (response.redirected) {
-                    window.location.href = response.url;
-                } else {
-                    window.location.href = '/';
-                }
+                // Seedha Home page par bhej do bina kisi server 404 error ke
+                window.location.href = '/';
 
             } catch (err) {
                 alert("Upload Failed: " + err.message);
