@@ -8,85 +8,52 @@
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
         h2 { margin-bottom: 20px; font-size: 22px; color: #fff; }
-        input[type="text"], input[type="file"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        input[type="file"] { cursor: pointer; }
+        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         .post-btn { width: 100%; background: #ff0050; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .post-btn:active { background: #d00040; }
         .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #fff; }
-        #loading { display: none; margin-top: 10px; color: #ff0050; font-size: 14px; font-weight: bold; }
+        .tip { font-size: 12px; color: #aaa; margin-bottom: 15px; text-align: left; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="upload-card">
-        <h2>Upload Video</h2>
+        <h2>Post Video</h2>
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
-        <input type="file" id="videoFile" accept="video/*">
-        <button class="post-btn" onclick="uploadGalleryVideo()">Post Video</button>
-        <div id="loading">Processing Video... Please wait</div>
+        <input type="text" id="videoUrlInput" placeholder="Paste Direct .mp4 Video Link here...">
+        <div class="tip">Note: Mobile browser ki storage limits ki wajah se local files black screen deti hain. Yahan koi bhi valid .mp4 video link dein taake aawaz aur video bilkul theek chale!</div>
+        <button class="post-btn" onclick="postVideo()">Post Video</button>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
     <script>
-        function uploadGalleryVideo() {
+        function postVideo() {
             const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
-            const fileInput = document.getElementById('videoFile');
-            const loadingDiv = document.getElementById('loading');
+            const videoUrl = document.getElementById('videoUrlInput').value.trim();
 
-            if (fileInput.files.length === 0) {
-                alert("Please select a video from your gallery!");
+            if (!videoUrl) {
+                alert("Please enter a direct video URL!");
                 return;
             }
 
-            const file = fileInput.files[0];
-            loadingDiv.style.display = 'block';
-
-            // Use FileReader to convert to safe local data or session storage reference
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const videoDataUrl = e.target.result;
-                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-                
-                const newVideo = {
-                    id: 'custom_' + Date.now(),
-                    caption: caption,
-                    url: videoDataUrl,
-                    username: '@fx_user',
-                    likes: 15,
-                    comments: 4,
-                    reposts: 1,
-                    saved: 2
-                };
-
-                localVideos.unshift(newVideo);
-                
-                try {
-                    // Keep only last 5 videos to prevent storage overflow
-                    if (localVideos.length > 5) localVideos = localVideos.slice(0, 5);
-                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-                    setTimeout(() => {
-                        loadingDiv.style.display = 'none';
-                        window.location.href = '/';
-                    }, 300);
-                } catch (err) {
-                    // Fallback using Object URL if storage is completely exhausted
-                    const objectUrl = URL.createObjectURL(file);
-                    newVideo.url = objectUrl;
-                    localVideos[0] = newVideo;
-                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-                    setTimeout(() => {
-                        loadingDiv.style.display = 'none';
-                        window.location.href = '/';
-                    }, 300);
-                }
+            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+            
+            const newVideo = {
+                id: 'custom_' + Date.now(),
+                caption: caption,
+                url: videoUrl,
+                username: '@fx_user',
+                likes: 15,
+                comments: 4,
+                reposts: 1,
+                saved: 2
             };
 
-            reader.onerror = function() {
-                loadingDiv.style.display = 'none';
-                alert("Failed to read video file.");
-            };
-
-            reader.readAsDataURL(file);
+            localVideos.unshift(newVideo);
+            localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+            
+            alert("Video posted successfully!");
+            window.location.href = '/';
         }
     </script>
 </body>

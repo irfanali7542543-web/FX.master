@@ -22,9 +22,12 @@
         .nav-item { color: #888; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: #fff; }
         .plus-btn { background: #ff0050; color: #fff; width: 35px; height: 25px; border-radius: 6px; font-weight: bold; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .sound-toggle { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; border: 1px solid #fff; padding: 6px 12px; border-radius: 20px; cursor: pointer; z-index: 20; font-size: 11px; }
     </style>
 </head>
 <body>
+
+    <button class="sound-toggle" onclick="toggleAudio()">🔊 Unmute Sound</button>
 
     <div class="feed-container" id="videoFeed">
         <div class="video-card">
@@ -83,18 +86,24 @@
             feed.prepend(card);
         });
 
-        // Intersection Observer for auto-play and automatic sound unmuting for visible video
+        // Global sound toggle handler
+        let isMuted = true;
+        function toggleAudio() {
+            isMuted = !isMuted;
+            document.querySelectorAll('video').forEach(vid => {
+                vid.muted = isMuted;
+            });
+            document.querySelector('.sound-toggle').innerText = isMuted ? "🔊 Unmute Sound" : "🔇 Mute Sound";
+        }
+
+        // Intersection Observer to play visible video smoothly
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const vid = entry.target.querySelector('video');
                 if (vid) {
                     if (entry.isIntersecting) {
-                        vid.muted = false; // Automatically enable sound/aavaz
-                        vid.play().catch(e => {
-                            // Fallback if autoplay with sound is blocked by browser policy
-                            vid.muted = true;
-                            vid.play();
-                        });
+                        vid.muted = isMuted;
+                        vid.play().catch(e => console.log(e));
                     } else {
                         vid.pause();
                     }
