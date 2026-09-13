@@ -14,29 +14,20 @@
         .post-btn:active { background: #d00040; }
         .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #fff; }
-        #loading { display: none; margin-top: 10px; color: #ff0050; font-size: 14px; font-weight: bold; }
+        .tip { font-size: 12px; color: #aaa; margin-bottom: 15px; text-align: left; line-height: 1.4; }
     </style>
 </head>
 <body>
     <div class="upload-card">
         <h2>Upload Video</h2>
-        <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
-            <input type="text" name="caption" id="captionInput" placeholder="Enter video caption / hashtags...">
-            <input type="file" name="video" id="videoFile" accept="video/*" required>
-            <input type="hidden" name="username" value="@fx_trader">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="text" name="caption" placeholder="Enter video caption / hashtags...">
+            <input type="file" name="videoFile" accept="video/*">
+            <div class="tip">Ya phir direct .mp4 link dein:</div>
+            <input type="text" name="videoUrl" placeholder="Paste Direct .mp4 Video Link here...">
             <button type="submit" class="post-btn">Post Video</button>
         </form>
-        <div id="loading">Uploading video to server... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
-
-    <script>
-        function showLoading() {
-            const fileInput = document.getElementById('videoFile');
-            if (fileInput.files.length > 0) {
-                document.getElementById('loading').style.display = 'block';
-            }
-        }
-    </script>
 </body>
 </html>
