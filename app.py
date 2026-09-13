@@ -1,13 +1,16 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
+from supabase import create_client, Client
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+# Supabase configuration (Vercel environment variables se uthayega)
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+SUPABASE_BUCKET = "videos"  # Aapka Supabase storage bucket naam
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY) if SUPABASE_URL and SUPABASE_KEY else None
 
 # In-memory database for videos
 videos_db = [
@@ -37,15 +40,27 @@ def upload():
             file = request.files['videoFile']
             if file and file.filename != '':
                 filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(filepath)
+                file_bytes = file.read()
                 
-                # Add to video list
+                video_url = "https://www.w3schools.com/html/mov_bbb.mp4"
+                if supabase:
+                    try:
+                        # Upload file bytes to Supabase Storage bucket
+                        supabase.storage.from_(SUPABASE_BUCKET).upload(
+                            path=filename,
+                            file=file_bytes,
+                            file_options={"content-type": file.content_type, "upsert": "true"}
+                        )
+                        # Get Public URL
+                        video_url = supabase.storage.from_(SUPABASE_BUCKET).get_public_url(filename)
+                    except Exception as e:
+                        print("Supabase Upload Error:", e)
+                
                 new_video = {
                     "id": str(len(videos_db) + 1),
                     "username": "@fx_user",
                     "caption": caption,
-                    "url": url_for('static', filename='uploads/' + filename),
+                    "url": video_url,
                     "likes": 15,
                     "comments": 4,
                     "reposts": 1,
