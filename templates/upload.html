@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Video - FX Master</title>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
@@ -17,7 +16,6 @@
         .post-btn:disabled { background: #555; cursor: not-allowed; }
         .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #fff; }
-        .tip { font-size: 12px; color: #aaa; margin-bottom: 15px; text-align: left; line-height: 1.4; }
         #loadingMsg { display: none; color: #ff0050; margin-top: 10px; font-size: 14px; font-weight: bold; }
     </style>
 </head>
@@ -33,13 +31,10 @@
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
-    
-        // Yahan apni real Supabase URL aur Key daal dein:
-        <script>
-    const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
-    const BUCKET_NAME = "videos";
-
+    <script>
+        const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQX3E4MDmHFcw_HZ-p-fG1";
+        const BUCKET_NAME = "videos";
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -67,9 +62,7 @@
                         upsert: false
                     });
 
-                if (error) {
-                    throw error;
-                }
+                if (error) throw error;
 
                 const { data: publicURLData } = supabaseClient.storage
                     .from(BUCKET_NAME)
