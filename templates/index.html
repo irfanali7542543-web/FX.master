@@ -60,31 +60,47 @@
 
     <script>
         const feed = document.getElementById('videoFeed');
-        let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-        
-        localVideos.forEach(v => {
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.innerHTML = `
-                <video src="${v.url}" loop playsinline></video>
-                <div class="footer">
-                    <div class="username">${v.username}</div>
-                    <div class="caption">${v.caption}</div>
-                </div>
-                <div class="sidebar">
-                    <div class="avatar-container">
-                        <div class="avatar">👤</div>
-                        <div class="follow-badge">+</div>
-                    </div>
-                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span class="like-count">${v.likes || 15}</span></button>
-                    <button class="action-btn" onclick="commentVideo()">💬 <span class="comment-count">${v.comments || 4}</span></button>
-                    <button class="action-btn" onclick="repostVideo()">🔁 <span class="repost-count">${v.reposts || 1}</span></button>
-                    <button class="action-btn" onclick="saveVideo()">⭐ <span class="save-count">${v.saved || 2}</span></button>
-                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
-                </div>
-            `;
-            feed.prepend(card);
-        });
+
+        // Load custom gallery videos from IndexedDB
+        const request = indexedDB.open('FXMasterDB', 1);
+        request.onsuccess = function(event) {
+            const db = event.target.result;
+            if (db.objectStoreNames.contains('videos')) {
+                const transaction = db.transaction(['videos'], 'readonly');
+                const store = transaction.objectStore('videos');
+                const getAllRequest = store.getAll();
+
+                getAllRequest.onsuccess = function() {
+                    const videos = getAllRequest.result;
+                    videos.reverse().forEach(v => {
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
+                        card.innerHTML = `
+                            <video src="${v.url}" loop playsinline controls></video>
+                            <div class="footer">
+                                <div class="username">${v.username}</div>
+                                <div class="caption">${v.caption}</div>
+                            </div>
+                            <div class="sidebar">
+                                <div class="avatar-container">
+                                    <div class="avatar">👤</div>
+                                    <div class="follow-badge">+</div>
+                                </div>
+                                <button class="action-btn" onclick="likeVideo(this)">❤️ <span class="like-count">${v.likes || 15}</span></button>
+                                <button class="action-btn" onclick="commentVideo()">💬 <span class="comment-count">${v.comments || 4}</span></button>
+                                <button class="action-btn" onclick="repostVideo()">🔁 <span class="repost-count">${v.reposts || 1}</span></button>
+                                <button class="action-btn" onclick="saveVideo()">⭐ <span class="save-count">${v.saved || 2}</span></button>
+                                <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
+                            </div>
+                        `;
+                        feed.prepend(card);
+                    });
+
+                    // Re-observe videos after adding dynamic items
+                    observeVideos();
+                };
+            }
+        };
 
         // Global sound toggle handler
         let isMuted = true;
@@ -96,22 +112,23 @@
             document.querySelector('.sound-toggle').innerText = isMuted ? "🔊 Unmute Sound" : "🔇 Mute Sound";
         }
 
-        // Intersection Observer to play visible video smoothly
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const vid = entry.target.querySelector('video');
-                if (vid) {
-                    if (entry.isIntersecting) {
-                        vid.muted = isMuted;
-                        vid.play().catch(e => console.log(e));
-                    } else {
-                        vid.pause();
+        function observeVideos() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const vid = entry.target.querySelector('video');
+                    if (vid) {
+                        if (entry.isIntersecting) {
+                            vid.muted = isMuted;
+                            vid.play().catch(e => console.log(e));
+                        } else {
+                            vid.pause();
+                        }
                     }
-                }
-            });
-        }, { threshold: 0.6 });
+                });
+            }, { threshold: 0.6 });
 
-        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
+            document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
+        }
 
         // Action button functions
         function likeVideo(btn) {

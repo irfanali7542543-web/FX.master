@@ -8,52 +8,101 @@
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
         h2 { margin-bottom: 20px; font-size: 22px; color: #fff; }
-        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input[type="file"] { cursor: pointer; }
         .post-btn { width: 100%; background: #ff0050; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .post-btn:active { background: #d00040; }
         .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #fff; }
-        .tip { font-size: 12px; color: #aaa; margin-bottom: 15px; text-align: left; line-height: 1.4; }
+        #loading { display: none; margin-top: 10px; color: #ff0050; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="upload-card">
-        <h2>Post Video</h2>
+        <h2>Upload from Gallery</h2>
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
-        <input type="text" id="videoUrlInput" placeholder="Paste Direct .mp4 Video Link here...">
-        <div class="tip">Note: Mobile browser ki storage limits ki wajah se local files black screen deti hain. Yahan koi bhi valid .mp4 video link dein taake aawaz aur video bilkul theek chale!</div>
-        <button class="post-btn" onclick="postVideo()">Post Video</button>
+        <input type="file" id="videoFile" accept="video/*">
+        <button class="post-btn" onclick="uploadGalleryVideo()">Post Video</button>
+        <div id="loading">Saving video to database... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
     <script>
-        function postVideo() {
-            const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
-            const videoUrl = document.getElementById('videoUrlInput').value.trim();
+        // Initialize IndexedDB for large video storage
+        let db;
+        const request = indexedDB.open('FXMasterDB', 1);
+        
+        request.onerror = function(event) {
+            console.log("Database error: " + event.target.errorCode);
+        };
+        
+        request.onsuccess = function(event) {
+            db = event.target.result;
+        };
+        
+        request.onupgradeneeded = function(event) {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains('videos')) {
+                db.createObjectStore('videos', { keyPath: 'id' });
+            }
+        };
 
-            if (!videoUrl) {
-                alert("Please enter a direct video URL!");
+        function uploadGalleryVideo() {
+            const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
+            const fileInput = document.getElementById('videoFile');
+            const loadingDiv = document.getElementById('loading');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a video from your gallery!");
                 return;
             }
 
-            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-            
-            const newVideo = {
-                id: 'custom_' + Date.now(),
-                caption: caption,
-                url: videoUrl,
-                username: '@fx_user',
-                likes: 15,
-                comments: 4,
-                reposts: 1,
-                saved: 2
+            const file = fileInput.files[0];
+            loadingDiv.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const videoDataUrl = e.target.result;
+                const videoId = 'custom_' + Date.now();
+                
+                const newVideo = {
+                    id: videoId,
+                    caption: caption,
+                    url: videoDataUrl,
+                    username: '@fx_user',
+                    likes: 15,
+                    comments: 4,
+                    reposts: 1,
+                    saved: 2
+                };
+
+                // Save to IndexedDB safely
+                if (db) {
+                    const transaction = db.transaction(['videos'], 'readwrite');
+                    const store = transaction.objectStore('videos');
+                    store.put(newVideo);
+
+                    transaction.oncomplete = function() {
+                        // Also store recent video IDs list in localStorage for quick index reference
+                        let videoIds = JSON.parse(localStorage.getItem('fx_video_ids') || '[]');
+                        videoIds.unshift(videoId);
+                        localStorage.setItem('fx_video_ids', JSON.stringify(videoIds));
+
+                        loadingDiv.style.display = 'none';
+                        window.location.href = '/';
+                    };
+
+                    transaction.onerror = function() {
+                        loadingDiv.style.display = 'none';
+                        alert("Error saving video to database!");
+                    };
+                } else {
+                    loadingDiv.style.display = 'none';
+                    alert("Database not ready yet. Please try again.");
+                }
             };
 
-            localVideos.unshift(newVideo);
-            localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-            
-            alert("Video posted successfully!");
-            window.location.href = '/';
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
