@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Video - FX Master</title>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
@@ -21,25 +23,78 @@
 </head>
 <body>
     <div class="upload-card">
-        <h2>Upload Video</h2>
-        <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
-            <input type="text" name="caption" placeholder="Enter video caption / hashtags...">
-            <input type="file" name="videoFile" accept="video/*" id="videoFile">
-            <div class="tip">Ya phir direct .mp4 link dein:</div>
-            <input type="text" name="videoUrl" placeholder="Paste Direct .mp4 Video Link here...">
+        <h2>Upload Large Video</h2>
+        <form id="uploadForm" onsubmit="uploadVideo(event)">
+            <input type="text" id="caption" name="caption" placeholder="Enter video caption / hashtags..." required>
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required>
             <button type="submit" id="submitBtn" class="post-btn">Post Video</button>
-            <div id="loadingMsg">Uploading video, please wait...</div>
+            <div id="loadingMsg">Uploading large video, please wait...</div>
         </form>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
     <script>
-        function showLoading() {
+        // Yahan apni real Supabase URL aur Key daal dein:
+        const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
+        const BUCKET_NAME = "videos";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function uploadVideo(event) {
+            event.preventDefault();
             const fileInput = document.getElementById('videoFile');
-            if (fileInput.files.length > 0) {
-                document.getElementById('submitBtn').disabled = true;
-                document.getElementById('submitBtn').innerText = "Uploading...";
-                document.getElementById('loadingMsg').style.display = "block";
+            const captionInput = document.getElementById('caption').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMsg = document.getElementById('loadingMsg');
+
+            if (fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Uploading...";
+            loadingMsg.style.display = "block";
+
+            try {
+                const fileName = Date.now() + "_" + file.name;
+                
+                const { data, error } = await supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                const { data: publicURLData } = supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .getPublicUrl(fileName);
+
+                const videoUrl = publicURLData.publicUrl;
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        'caption': captionInput,
+                        'videoUrl': videoUrl
+                    })
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.href = '/';
+                }
+
+            } catch (err) {
+                alert("Upload Failed: " + err.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Post Video";
+                loadingMsg.style.display = "none";
             }
         }
     </script>
