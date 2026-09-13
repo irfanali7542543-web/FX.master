@@ -19,87 +19,23 @@
 </head>
 <body>
     <div class="upload-card">
-        <h2>Upload from Gallery</h2>
-        <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
-        <input type="file" id="videoFile" accept="video/*">
-        <button class="post-btn" onclick="uploadGalleryVideo()">Post Video</button>
-        <div id="loading">Saving video to database... Please wait</div>
+        <h2>Upload Video</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+            <input type="text" name="caption" id="captionInput" placeholder="Enter video caption / hashtags...">
+            <input type="file" name="video" id="videoFile" accept="video/*" required>
+            <input type="hidden" name="username" value="@fx_trader">
+            <button type="submit" class="post-btn">Post Video</button>
+        </form>
+        <div id="loading">Uploading video to server... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
     <script>
-        let db;
-        const request = indexedDB.open('FXMasterDB', 1);
-        
-        request.onerror = function(event) {
-            console.log("Database error: " + event.target.errorCode);
-        };
-        
-        request.onsuccess = function(event) {
-            db = event.target.result;
-        };
-        
-        request.onupgradeneeded = function(event) {
-            db = event.target.result;
-            if (!db.objectStoreNames.contains('videos')) {
-                db.createObjectStore('videos', { keyPath: 'id' });
-            }
-        };
-
-        function uploadGalleryVideo() {
-            const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
+        function showLoading() {
             const fileInput = document.getElementById('videoFile');
-            const loadingDiv = document.getElementById('loading');
-
-            if (fileInput.files.length === 0) {
-                alert("Please select a video from your gallery!");
-                return;
+            if (fileInput.files.length > 0) {
+                document.getElementById('loading').style.display = 'block';
             }
-
-            const file = fileInput.files[0];
-            loadingDiv.style.display = 'block';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const videoDataUrl = e.target.result;
-                const videoId = 'custom_' + Date.now();
-                
-                const newVideo = {
-                    id: videoId,
-                    caption: caption,
-                    url: videoDataUrl,
-                    username: '@fx_user',
-                    likes: 15,
-                    comments: 4,
-                    reposts: 1,
-                    saved: 2
-                };
-
-                if (db) {
-                    const transaction = db.transaction(['videos'], 'readwrite');
-                    const store = transaction.objectStore('videos');
-                    store.put(newVideo);
-
-                    transaction.oncomplete = function() {
-                        let videoIds = JSON.parse(localStorage.getItem('fx_video_ids') || '[]');
-                        videoIds.unshift(videoId);
-                        localStorage.setItem('fx_video_ids', JSON.stringify(videoIds));
-
-                        loadingDiv.style.display = 'none';
-                        window.location.href = '/';
-                    };
-
-                    transaction.onerror = function() {
-                        loadingDiv.style.display = 'none';
-                        alert("Error saving video to database!");
-                    };
-                } else {
-                    loadingDiv.style.display = 'none';
-                    alert("Database not ready yet. Please try again.");
-                }
-            };
-
-            reader.readAsDataURL(file);
         }
     </script>
 </body>
