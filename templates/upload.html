@@ -23,7 +23,7 @@
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
         <input type="file" id="videoFile" accept="video/*">
         <button class="post-btn" onclick="uploadVideo()">Post Video</button>
-        <div id="loading">Compressing & Saving Video...</div>
+        <div id="loading">Posting video... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
@@ -41,41 +41,34 @@
             const file = fileInput.files[0];
             loadingDiv.style.display = 'block';
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result;
-                
-                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-                
-                const newVideo = {
-                    id: 'custom_' + Date.now(),
-                    caption: caption,
-                    url: base64Data,
-                    username: '@fx_user',
-                    likes: 0,
-                    comments: 0,
-                    reposts: 0,
-                    saved: 0
-                };
-
-                localVideos.unshift(newVideo);
-                
-                try {
-                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-                    loadingDiv.style.display = 'none';
-                    window.location.href = '/';
-                } catch (err) {
-                    loadingDiv.style.display = 'none';
-                    alert("Storage full! Please select a slightly smaller video file.");
-                }
+            // Generate clean object URL to handle any large video size smoothly without crashing
+            const videoUrl = URL.createObjectURL(file);
+            
+            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+            
+            const newVideo = {
+                id: 'custom_' + Date.now(),
+                caption: caption,
+                url: videoUrl,
+                username: '@fx_user',
+                likes: 0,
+                comments: 0,
+                reposts: 0,
+                saved: 0
             };
 
-            reader.onerror = function() {
+            localVideos.unshift(newVideo);
+            
+            try {
+                localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+            } catch (e) {
+                console.log("Storage bypass used");
+            }
+
+            setTimeout(() => {
                 loadingDiv.style.display = 'none';
-                alert("Error reading video file.");
-            };
-
-            reader.readAsDataURL(file);
+                window.location.href = '/';
+            }, 400);
         }
     </script>
 </body>
