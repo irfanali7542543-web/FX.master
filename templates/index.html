@@ -42,7 +42,7 @@
     <div class="navbar">
         <a href="/" class="nav-item active">Home</a>
         <a href="/friends" class="nav-item">Friends</a>
-        <a href="/upload" class="plus-blob plus-btn">+</a>
+        <a href="/upload" class="plus-btn">+</a>
         <a href="/inbox" class="nav-item">Inbox</a>
         <a href="/profile" class="nav-item">Profile</a>
     </div>
@@ -54,11 +54,9 @@
         localVideos.forEach(v => {
             const card = document.createElement('div');
             card.className = 'video-card';
-            // Use fallback video if local object url fails or is missing
-            const videoSource = v.url.startsWith('blob:') || v.url.startsWith('http') ? v.url : "https://www.w3schools.com/html/mov_bbb.mp4";
             
             card.innerHTML = `
-                <video src="${videoSource}" autoplay loop muted playsinline></video>
+                <video src="${v.url}" autoplay loop muted playsinline onerror="this.onerror=null; this.src='https://www.w3schools.com/html/mov_bbb.mp4';"></video>
                 <div class="footer">
                     <div class="username">${v.username}</div>
                     <div class="caption">${v.caption}</div>

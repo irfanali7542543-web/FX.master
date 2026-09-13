@@ -23,7 +23,7 @@
         <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
         <input type="file" id="videoFile" accept="video/*">
         <button class="post-btn" onclick="uploadVideo()">Post Video</button>
-        <div id="loading">Uploading Video... Please wait</div>
+        <div id="loading">Processing Video... Please wait</div>
         <a href="/" class="back-link">← Back to Home</a>
     </div>
 
@@ -39,36 +39,51 @@
             }
 
             const file = fileInput.files[0];
-            loadingDiv.style.display = 'block';
-
-            // Using Object URL to bypass storage size limits completely
-            const videoUrl = URL.createObjectURL(file);
             
-            let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
-            
-            const newVideo = {
-                id: 'custom_' + Date.now(),
-                caption: caption,
-                url: videoUrl,
-                username: '@fx_user',
-                likes: 0,
-                comments: 0,
-                reposts: 0,
-                saved: 0
-            };
-
-            localVideos.unshift(newVideo);
-            
-            try {
-                localStorage.setItem('fx_videos', JSON.stringify(localVideos));
-            } catch (e) {
-                console.log("Using direct memory fallback");
+            // Limit file size to prevent browser storage crash (Max 15MB)
+            if (file.size > 15 * 1024 * 1024) {
+                alert("Video size is too large! Please select a smaller video under 15MB.");
+                return;
             }
 
-            setTimeout(() => {
+            loadingDiv.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+                
+                const newVideo = {
+                    id: 'custom_' + Date.now(),
+                    caption: caption,
+                    url: base64Data,
+                    username: '@fx_user',
+                    likes: 0,
+                    comments: 0,
+                    reposts: 0,
+                    saved: 0
+                };
+
+                localVideos.unshift(newVideo);
+                
+                try {
+                    localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+                    setTimeout(() => {
+                        loadingDiv.style.display = 'none';
+                        window.location.href = '/';
+                    }, 500);
+                } catch (err) {
+                    loadingDiv.style.display = 'none';
+                    alert("Storage full! Please clear some data or use a smaller video.");
+                }
+            };
+
+            reader.onerror = function() {
                 loadingDiv.style.display = 'none';
-                window.location.href = '/';
-            }, 300);
+                alert("Failed to read video file.");
+            };
+
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
