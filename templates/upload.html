@@ -5,58 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Video - FX Master</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
-        form { margin-top: 30px; display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin-left: auto; margin-right: auto; }
-        input, button { padding: 14px; font-size: 16px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; }
-        input[type="file"] { background: #222; cursor: pointer; }
-        button { background: #ff0050; border: none; font-weight: bold; cursor: pointer; }
-        .back { color: #888; text-decoration: none; margin-top: 20px; display: inline-block; }
-        p { color: #aaa; font-size: 13px; }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
+        h2 { margin-bottom: 20px; font-size: 22px; color: #fff; }
+        input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input[type="file"] { width: 100%; padding: 10px; margin-bottom: 20px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; cursor: pointer; }
+        .post-btn { width: 100%; background: #ff0050; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .post-btn:active { background: #d00040; }
+        .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
+        .back-link:hover { color: #fff; }
+        #loading { display: none; margin-top: 10px; color: #ff0050; font-size: 14px; }
     </style>
 </head>
 <body>
-    <h2>Upload Video from Gallery</h2>
-    <form id="uploadForm">
-        <input type="text" id="caption" placeholder="Enter video caption / hashtags...">
-        <input type="file" id="videoFile" accept="video/*" required>
-        <p>Apni mobile gallery se video select karein.</p>
-        <button type="button" onclick="handleUpload()">Post Video</button>
-    </form>
-    <a href="/" class="back">← Back to Home</a>
+    <div class="upload-card">
+        <h2>Upload Video</h2>
+        <input type="text" id="captionInput" placeholder="Enter video caption / hashtags...">
+        <input type="file" id="videoFile" accept="video/*">
+        <button class="post-btn" onclick="uploadVideo()">Post Video</button>
+        <div id="loading">Processing & Uploading... Please wait</div>
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
 
     <script>
-        function handleUpload() {
-            let caption = document.getElementById('caption').value.trim();
+        function uploadVideo() {
+            const caption = document.getElementById('captionInput').value.trim() || "FX Master Video #trending";
             const fileInput = document.getElementById('videoFile');
-            
-            if(fileInput.files.length === 0) {
-                alert('Please select a video file first!');
+            const loadingDiv = document.getElementById('loading');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a video file first!");
                 return;
             }
 
-            if(caption === '') {
-                caption = "FX Master Video #trending";
-            }
-
             const file = fileInput.files[0];
+            loadingDiv.style.display = 'block';
+
             const reader = new FileReader();
-
             reader.onload = function(e) {
-                const base64Video = e.target.result;
-                let videos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+                const base64VideoUrl = e.target.result;
                 
-                videos.unshift({
-                    id: Date.now(),
+                let localVideos = JSON.parse(localStorage.getItem('fx_videos') || '[]');
+                
+                const newVideo = {
+                    id: 'custom_' + Date.now(),
                     caption: caption,
-                    url: base64Video,
-                    username: "@fx_user",
-                    likes: 15,
-                    comments: 4,
-                    saved: 2
-                });
+                    url: base64VideoUrl,
+                    username: '@fx_user',
+                    likes: 0,
+                    comments: 0,
+                    reposts: 0,
+                    saved: 0
+                };
 
-                localStorage.setItem('fx_videos', JSON.stringify(videos));
+                localVideos.unshift(newVideo); // Add to the beginning of the list
+                localStorage.setItem('fx_videos', JSON.stringify(localVideos));
+
+                loadingDiv.style.display = 'none';
+                alert("Video posted successfully!");
                 window.location.href = '/';
+            };
+
+            reader.onerror = function() {
+                loadingDiv.style.display = 'none';
+                alert("Error reading video file. Try a smaller file.");
             };
 
             reader.readAsDataURL(file);
