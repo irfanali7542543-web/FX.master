@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -6,13 +6,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/friends')
-def friends():
-    return render_template('friends.html')
-
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
+
+@app.route('/friends')
+def friends():
+    return render_template('friends.html')
 
 @app.route('/inbox')
 def inbox():
