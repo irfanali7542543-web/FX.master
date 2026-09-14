@@ -5,28 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FX Master</title>
     <style>
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding-bottom: 70px; }
-       .video-card { width: 100%; max-width: 500px; margin: 10px auto; background: #111; border-bottom: 1px solid #222; }
-        video { width: 100%; height: auto; max-height: 80vh; background: #000; }
-       .caption { padding: 10px; font-size: 14px; }
-       .top-bar { text-align: center; padding: 15px; font-weight: bold; border-bottom: 1px solid #222; }
-       .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; border-top: 1px solid #222; padding: 12px 0; z-index: 1000; }
-       .bottom-nav a { color: #888; text-decoration: none; font-size: 14px; }
-       .bottom-nav a.active { color: #fff; font-weight: bold; }
-       .plus-btn { background: #ff0050; color: #fff; padding: 6px 18px; border-radius: 6px; font-weight: bold; font-size: 18px; }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .feed { text-align: center; color: #888; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; border-top: 1px solid #222; padding: 12px 0; z-index: 1000; }
+        .bottom-nav a { color: #888; text-decoration: none; font-size: 14px; }
+        .bottom-nav a.active { color: #fff; font-weight: bold; }
+        .plus-btn { background: #ff0050; color: #fff; padding: 6px 18px; border-radius: 6px; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
-    <div class="top-bar">FX MASTER</div>
-    {% for v in videos %}
-    <div class="video-card">
-        <video src="{{ supabase_url }}/storage/v1/object/public/{{ bucket }}/{{ v.name }}" controls loop playsinline></video>
-        <div class="caption">{{ v.name }}</div>
+    <div class="feed">
+        <h2>Welcome to FX Master</h2>
+        <p>Your video feed is ready.</p>
     </div>
-    {% else %}
-    <div style="text-align:center; margin-top:50px; color:#555;">No videos yet. Upload one!</div>
-    {% endfor %}
-
     <div class="bottom-nav">
         <a href="/" class="active">Home</a>
         <a href="/friends">Friends</a>

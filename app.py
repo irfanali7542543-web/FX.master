@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,6 +22,5 @@ def inbox():
 def profile():
     return render_template('profile.html')
 
-# Vercel ke liye zaroori hai
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
