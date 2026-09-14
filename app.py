@@ -6,13 +6,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/group')
+def group():
+    return render_template('group.html')
+
 @app.route('/upload')
 def upload():
     return render_template('upload.html')
-
-@app.route('/friends')
-def friends():
-    return render_template('friends.html')
 
 @app.route('/inbox')
 def inbox():

@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload - FX Master</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-body{background:#000;color:#fff;margin:0;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh}
-.upload-card{width:90%;max-width:400px;background:#111;padding:25px;border-radius:12px;border:1px solid #333;text-align:center}
-input{width:100%;padding:12px;margin-bottom:15px;background:#222;border:1px solid #444;color:#fff;border-radius:6px;box-sizing:border-box}
-.post-btn{width:100%;background:#ff0050;color:#fff;border:none;padding:12px;border-radius:6px;font-size:16px;font-weight:bold}
-#msg{margin-top:10px;font-size:13px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - FX Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .upload-card { width: 90%; max-width: 400px; background: #111; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center; }
+        h2 { margin-bottom: 20px; font-size: 22px; color: #fff; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input[type="file"] { cursor: pointer; }
+        .post-btn { width: 100%; background: #ff0050; color: #fff; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .post-btn:disabled { background: #555; cursor: not-allowed; }
+        .back-link { display: block; margin-top: 15px; color: #888; text-decoration: none; font-size: 14px; }
+        #loadingMsg { display: none; color: #ff0050; margin-top: 10px; font-size: 14px; font-weight: bold; }
+    </style>
 </head>
 <body>
-<div class="upload-card">
-<h2>Upload Video</h2>
-<input type="text" id="caption" placeholder="Caption (optional)">
-<input type="file" id="videoFile" accept="video/*">
-<button id="btn" class="post-btn" onclick="uploadVideo()">Post Video</button>
-<div id="msg" style="color:#ff0050">Ready to upload</div>
-<a href="/" style="display:block;margin-top:15px;color:#888;text-decoration:none">← Back to Home</a>
-</div>
+    <div class="upload-card">
+        <h2>Upload Video</h2>
+        <form id="uploadForm" onsubmit="uploadVideo(event)">
+            <input type="text" id="caption" name="caption" placeholder="Enter video caption / hashtags..." required autocomplete="off">
+            <input type="file" id="videoFile" name="videoFile" accept="video/*" required>
+            <button type="submit" id="submitBtn" class="post-btn">Post Video</button>
+            <div id="loadingMsg">Uploading video, please wait...</div>
+        </form>
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
 
-<script>
-const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script>
+        const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_Vp7kq-sNHQX3E4MDmHFcw_HZ-p-fG1";
+        const BUCKET_NAME = "videos";
 
-async function uploadVideo(){
-  const fileInput = document.getElementById('videoFile');
-  const btn = document.getElementById('btn');
-  const msg = document.getElementById('msg');
-  if(fileInput.files.length==0){ alert("Bhai video select karo!"); return; }
-  const file = fileInput.files[0];
-  const fileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-  btn.disabled=true;
-  btn.innerText="Uploading...";
-  msg.innerText="Upload ho raha hai...";
-  const { error } = await supabaseClient.storage.from("videos").upload(fileName, file);
-  if(error){
-    msg.style.color="#f00";
-    msg.innerText="Failed: " + error.message;
-    btn.disabled=false;
-    btn.innerText="Post Video";
-  } else {
-    msg.style.color="#0f0";
-    msg.innerText="Success! Video hamesha ke liye save ho gaya!";
-    setTimeout(()=>{ window.location.href="/"; }, 1000);
-  }
-}
-</script>
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function uploadVideo(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('videoFile');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMsg = document.getElementById('loadingMsg');
+
+            if (fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Uploading...";
+            loadingMsg.style.display = "block";
+
+            try {
+                const fileName = Date.now() + "_" + file.name;
+                const { error } = await supabaseClient.storage
+                    .from(BUCKET_NAME)
+                    .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+                if (error) throw error;
+                window.location.href = '/';
+            } catch (err) {
+                alert("Upload Failed: " + err.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Post Video";
+                loadingMsg.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
