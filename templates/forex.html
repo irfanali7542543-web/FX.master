@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forex Page - FX Master</title>
+    <title>Forex - FX Master</title>
     <style>
-        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; padding: 20px; }
-        h2 { color: #00f2fe; text-align: center; }
-        .content-box { background: #111; padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #222; }
-        .back-btn { display: inline-block; margin-bottom: 15px; color: #aaa; text-decoration: none; font-size: 14px; }
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
+        .top-bar { position: absolute; top: 12px; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; box-sizing: border-box; z-index: 100; }
+        .search-icon { color: #aaa; font-size: 20px; text-decoration: none; }
+        .top-tabs { display: flex; gap: 40px; font-weight: bold; font-size: 20px; margin: 0 auto; position: absolute; left: 50%; transform: translateX(-50%); }
+        .top-tab { color: #777; text-decoration: none; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
+        .top-tab.active { color: #fff; border-bottom: 2px solid #fff; }
     </style>
 </head>
 <body>
-    <a href="/" class="back-btn">← Back to Home</a>
-    <h2>Forex Trading Page</h2>
-    <div class="content-box">
-        <p>Yahan aapke forex market signals, live charts aur baaki saari cheezein hongi.</p>
+    <div class="top-bar">
+        <div class="top-tabs">
+            <a href="/forex" class="top-tab active">Forex</a>
+            <a href="/" class="top-tab">For You</a>
+        </div>
+        <a href="#" class="search-icon">🔍</a>
     </div>
 </body>
 </html>
