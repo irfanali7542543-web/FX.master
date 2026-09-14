@@ -11,6 +11,10 @@
         .top-tabs { display: flex; gap: 40px; font-weight: bold; font-size: 20px; margin: 0 auto; position: absolute; left: 50%; transform: translateX(-50%); }
         .top-tab { color: #777; text-decoration: none; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
         .top-tab.active { color: #fff; border-bottom: 2px solid #fff; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; border-top: 1px solid #1a1a1a; padding: 10px 0; z-index: 1000; }
+        .bottom-nav a { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .bottom-nav a.active { color: #fff; font-weight: bold; }
+        .fx-plus-btn { background: #333; color: #fff; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
     </style>
 </head>
 <body>
@@ -20,6 +24,13 @@
             <a href="/" class="top-tab">For You</a>
         </div>
         <a href="#" class="search-icon">🔍</a>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="/forex" class="active">🏠 Home</a>
+        <a href="/inbox">💬 Chat</a>
+        <a href="/upload"><div class="fx-plus-btn">+</div></a>
+        <a href="/profile">📢 Channel</a>
     </div>
 </body>
 </html>
