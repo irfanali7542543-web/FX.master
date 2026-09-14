@@ -6,7 +6,8 @@
     <title>Forex - FX Master</title>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
-        .top-tabs { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 100; font-weight: bold; font-size: 16px; }
+        .top-bar { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .top-tabs { display: flex; gap: 20px; font-weight: bold; font-size: 16px; }
         .top-tab { color: #777; text-decoration: none; cursor: pointer; padding-bottom: 3px; }
         .top-tab.active { color: #fff; border-bottom: 2px solid #fff; }
         .feed { display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 60px); text-align: center; color: #00f2fe; }
@@ -17,9 +18,11 @@
     </style>
 </head>
 <body>
-    <div class="top-tabs">
-        <a href="/" class="top-tab">For You</a>
-        <a href="/forex" class="top-tab active">Forex</a>
+    <div class="top-bar">
+        <div class="top-tabs">
+            <a href="/" class="top-tab">For You</a>
+            <a href="/forex" class="top-tab active">Forex</a>
+        </div>
     </div>
 
     <div class="feed">
@@ -28,7 +31,7 @@
     </div>
 
     <div class="bottom-nav">
-        <a href="/" class="active">🏠 Home</a>
+        <a href="/">🏠 Home</a>
         <a href="/group">👥 Official Group</a>
         <a href="/upload"><div class="plus-btn">+</div></a>
         <a href="/inbox">📥 Inbox</a>
