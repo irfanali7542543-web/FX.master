@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -6,17 +6,21 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/friends')
+def friends():
+    return render_template('friends.html')
+
+@app.route('/upload')
 def upload():
     return render_template('upload.html')
 
-@app.route('/friends')
-def friends():
-    return render_template('index.html') # Filhaal home page dikhayega taki 404 na aaye
-
 @app.route('/inbox')
 def inbox():
-    return render_template('index.html') # Filhaal home page dikhayega taki 404 na aaye
+    return render_template('inbox.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
