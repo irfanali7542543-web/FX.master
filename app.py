@@ -6,6 +6,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/forex')
+def forex():
+    return render_template('forex.html')
+
 @app.route('/group')
 def group():
     return render_template('group.html')
