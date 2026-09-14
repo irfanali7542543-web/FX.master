@@ -7,7 +7,7 @@
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; overflow: hidden; }
         .top-bar { position: absolute; top: 15px; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; }
-        .top-tabs { display: flex; gap: 20px; font-weight: bold; font-size: 16px; }
+        .top-tabs { display: flex; gap: 20px; font-weight: bold; font-size: 16px; position: absolute; left: 50%; transform: translateX(-50%); }
         .top-tab { color: #777; text-decoration: none; cursor: pointer; padding-bottom: 3px; }
         .top-tab.active { color: #fff; border-bottom: 2px solid #fff; }
     </style>
@@ -15,8 +15,8 @@
 <body>
     <div class="top-bar">
         <div class="top-tabs">
-            <a href="/" class="top-tab">For You</a>
             <a href="/forex" class="top-tab active">Forex</a>
+            <a href="/" class="top-tab">For You</a>
         </div>
     </div>
 </body>
