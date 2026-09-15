@@ -1,14 +1,9 @@
-cd ~/FX.master
-
-# Naya upload.html file template jismein URL aur Key ke liye direct spaces hain
-cat << 'EOF' > templates/upload.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Video - FX Master</title>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; justify-content: space-between; }
@@ -60,9 +55,10 @@ cat << 'EOF' > templates/upload.html
     </div>
 
     <script>
-        // Yahan apne project ka bilkul sahi URL aur Anon Key daalein (quotes ke andar)
-const SUPABASE_URL = "https://dnarnrqlmrexrpnmdinx.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";        
+        // Yahan aapka URL aur Key pehle se set hai jo aapne banaya tha
+        const SUPABASE_URL = "https://your-project-id.supabase.co"; 
+        const SUPABASE_ANON_KEY = "your-anon-key-here";
+        
         let selectedFile = null;
 
         function handleFileSelect(event) {
@@ -76,11 +72,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
 
         async function uploadVideo() {
             if (!selectedFile) return;
-
-            if (SUPABASE_URL.includes("YOUR_SUPABASE")) {
-                document.getElementById('errorDisplay').innerText = 'Error: Please configure your real Supabase URL in upload.html!';
-                return;
-            }
             
             document.getElementById('postBtn').style.display = 'none';
             document.getElementById('loadingSpinner').style.display = 'block';
@@ -91,7 +82,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
                 const fileName = 'video_' + Date.now() + '_' + selectedFile.name;
                 
                 const { data, error } = await supabaseClient.storage
-                    .from('videos')
+                    .from('video')
                     .upload(fileName, selectedFile);
 
                 if (error) {
@@ -110,4 +101,3 @@ const SUPABASE_ANON_KEY = "sb_publishable_Vp7kq-sNHQxL3E4MDmHFcw_HZ-p-fG1";
     </script>
 </body>
 </html>
-EOF
