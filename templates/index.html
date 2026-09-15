@@ -11,6 +11,24 @@
         .top-tabs { display: flex; gap: 40px; font-weight: bold; font-size: 20px; margin: 0 auto; position: absolute; left: 50%; transform: translateX(-50%); }
         .top-tab { color: #777; text-decoration: none; cursor: pointer; padding-bottom: 4px; white-space: nowrap; }
         .top-tab.active { color: #fff; border-bottom: 2px solid #fff; }
+        
+        /* Video Feed Container */
+        .feed-container { position: absolute; top: 60px; bottom: 60px; width: 100%; display: flex; justify-content: center; align-items: center; background: #0b0b0b; }
+        .video-card { position: relative; width: 100%; height: 100%; max-width: 480px; background: #111; display: flex; flex-direction: column; justify-content: flex-end; }
+        .video-player { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        
+        /* Right Side Engagement Buttons (Like, Comment, Share, Profile) */
+        .right-actions { position: absolute; right: 15px; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 50; }
+        .action-btn { display: flex; flex-direction: column; align-items: center; color: #fff; font-size: 11px; text-decoration: none; gap: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .action-icon { width: 42px; height: 42px; background: rgba(0,0,0,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 1px solid rgba(255,255,255,0.2); }
+        
+        /* Video Details Overlay at Bottom Left */
+        .video-info { position: absolute; left: 15px; bottom: 20px; right: 80px; z-index: 50; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .username { font-size: 16px; font-weight: bold; margin-bottom: 6px; }
+        .caption { font-size: 13px; color: #ddd; margin-bottom: 8px; }
+        .signal-tag { display: inline-block; background: rgba(0, 242, 254, 0.2); color: #00f2fe; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; border: 1px solid #00f2fe; }
+
+        /* Bottom Navigation Bar */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; background: #000; border-top: 1px solid #1a1a1a; padding: 10px 0; z-index: 1000; }
         .bottom-nav a { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
         .bottom-nav a.active { color: #fff; font-weight: bold; }
@@ -24,6 +42,41 @@
             <a href="/" class="top-tab active">For You</a>
         </div>
         <a href="#" class="search-icon">🔍</a>
+    </div>
+
+    <!-- Video Feed Section -->
+    <div class="feed-container">
+        <div class="video-card">
+            <!-- Sample background placeholder video or canvas -->
+            <video class="video-player" autoplay loop muted playsinline src="https://assets.mixkit.co/videos/preview/mixkit-forex-trader-analyzing-graphs-41662-large.mp4"></video>
+            
+            <!-- Right Side Interactive Side Buttons -->
+            <div class="right-actions">
+                <a href="/profile" class="action-btn">
+                    <div class="action-icon" style="background: #ff0050;">💎</div>
+                    <span>FX_MASTER</span>
+                </a>
+                <a href="#" class="action-btn" onclick="this.querySelector('.action-icon').style.color='#ff0050'; alert('Liked!'); return false;">
+                    <div class="action-icon">❤️</div>
+                    <span>1.2K</span>
+                </a>
+                <a href="/inbox" class="action-btn">
+                    <div class="action-icon">💬</div>
+                    <span>84</span>
+                </a>
+                <a href="#" class="action-btn" onclick="alert('Link copied to share!'); return false;">
+                    <div class="action-icon">↗️</div>
+                    <span>Share</span>
+                </a>
+            </div>
+
+            <!-- Video Info & Signal Details -->
+            <div class="video-info">
+                <div class="username">@fx_master034211</div>
+                <div class="caption">#XAUUSD BUY ENTRY 4288 - Live Market Analysis & Signals update.</div>
+                <div class="signal-tag">📈 VIP Signal Channel</div>
+            </div>
+        </div>
     </div>
 
     <div class="bottom-nav">
