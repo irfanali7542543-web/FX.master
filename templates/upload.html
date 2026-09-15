@@ -18,6 +18,7 @@
         .file-name { font-size: 13px; color: #00f2fe; word-break: break-all; }
         .post-btn { background: linear-gradient(135deg, #00f2fe 0%, #ff0050 100%); color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; width: 100%; max-width: 320px; cursor: pointer; }
         .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error-box { color: #ff0050; font-size: 12px; margin-top: 10px; padding: 0 20px; word-break: break-all; }
         .loader { display: none; width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; animation: rotation 1s linear infinite; margin: 0 auto; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .bottom-nav { display: flex; justify-content: space-around; background: #000; border-top: 1px solid #1a1a1a; padding: 10px 0; width: 100%; }
@@ -43,6 +44,7 @@
         
         <button id="postBtn" class="post-btn" onclick="uploadVideo()" disabled>Post to Feed</button>
         <div class="loader" id="loadingSpinner"></div>
+        <div class="error-box" id="errorDisplay"></div>
     </div>
 
     <div class="bottom-nav">
@@ -54,7 +56,15 @@
     </div>
 
     <script>
-        // Supabase configuration placeholders (apne credentials yahan fit kar sakte hain ya direct client-side upload handle karein)
+        // Aapke Supabase credentials yahan connect honge
+        const SUPABASE_URL = 'YAHAN_APNA_SUPABASE_URL_DAALEIN';
+        const SUPABASE_ANON_KEY = 'YAHAN_APNA_SUPABASE_ANON_KEY_DAALEIN';
+        
+        let supabaseClient = null;
+        if (SUPABASE_URL !== 'YAHAN_APNA_SUPABASE_URL_DAALEIN') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
         let selectedFile = null;
 
         function handleFileSelect(event) {
@@ -66,17 +76,38 @@
             }
         }
 
-        function uploadVideo() {
+        async function uploadVideo() {
             if (!selectedFile) return;
+
+            if (!supabaseClient) {
+                document.getElementById('errorDisplay.innerText = "Error: Supabase URL/Key configured nahi hai!";
+                return;
+            }
             
             document.getElementById('postBtn').style.display = 'none';
             document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('errorDisplay').innerText = '';
 
-            // Simulate direct upload & redirect to Home/Feed seamlessly
-            setTimeout(() => {
-                alert('Video successfully posted to Feed!');
+            try {
+                const fileName = 'video_' + Date.now() + '_' + selectedFile.name;
+                
+                // Supabase Storage Bucket ('videos' ya apni bucket ka naam yahan likhein)
+                const { data, error } = await supabaseClient.storage
+                    .from('videos')
+                    .upload(fileName, selectedFile);
+
+                if (error) {
+                    throw error;
+                }
+
+                alert('Video successfully uploaded to Supabase!');
                 window.location.href = '/';
-            }, 1500);
+
+            } catch (err) {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('postBtn').style.display = 'block';
+                document.getElementById('errorDisplay').innerText = 'Supabase Error: ' + err.message;
+            }
         }
     </script>
 </body>
