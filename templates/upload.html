@@ -56,15 +56,11 @@
     </div>
 
     <script>
-        // Aapke Supabase credentials yahan connect honge
-        const SUPABASE_URL = 'YAHAN_APNA_SUPABASE_URL_DAALEIN';
-        const SUPABASE_ANON_KEY = 'YAHAN_APNA_SUPABASE_ANON_KEY_DAALEIN';
+        // Yahan apni asli Supabase credentials daal dein
+        const SUPABASE_URL = 'YAHAN_APNA_URL_DAALEIN';
+        const SUPABASE_ANON_KEY = 'YAHAN_APNA_ANON_KEY_DAALEIN';
         
-        let supabaseClient = null;
-        if (SUPABASE_URL !== 'YAHAN_APNA_SUPABASE_URL_DAALEIN') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let selectedFile = null;
 
         function handleFileSelect(event) {
@@ -78,11 +74,6 @@
 
         async function uploadVideo() {
             if (!selectedFile) return;
-
-            if (!supabaseClient) {
-                document.getElementById('errorDisplay.innerText = "Error: Supabase URL/Key configured nahi hai!";
-                return;
-            }
             
             document.getElementById('postBtn').style.display = 'none';
             document.getElementById('loadingSpinner').style.display = 'block';
@@ -91,7 +82,6 @@
             try {
                 const fileName = 'video_' + Date.now() + '_' + selectedFile.name;
                 
-                // Supabase Storage Bucket ('videos' ya apni bucket ka naam yahan likhein)
                 const { data, error } = await supabaseClient.storage
                     .from('videos')
                     .upload(fileName, selectedFile);
