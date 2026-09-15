@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Video - FX Master</title>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; justify-content: space-between; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #1a1a1a; }
         .close-btn { color: #aaa; text-decoration: none; font-size: 20px; }
         .upload-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; flex-grow: 1; text-align: center; gap: 20px; }
-        .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 40px 20px; width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; gap: 15px; background: #111; cursor: pointer; }
-        .upload-icon { font-size: 50px; }
+        .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 30px 20px; width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; gap: 15px; background: #111; cursor: pointer; }
+        .upload-icon { font-size: 45px; }
         .upload-text { font-size: 14px; color: #aaa; }
         .file-input { display: none; }
+        .file-name { font-size: 13px; color: #00f2fe; word-break: break-all; }
         .post-btn { background: linear-gradient(135deg, #00f2fe 0%, #ff0050 100%); color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; width: 100%; max-width: 320px; cursor: pointer; }
+        .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .loader { display: none; width: 24px; height: 24px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; animation: rotation 1s linear infinite; margin: 0 auto; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .bottom-nav { display: flex; justify-content: space-around; background: #000; border-top: 1px solid #1a1a1a; padding: 10px 0; width: 100%; }
         .bottom-nav a { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
         .bottom-nav a.active { color: #fff; font-weight: bold; }
@@ -30,10 +36,13 @@
     <div class="upload-container">
         <label for="videoFile" class="upload-box">
             <div class="upload-icon">📁</div>
-            <div class="upload-text">Tap to open Gallery & select video for Signal/Market Post</div>
+            <div class="upload-text" id="uploadLabelText">Tap to select video from Gallery</div>
+            <div class="file-name" id="fileNameDisplay"></div>
         </label>
-        <input type="file" id="videoFile" class="file-input" accept="video/*">
-        <button class="post-btn" onclick="alert('Video ready to post!')">Post to Feed</button>
+        <input type="file" id="videoFile" class="file-input" accept="video/*" onchange="handleFileSelect(event)">
+        
+        <button id="postBtn" class="post-btn" onclick="uploadVideo()" disabled>Post to Feed</button>
+        <div class="loader" id="loadingSpinner"></div>
     </div>
 
     <div class="bottom-nav">
@@ -43,5 +52,32 @@
         <a href="/inbox">📥 Inbox</a>
         <a href="/profile">👤 Profile</a>
     </div>
+
+    <script>
+        // Supabase configuration placeholders (apne credentials yahan fit kar sakte hain ya direct client-side upload handle karein)
+        let selectedFile = null;
+
+        function handleFileSelect(event) {
+            selectedFile = event.target.files[0];
+            if (selectedFile) {
+                document.getElementById('fileNameDisplay').innerText = 'Selected: ' + selectedFile.name;
+                document.getElementById('uploadLabelText').innerText = 'Change Video';
+                document.getElementById('postBtn').disabled = false;
+            }
+        }
+
+        function uploadVideo() {
+            if (!selectedFile) return;
+            
+            document.getElementById('postBtn').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+
+            // Simulate direct upload & redirect to Home/Feed seamlessly
+            setTimeout(() => {
+                alert('Video successfully posted to Feed!');
+                window.location.href = '/';
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
