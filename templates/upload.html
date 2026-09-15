@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - FX Master</title>
+    <style>
+        body { background: #000; color: #fff; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; justify-content: space-between; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; font-size: 16px; font-weight: bold; border-bottom: 1px solid #1a1a1a; }
+        .close-btn { color: #aaa; text-decoration: none; font-size: 20px; }
+        .upload-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; flex-grow: 1; text-align: center; gap: 20px; }
+        .upload-box { border: 2px dashed #444; border-radius: 15px; padding: 40px 20px; width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; gap: 15px; background: #111; cursor: pointer; }
+        .upload-icon { font-size: 50px; }
+        .upload-text { font-size: 14px; color: #aaa; }
+        .file-input { display: none; }
+        .post-btn { background: linear-gradient(135deg, #00f2fe 0%, #ff0050 100%); color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: bold; width: 100%; max-width: 320px; cursor: pointer; }
+        .bottom-nav { display: flex; justify-content: space-around; background: #000; border-top: 1px solid #1a1a1a; padding: 10px 0; width: 100%; }
+        .bottom-nav a { color: #888; text-decoration: none; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .bottom-nav a.active { color: #fff; font-weight: bold; }
+        .plus-btn { background: linear-gradient(135deg, #00f2fe 0%, #ff0050 100%); color: #fff; width: 42px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="close-btn">✕</a>
+        <span>New Video Post</span>
+        <span></span>
+    </div>
+
+    <div class="upload-container">
+        <label for="videoFile" class="upload-box">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Tap to open Gallery & select video for Signal/Market Post</div>
+        </label>
+        <input type="file" id="videoFile" class="file-input" accept="video/*">
+        <button class="post-btn" onclick="alert('Video ready to post!')">Post to Feed</button>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="/">🏠 Home</a>
+        <a href="/group">👥 Official Group</a>
+        <a href="/upload"><div class="plus-btn">+</div></a>
+        <a href="/inbox">📥 Inbox</a>
+        <a href="/profile">👤 Profile</a>
+    </div>
+</body>
+</html>
