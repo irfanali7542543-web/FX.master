@@ -1,1 +1,39 @@
-<h1>FX Master App</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - Trading Platform</title>
+    <style>
+        body { background-color: #121212; color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background: #1f1f1f; padding: 15px; text-align: center; border-bottom: 2px solid #333; }
+        .nav-tabs { display: flex; justify-content: space-around; background: #181818; padding: 10px 0; border-bottom: 1px solid #333; }
+        .nav-tabs button { background: #2b2b2b; color: #fff; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .nav-tabs button:hover, .nav-tabs button.active { background: #0088cc; }
+        .content { padding: 20px; text-align: center; }
+        .signal-box { background: #1e1e1e; border: 1px solid #444; padding: 15px; margin: 10px auto; width: 90%; max-width: 400px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>FX Master Trading</h2>
+    </header>
+    <div class="nav-tabs">
+        <button class="active">Quotes</button>
+        <button>Charts</button>
+        <button>Trade</button>
+        <button>History</button>
+    </div>
+    <div class="content">
+        <h3>Live Market Signals</h3>
+        <div class="signal-box">
+            <p><strong>XAUUSD</strong> - Buy @ 2650.00</p>
+            <p style="color: #00ff00;">Status: Active</p>
+        </div>
+        <div class="signal-box">
+            <p><strong>BTCUSD</strong> - Sell @ 92000.00</p>
+            <p style="color: #00ff00;">Status: Active</p>
+        </div>
+    </div>
+</body>
+</html>
