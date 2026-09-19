@@ -42,6 +42,38 @@
             height: calc(100vh - 120px);
             overflow-y: auto;
         }
+        /* Forex Tab Custom Buttons Bar */
+        .forex-header-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+        }
+        .forex-btn {
+            background: #f1f3f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .forex-btn.active-sub {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+        .forex-sub-content {
+            padding: 10px 0;
+        }
+
         .group-card {
             background: #f8f9fa;
             border-radius: 10px;
@@ -68,9 +100,8 @@
             padding: 12px;
             border-radius: 8px;
             margin-top: 8px;
-            border-left: 4px solid #28a745;
             border: 1px solid #e0e0e0;
-            border-left-width: 4px;
+            border-left: 4px solid #28a745;
         }
         .bottom-bar {
             position: fixed;
@@ -118,38 +149,24 @@
 
     <!-- Top Navigation -->
     <div class="top-nav">
-        <span id="forexTab" onclick="switchTopTab('forex')">Forex</span>
-        <span id="foryouTab" class="active" onclick="switchTopTab('foryou')">For You</span>
+        <span id="forexTab" class="active" onclick="switchTopTab('forex')">Forex</span>
+        <span id="foryouTab" onclick="switchTopTab('foryou')">For You</span>
     </div>
 
     <!-- Main Dynamic Content Area -->
     <div class="content-container" id="mainContent">
-        <!-- Default View: For You (Group & Signals) -->
-        <div id="forYouView">
-            <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
-            
-            <div class="group-card">
-                <div class="group-header">
-                    <span><strong>DIGI ANTI</strong></span>
-                    <span class="admin-badge">admin</span>
-                </div>
-                <div style="font-size: 14px; color: #333;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
-                <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
+        <!-- Default View on Load: Forex with custom buttons -->
+        <div id="forexView">
+            <div class="forex-header-bar">
+                <button class="forex-btn active-sub" onclick="switchForexSub('chats', this)">💬 Chats</button>
+                <button class="forex-btn" onclick="switchForexSub('meta5', this)">📊 Meta 5 Market</button>
+                <button class="forex-btn" onclick="switchForexSub('plus', this)">➕ Plus</button>
+                <button class="forex-btn" onclick="switchForexSub('profile', this)">👤 Profile</button>
+                <button class="forex-btn" onclick="switchForexSub('channel', this)">📢 Channel</button>
             </div>
-
-            <div class="group-card">
-                <div style="font-weight: bold; margin-bottom: 5px; color: #000;">#XAUUSD VIP SIGNAL BUY 4290</div>
-                <div class="signal-box">
-                    <div style="color: #333;">Limit 4285</div>
-                    <div style="color: #28a745; font-weight: bold;">✅ TP 4295</div>
-                    <div style="color: #28a745; font-weight: bold;">✅ TP 4300</div>
-                    <div style="color: #dc3545; font-weight: bold;">vs S.L. 4277</div>
-                </div>
-                <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+            <div class="forex-sub-content" id="forexSubContent">
+                <h3>Forex Chats</h3>
+                <p style="color: #666;">Active market discussion rooms and chats.</p>
             </div>
         </div>
     </div>
@@ -171,7 +188,7 @@
             <span class="icon">📥</span>
             Inbox
         </div>
-        <div class="nav-item" onclick="loadProfile()">
+        <div class="nav-item" onclick="loadProfileMain()">
             <span class="icon">👤</span>
             Profile
         </div>
@@ -187,36 +204,73 @@
             if (tab === 'forex') {
                 forexTab.classList.add('active');
                 foryouTab.classList.remove('active');
-                container.innerHTML = '';
-                bottomBar.style.display = 'none';
+                bottomBar.style.display = 'flex'; // Neeche wale buttons wapas aa jayenge
+                container.innerHTML = `
+                    <div id="forexView">
+                        <div class="forex-header-bar">
+                            <button class="forex-btn active-sub" onclick="switchForexSub('chats', this)">💬 Chats</button>
+                            <button class="forex-btn" onclick="switchForexSub('meta5', this)">📊 Meta 5 Market</button>
+                            <button class="forex-btn" onclick="switchForexSub('plus', this)">➕ Plus</button>
+                            <button class="forex-btn" onclick="switchForexSub('profile', this)">👤 Profile</button>
+                            <button class="forex-btn" onclick="switchForexSub('channel', this)">📢 Channel</button>
+                        </div>
+                        <div class="forex-sub-content" id="forexSubContent">
+                            <h3>Forex Chats</h3>
+                            <p style="color: #666;">Active market discussion rooms and chats.</p>
+                        </div>
+                    </div>
+                `;
             } else {
                 foryouTab.classList.add('active');
                 forexTab.classList.remove('active');
                 bottomBar.style.display = 'flex';
                 container.innerHTML = `
-                    <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
-                    <div class="group-card">
-                        <div class="group-header">
-                            <span><strong>DIGI ANTI</strong></span>
-                            <span class="admin-badge">admin</span>
+                    <div id="forYouView">
+                        <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+                        <div class="group-card">
+                            <div class="group-header">
+                                <span><strong>DIGI ANTI</strong></span>
+                                <span class="admin-badge">admin</span>
+                            </div>
+                            <div style="font-size: 14px; color: #333;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                            <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
                         </div>
-                        <div style="font-size: 14px; color: #333;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
-                        <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
-                    </div>
-                    <div class="group-card">
-                        <div style="font-weight: bold; margin-bottom: 5px; color: #000;">#XAUUSD VIP SIGNAL BUY 4290</div>
-                        <div class="signal-box">
-                            <div style="color: #333;">Limit 4285</div>
-                            <div style="color: #28a745; font-weight: bold;">✅ TP 4295</div>
-                            <div style="color: #28a745; font-weight: bold;">✅ TP 4300</div>
-                            <div style="color: #dc3545; font-weight: bold;">vs S.L. 4277</div>
+                        <div class="group-card">
+                            <div style="font-weight: bold; margin-bottom: 5px; color: #000;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                            <div class="signal-box">
+                                <div style="color: #333;">Limit 4285</div>
+                                <div style="color: #28a745; font-weight: bold;">✅ TP 4295</div>
+                                <div style="color: #28a745; font-weight: bold;">✅ TP 4300</div>
+                                <div style="color: #dc3545; font-weight: bold;">vs S.L. 4277</div>
+                            </div>
+                            <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
                         </div>
-                        <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
-                    </div>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+                        </div>
                     </div>
                 `;
+            }
+        }
+
+        function switchForexSub(section, btnElement) {
+            // Remove active-sub from all buttons
+            const buttons = document.querySelectorAll('.forex-btn');
+            buttons.forEach(btn => btn.classList.remove('active-sub'));
+            // Add to clicked
+            btnElement.classList.add('active-sub');
+
+            const subContainer = document.getElementById('forexSubContent');
+            if (section === 'chats') {
+                subContainer.innerHTML = `<h3>Forex Chats</h3><p style="color: #666;">Active market discussion rooms and chats.</p>`;
+            } else if (section === 'meta5') {
+                subContainer.innerHTML = `<h3>Meta 5 Market</h3><p style="color: #666;">Live MetaTrader 5 market data, charts, and quotes.</p>`;
+            } else if (section === 'plus') {
+                subContainer.innerHTML = `<h3>Plus Features</h3><p style="color: #666;">Add new trading tools, assets, and shortcuts.</p>`;
+            } else if (section === 'profile') {
+                subContainer.innerHTML = `<h3>Forex Profile</h3><p style="color: #666;">Manage your forex trading account details and settings.</p>`;
+            } else if (section === 'channel') {
+                subContainer.innerHTML = `<h3>Official Channel</h3><p style="color: #666;">Broadcast channels and VIP notification updates.</p>`;
             }
         }
 
@@ -242,7 +296,7 @@
             `;
         }
 
-        function loadProfile() {
+        function loadProfileMain() {
             document.getElementById('mainContent').innerHTML = `
                 <div style="padding: 20px; text-align: center; color: #000;">
                     <h3>@fx_master</h3>
