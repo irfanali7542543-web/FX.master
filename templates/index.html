@@ -3,37 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FX Master - Live Trading</title>
+    <title>FX Master - Live Market Signal & Analysis</title>
     <style>
-        body { background-color: #121212; color: #ffffff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        header { background: #1f1f1f; padding: 15px; text-align: center; border-bottom: 2px solid #333; }
-        .nav-tabs { display: flex; justify-content: space-around; background: #181818; padding: 10px 0; border-bottom: 1px solid #333; }
-        .nav-tabs button { background: #2b2b2b; color: #fff; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        .nav-tabs button.active { background: #0088cc; }
-        .content { padding: 20px; text-align: center; }
-        .signal-box { background: #1e1e1e; border: 1px solid #444; padding: 15px; margin: 10px auto; width: 90%; max-width: 400px; border-radius: 8px; text-align: left; }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+        .top-nav span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+        }
+        .top-nav span.active {
+            color: #00f2fe;
+            border-bottom: 2px solid #00f2fe;
+            padding-bottom: 2px;
+        }
+        .content-container {
+            margin-top: 60px;
+            padding: 20px;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        .group-card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .admin-badge {
+            background: #00f2fe;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .signal-box {
+            background: #111;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #222;
+            z-index: 100;
+        }
+        .nav-item {
+            text-align: center;
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .nav-item.active {
+            color: #fff;
+        }
+        .nav-item img, .nav-item .icon {
+            display: block;
+            margin: 0 auto 2px auto;
+            font-size: 18px;
+        }
+        .plus-btn {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            width: 36px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h2>FX Master Trading Platform</h2>
-    </header>
-    <div class="nav-tabs">
-        <button class="active">Quotes</button>
-        <button>Charts</button>
-        <button>Trade</button>
-        <button>History</button>
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <span onclick="switchTab('forex')">Forex</span>
+        <span class="active" onclick="switchTab('foryou')">For You</span>
     </div>
-    <div class="content">
-        <h3>Market Watch & Signals</h3>
-        <div class="signal-box">
-            <p><strong>XAUUSD (Gold)</strong> - BUY @ 2650.00</p>
-            <p style="color: #00ff00;">Status: Active | TP: 2680.00</p>
-        </div>
-        <div class="signal-box">
-            <p><strong>BTCUSD (Crypto)</strong> - SELL @ 92000.00</p>
-            <p style="color: #00ff00;">Status: Active | TP: 90000.00</p>
+
+    <!-- Main Dynamic Content Area -->
+    <div class="content-container" id="mainContent">
+        <!-- Default View: Official Group / Signals view -->
+        <div id="groupView">
+            <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+            
+            <div class="group-card">
+                <div class="group-header">
+                    <span><strong>DIGI ANTI</strong></span>
+                    <span class="admin-badge">admin</span>
+                </div>
+                <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
+            </div>
+
+            <div class="group-card">
+                <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                <div class="signal-box">
+                    <div>Limit 4285</div>
+                    <div style="color: #28a745;">✅ TP 4295</div>
+                    <div style="color: #28a745;">✅ TP 4300</div>
+                    <div style="color: #ff4d4d;">vs S.L. 4277</div>
+                </div>
+                <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+            </div>
         </div>
     </div>
+
+    <!-- Bottom TikTok Style Navigation Bar -->
+    <div class="bottom-bar">
+        <div class="nav-item" onclick="loadHome()">
+            <span class="icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-item active" onclick="loadGroup()">
+            <span class="icon">👥</span>
+            Official Group
+        </div>
+        <div class="nav-item">
+            <div class="plus-btn">+</div>
+        </div>
+        <div class="nav-item" onclick="loadInbox()">
+            <span class="icon">📥</span>
+            Inbox
+        </div>
+        <div class="nav-item" onclick="loadProfile()">
+            <span class="icon">👤</span>
+            Profile
+        </div>
+    </div>
+
+    <script>
+        function loadGroup() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+                <div class="group-card">
+                    <div class="group-header">
+                        <span><strong>DIGI ANTI</strong></span>
+                        <span class="admin-badge">admin</span>
+                    </div>
+                    <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                    <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
+                </div>
+                <div class="group-card">
+                    <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                    <div class="signal-box">
+                        <div>Limit 4285</div>
+                        <div style="color: #28a745;">✅ TP 4295</div>
+                        <div style="color: #28a745;">✅ TP 4300</div>
+                        <div style="color: #ff4d4d;">vs S.L. 4277</div>
+                    </div>
+                    <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+                </div>
+            `;
+        }
+
+        function loadHome() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="text-align: center; padding-top: 40px;">
+                    <h2>FX Master Market Hub</h2>
+                    <p style="color: #888;">Live Forex Analysis & Professional Insights</p>
+                </div>
+            `;
+        }
+
+        function loadInbox() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="padding: 20px;">
+                    <h3>Inbox / Notifications</h3>
+                    <p style="color: #888;">No new messages from VIP signals.</p>
+                </div>
+            `;
+        }
+
+        function loadProfile() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <h3>@fx_master</h3>
+                    <p style="color: #888;">Live Market Signal & Analysis Creator</p>
+                </div>
+            `;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.top-nav span').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
