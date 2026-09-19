@@ -171,16 +171,15 @@
 
     <!-- Main Dynamic Content Area -->
     <div class="content-container" id="mainContent">
-        <!-- Default View on Load: Forex (Blank content as requested, text removed) -->
         <div id="forexSubContent"></div>
     </div>
 
     <!-- Dynamic Bottom Bars Container -->
     <div id="bottomBarContainer">
-        <!-- Forex ke neche wale buttons jahan sab par HEME likh diya hai -->
+        <!-- Forex ke neche wale buttons: 1. Home (HEME), 2. Meta 5, 3. Plus (+), 4. Profile, 5. Channel -->
         <div class="forex-bottom-bar" id="forexBottomBar">
-            <button class="forex-nav-item active" onclick="switchForexSub('chats', this)">
-                <span class="icon">💬</span>
+            <button class="forex-nav-item active" onclick="switchForexSub('home', this)">
+                <span class="icon">🏠</span>
                 HEME
             </button>
             <button class="forex-nav-item" onclick="switchForexSub('meta5', this)">
@@ -214,8 +213,8 @@
                 
                 bottomBarContainer.innerHTML = `
                     <div class="forex-bottom-bar" id="forexBottomBar">
-                        <button class="forex-nav-item active" onclick="switchForexSub('chats', this)">
-                            <span class="icon">💬</span>
+                        <button class="forex-nav-item active" onclick="switchForexSub('home', this)">
+                            <span class="icon">🏠</span>
                             HEME
                         </button>
                         <button class="forex-nav-item" onclick="switchForexSub('meta5', this)">
@@ -300,7 +299,7 @@
             btnElement.classList.add('active');
 
             const subContainer = document.getElementById('forexSubContent');
-            subContainer.innerHTML = ''; // Blank content as requested
+            subContainer.innerHTML = '';
         }
 
         function loadGroup() {
