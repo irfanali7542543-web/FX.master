@@ -18,7 +18,7 @@
             justify-content: center;
             gap: 20px;
             padding: 15px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             position: fixed;
             top: 0;
             width: 100%;
@@ -91,7 +91,7 @@
         .nav-item.active {
             color: #fff;
         }
-        .nav-item img, .nav-item .icon {
+        .nav-item .icon {
             display: block;
             margin: 0 auto 2px auto;
             font-size: 18px;
@@ -114,14 +114,14 @@
 
     <!-- Top Navigation -->
     <div class="top-nav">
-        <span onclick="switchTab('forex')">Forex</span>
-        <span class="active" onclick="switchTab('foryou')">For You</span>
+        <span id="forexTab" onclick="switchTopTab('forex')">Forex</span>
+        <span id="foryouTab" class="active" onclick="switchTopTab('foryou')">For You</span>
     </div>
 
     <!-- Main Dynamic Content Area -->
     <div class="content-container" id="mainContent">
-        <!-- Default View: Official Group / Signals view -->
-        <div id="groupView">
+        <!-- Default View: For You (Group & Signals) -->
+        <div id="forYouView">
             <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
             
             <div class="group-card">
@@ -174,31 +174,57 @@
     </div>
 
     <script>
+        function switchTopTab(tab) {
+            const forexTab = document.getElementById('forexTab');
+            const foryouTab = document.getElementById('foryouTab');
+            const container = document.getElementById('mainContent');
+
+            if (tab === 'forex') {
+                forexTab.classList.add('active');
+                foryouTab.classList.remove('active');
+                // Forex page - Bilkul alag aur clean page jahan kuch nahi hoga
+                container.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center; color: #555;">
+                        <div>
+                            <h2>Forex Market Clean View</h2>
+                            <p>Yahan koi buttons ya signals nahi hain.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                foryouTab.classList.add('active');
+                forexTab.classList.remove('active');
+                // For You page - Original Group & Signals view
+                container.innerHTML = `
+                    <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+                    <div class="group-card">
+                        <div class="group-header">
+                            <span><strong>DIGI ANTI</strong></span>
+                            <span class="admin-badge">admin</span>
+                        </div>
+                        <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                        <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
+                    </div>
+                    <div class="group-card">
+                        <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                        <div class="signal-box">
+                            <div>Limit 4285</div>
+                            <div style="color: #28a745;">✅ TP 4295</div>
+                            <div style="color: #28a745;">✅ TP 4300</div>
+                            <div style="color: #ff4d4d;">vs S.L. 4277</div>
+                        </div>
+                        <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
+                    </div>
+                `;
+            }
+        }
+
         function loadGroup() {
-            document.getElementById('mainContent').innerHTML = `
-                <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
-                <div class="group-card">
-                    <div class="group-header">
-                        <span><strong>DIGI ANTI</strong></span>
-                        <span class="admin-badge">admin</span>
-                    </div>
-                    <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
-                    <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
-                </div>
-                <div class="group-card">
-                    <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
-                    <div class="signal-box">
-                        <div>Limit 4285</div>
-                        <div style="color: #28a745;">✅ TP 4295</div>
-                        <div style="color: #28a745;">✅ TP 4300</div>
-                        <div style="color: #ff4d4d;">vs S.L. 4277</div>
-                    </div>
-                    <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
-                </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button style="background: #28a745; color: white; border: none; padding: 10px 40px; border-radius: 20px; font-weight: bold; font-size: 16px; width: 100%;">JOIN</button>
-                </div>
-            `;
+            // Official Group tab click hone par For You view par wapas le aayein
+            switchTopTab('foryou');
         }
 
         function loadHome() {
@@ -214,7 +240,7 @@
             document.getElementById('mainContent').innerHTML = `
                 <div style="padding: 20px;">
                     <h3>Inbox / Notifications</h3>
-                    <p style="color: #888;">No new messages from VIP signals.</p>
+                    <p style="color: #888;">No new messages.</p>
                 </div>
             `;
         }
@@ -226,11 +252,6 @@
                     <p style="color: #888;">Live Market Signal & Analysis Creator</p>
                 </div>
             `;
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.top-nav span').forEach(el => el.classList.remove('active'));
-            event.target.classList.add('active');
         }
     </script>
 </body>
