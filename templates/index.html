@@ -8,8 +8,8 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #000;
-            color: #fff;
+            background-color: #ffffff;
+            color: #000000;
             font-family: Arial, sans-serif;
             overflow-x: hidden;
         }
@@ -18,11 +18,12 @@
             justify-content: center;
             gap: 20px;
             padding: 15px;
-            background: rgba(0,0,0,0.9);
+            background: rgba(255,255,255,0.95);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 100;
+            border-bottom: 1px solid #ddd;
         }
         .top-nav span {
             font-size: 16px;
@@ -31,8 +32,8 @@
             cursor: pointer;
         }
         .top-nav span.active {
-            color: #00f2fe;
-            border-bottom: 2px solid #00f2fe;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
             padding-bottom: 2px;
         }
         .content-container {
@@ -42,11 +43,11 @@
             overflow-y: auto;
         }
         .group-card {
-            background: #1a1a1a;
+            background: #f8f9fa;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
-            border: 1px solid #333;
+            border: 1px solid #ddd;
         }
         .group-header {
             display: flex;
@@ -55,41 +56,44 @@
             margin-bottom: 10px;
         }
         .admin-badge {
-            background: #00f2fe;
-            color: #000;
+            background: #007bff;
+            color: #fff;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: bold;
         }
         .signal-box {
-            background: #111;
+            background: #ffffff;
             padding: 12px;
             border-radius: 8px;
             margin-top: 8px;
             border-left: 4px solid #28a745;
+            border: 1px solid #e0e0e0;
+            border-left-width: 4px;
         }
         .bottom-bar {
             position: fixed;
             bottom: 0;
             width: 100%;
             height: 60px;
-            background: #000;
+            background: #ffffff;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid #222;
+            border-top: 1px solid #ddd;
             z-index: 100;
         }
         .nav-item {
             text-align: center;
-            color: #888;
+            color: #666;
             font-size: 11px;
             cursor: pointer;
             text-decoration: none;
         }
         .nav-item.active {
-            color: #fff;
+            color: #000;
+            font-weight: bold;
         }
         .nav-item .icon {
             display: block;
@@ -97,14 +101,14 @@
             font-size: 18px;
         }
         .plus-btn {
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            background: linear-gradient(45deg, #007bff, #00f2fe);
             width: 36px;
             height: 30px;
             border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #000;
+            color: #fff;
             font-weight: bold;
             font-size: 20px;
         }
@@ -122,24 +126,24 @@
     <div class="content-container" id="mainContent">
         <!-- Default View: For You (Group & Signals) -->
         <div id="forYouView">
-            <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+            <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
             
             <div class="group-card">
                 <div class="group-header">
                     <span><strong>DIGI ANTI</strong></span>
                     <span class="admin-badge">admin</span>
                 </div>
-                <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                <div style="font-size: 14px; color: #333;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
                 <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
             </div>
 
             <div class="group-card">
-                <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                <div style="font-weight: bold; margin-bottom: 5px; color: #000;">#XAUUSD VIP SIGNAL BUY 4290</div>
                 <div class="signal-box">
-                    <div>Limit 4285</div>
-                    <div style="color: #28a745;">✅ TP 4295</div>
-                    <div style="color: #28a745;">✅ TP 4300</div>
-                    <div style="color: #ff4d4d;">vs S.L. 4277</div>
+                    <div style="color: #333;">Limit 4285</div>
+                    <div style="color: #28a745; font-weight: bold;">✅ TP 4295</div>
+                    <div style="color: #28a745; font-weight: bold;">✅ TP 4300</div>
+                    <div style="color: #dc3545; font-weight: bold;">vs S.L. 4277</div>
                 </div>
                 <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
             </div>
@@ -183,31 +187,29 @@
             if (tab === 'forex') {
                 forexTab.classList.add('active');
                 foryouTab.classList.remove('active');
-                // Forex page - Bilkul khali aur neeche wale buttons gayab
                 container.innerHTML = '';
                 bottomBar.style.display = 'none';
             } else {
                 foryouTab.classList.add('active');
                 forexTab.classList.remove('active');
-                // For You page - Original content aur neeche wale buttons wapas
                 bottomBar.style.display = 'flex';
                 container.innerHTML = `
-                    <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+                    <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
                     <div class="group-card">
                         <div class="group-header">
                             <span><strong>DIGI ANTI</strong></span>
                             <span class="admin-badge">admin</span>
                         </div>
-                        <div style="font-size: 14px; color: #ddd;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                        <div style="font-size: 14px; color: #333;">سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
                         <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">01:52 PM</div>
                     </div>
                     <div class="group-card">
-                        <div style="font-weight: bold; margin-bottom: 5px;">#XAUUSD VIP SIGNAL BUY 4290</div>
+                        <div style="font-weight: bold; margin-bottom: 5px; color: #000;">#XAUUSD VIP SIGNAL BUY 4290</div>
                         <div class="signal-box">
-                            <div>Limit 4285</div>
-                            <div style="color: #28a745;">✅ TP 4295</div>
-                            <div style="color: #28a745;">✅ TP 4300</div>
-                            <div style="color: #ff4d4d;">vs S.L. 4277</div>
+                            <div style="color: #333;">Limit 4285</div>
+                            <div style="color: #28a745; font-weight: bold;">✅ TP 4295</div>
+                            <div style="color: #28a745; font-weight: bold;">✅ TP 4300</div>
+                            <div style="color: #dc3545; font-weight: bold;">vs S.L. 4277</div>
                         </div>
                         <div style="font-size: 10px; color: #777; text-align: right; margin-top: 5px;">08:40 AM</div>
                     </div>
@@ -224,27 +226,27 @@
 
         function loadHome() {
             document.getElementById('mainContent').innerHTML = `
-                <div style="text-align: center; padding-top: 40px;">
+                <div style="text-align: center; padding-top: 40px; color: #000;">
                     <h2>FX Master Market Hub</h2>
-                    <p style="color: #888;">Live Forex Analysis & Professional Insights</p>
+                    <p style="color: #666;">Live Forex Analysis & Professional Insights</p>
                 </div>
             `;
         }
 
         function loadInbox() {
             document.getElementById('mainContent').innerHTML = `
-                <div style="padding: 20px;">
+                <div style="padding: 20px; color: #000;">
                     <h3>Inbox / Notifications</h3>
-                    <p style="color: #888;">No new messages.</p>
+                    <p style="color: #666;">No new messages.</p>
                 </div>
             `;
         }
 
         function loadProfile() {
             document.getElementById('mainContent').innerHTML = `
-                <div style="padding: 20px; text-align: center;">
+                <div style="padding: 20px; text-align: center; color: #000;">
                     <h3>@fx_master</h3>
-                    <p style="color: #888;">Live Market Signal & Analysis Creator</p>
+                    <p style="color: #666;">Live Market Signal & Analysis Creator</p>
                 </div>
             `;
         }
