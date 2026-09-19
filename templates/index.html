@@ -39,39 +39,53 @@
         .content-container {
             margin-top: 60px;
             padding: 20px;
-            height: calc(100vh - 120px);
+            padding-bottom: 80px; /* space for bottom bar if visible */
             overflow-y: auto;
         }
-        /* Forex Tab Custom Buttons Bar */
-        .forex-header-bar {
+        
+        /* Forex Tab ke andar neche wale buttons ki styling */
+        .forex-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
             display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            white-space: nowrap;
-        }
-        .forex-btn {
-            background: #f1f3f5;
-            color: #333;
-            border: 1px solid #ddd;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-flex;
+            justify-content: space-around;
             align-items: center;
-            gap: 5px;
+            border-top: 1px solid #ddd;
+            z-index: 100;
         }
-        .forex-btn.active-sub {
-            background: #007bff;
+        .forex-nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+            background: none;
+            border: none;
+        }
+        .forex-nav-item.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .forex-nav-item .icon {
+            display: block;
+            margin: 0 auto 2px auto;
+            font-size: 18px;
+        }
+        .forex-plus-btn {
+            background: linear-gradient(45deg, #007bff, #00f2fe);
+            width: 36px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: #fff;
-            border-color: #007bff;
-        }
-        .forex-sub-content {
-            padding: 10px 0;
+            font-weight: bold;
+            font-size: 20px;
         }
 
         .group-card {
@@ -103,6 +117,8 @@
             border: 1px solid #e0e0e0;
             border-left: 4px solid #28a745;
         }
+
+        /* For You tab wala original bottom bar */
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -155,42 +171,36 @@
 
     <!-- Main Dynamic Content Area -->
     <div class="content-container" id="mainContent">
-        <!-- Default View on Load: Forex with custom buttons -->
-        <div id="forexView">
-            <div class="forex-header-bar">
-                <button class="forex-btn active-sub" onclick="switchForexSub('chats', this)">💬 Chats</button>
-                <button class="forex-btn" onclick="switchForexSub('meta5', this)">📊 Meta 5 Market</button>
-                <button class="forex-btn" onclick="switchForexSub('plus', this)">➕ Plus</button>
-                <button class="forex-btn" onclick="switchForexSub('profile', this)">👤 Profile</button>
-                <button class="forex-btn" onclick="switchForexSub('channel', this)">📢 Channel</button>
-            </div>
-            <div class="forex-sub-content" id="forexSubContent">
-                <h3>Forex Chats</h3>
-                <p style="color: #666;">Active market discussion rooms and chats.</p>
-            </div>
+        <!-- Default View on Load: Forex -->
+        <div id="forexSubContent">
+            <h3>Forex Chats</h3>
+            <p style="color: #666;">Active market discussion rooms and chats.</p>
         </div>
     </div>
 
-    <!-- Bottom TikTok Style Navigation Bar -->
-    <div class="bottom-bar" id="bottomBar">
-        <div class="nav-item" onclick="loadHome()">
-            <span class="icon">🏠</span>
-            Home
-        </div>
-        <div class="nav-item active" onclick="loadGroup()">
-            <span class="icon">👥</span>
-            Official Group
-        </div>
-        <div class="nav-item">
-            <div class="plus-btn">+</div>
-        </div>
-        <div class="nav-item" onclick="loadInbox()">
-            <span class="icon">📥</span>
-            Inbox
-        </div>
-        <div class="nav-item" onclick="loadProfileMain()">
-            <span class="icon">👤</span>
-            Profile
+    <!-- Dynamic Bottom Bars Container -->
+    <div id="bottomBarContainer">
+        <!-- Forex ke apne neche wale buttons (Chats, Meta 5, Plus, Profile, Channel) -->
+        <div class="forex-bottom-bar" id="forexBottomBar">
+            <button class="forex-nav-item active" onclick="switchForexSub('chats', this)">
+                <span class="icon">💬</span>
+                Chats
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('meta5', this)">
+                <span class="icon">📊</span>
+                Meta 5
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('plus', this)">
+                <div class="forex-plus-btn">+</div>
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('profile', this)">
+                <span class="icon">👤</span>
+                Profile
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('channel', this)">
+                <span class="icon">📢</span>
+                Channel
+            </button>
         </div>
     </div>
 
@@ -199,31 +209,72 @@
             const forexTab = document.getElementById('forexTab');
             const foryouTab = document.getElementById('foryouTab');
             const container = document.getElementById('mainContent');
-            const bottomBar = document.getElementById('bottomBar');
+            const bottomBarContainer = document.getElementById('bottomBarContainer');
 
             if (tab === 'forex') {
                 forexTab.classList.add('active');
                 foryouTab.classList.remove('active');
-                bottomBar.style.display = 'flex'; // Neeche wale buttons wapas aa jayenge
+                
+                // Forex ke neche wale buttons show honge, For You wale nahi
+                bottomBarContainer.innerHTML = `
+                    <div class="forex-bottom-bar" id="forexBottomBar">
+                        <button class="forex-nav-item active" onclick="switchForexSub('chats', this)">
+                            <span class="icon">💬</span>
+                            Chats
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('meta5', this)">
+                            <span class="icon">📊</span>
+                            Meta 5
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('plus', this)">
+                            <div class="forex-plus-btn">+</div>
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('profile', this)">
+                            <span class="icon">👤</span>
+                            Profile
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('channel', this)">
+                            <span class="icon">📢</span>
+                            Channel
+                        </button>
+                    </div>
+                `;
+
                 container.innerHTML = `
-                    <div id="forexView">
-                        <div class="forex-header-bar">
-                            <button class="forex-btn active-sub" onclick="switchForexSub('chats', this)">💬 Chats</button>
-                            <button class="forex-btn" onclick="switchForexSub('meta5', this)">📊 Meta 5 Market</button>
-                            <button class="forex-btn" onclick="switchForexSub('plus', this)">➕ Plus</button>
-                            <button class="forex-btn" onclick="switchForexSub('profile', this)">👤 Profile</button>
-                            <button class="forex-btn" onclick="switchForexSub('channel', this)">📢 Channel</button>
-                        </div>
-                        <div class="forex-sub-content" id="forexSubContent">
-                            <h3>Forex Chats</h3>
-                            <p style="color: #666;">Active market discussion rooms and chats.</p>
-                        </div>
+                    <div id="forexSubContent">
+                        <h3>Forex Chats</h3>
+                        <p style="color: #666;">Active market discussion rooms and chats.</p>
                     </div>
                 `;
             } else {
                 foryouTab.classList.add('active');
                 forexTab.classList.remove('active');
-                bottomBar.style.display = 'flex';
+                
+                // Sirf For You wala bottom bar show hoga
+                bottomBarContainer.innerHTML = `
+                    <div class="bottom-bar" id="bottomBar">
+                        <div class="nav-item" onclick="loadHome()">
+                            <span class="icon">🏠</span>
+                            Home
+                        </div>
+                        <div class="nav-item active" onclick="loadGroup()">
+                            <span class="icon">👥</span>
+                            Official Group
+                        </div>
+                        <div class="nav-item">
+                            <div class="plus-btn">+</div>
+                        </div>
+                        <div class="nav-item" onclick="loadInbox()">
+                            <span class="icon">📥</span>
+                            Inbox
+                        </div>
+                        <div class="nav-item" onclick="loadProfileMain()">
+                            <span class="icon">👤</span>
+                            Profile
+                        </div>
+                    </div>
+                `;
+
                 container.innerHTML = `
                     <div id="forYouView">
                         <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
@@ -254,11 +305,9 @@
         }
 
         function switchForexSub(section, btnElement) {
-            // Remove active-sub from all buttons
-            const buttons = document.querySelectorAll('.forex-btn');
-            buttons.forEach(btn => btn.classList.remove('active-sub'));
-            // Add to clicked
-            btnElement.classList.add('active-sub');
+            const buttons = document.querySelectorAll('.forex-nav-item');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
 
             const subContainer = document.getElementById('forexSubContent');
             if (section === 'chats') {
