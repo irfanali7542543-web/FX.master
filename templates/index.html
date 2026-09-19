@@ -38,7 +38,7 @@
         }
         .content-container {
             margin-top: 60px;
-            padding: 15px;
+            padding: 0;
             padding-bottom: 80px;
             overflow-y: auto;
         }
@@ -91,7 +91,7 @@
         /* Post & Feed Styles */
         .post-card {
             border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            padding: 15px;
             margin-bottom: 15px;
         }
         .post-header {
@@ -120,30 +120,62 @@
             border-left: 4px solid #28a745;
         }
 
-        /* Meta 5 Chart Mockup */
-        .mt5-top-bar {
+        /* Authentic MT5 UI Styles */
+        .mt5-header-menu {
             display: flex;
             justify-content: space-between;
-            background: #e9ecef;
+            align-items: center;
+            background: #f8f9fa;
             padding: 8px 15px;
-            font-weight: bold;
-            font-size: 14px;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
         }
-        .mt5-btn-red {
-            background: #dc3545;
+        .mt5-trade-panel {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .mt5-sell-box {
+            background: #2196f3;
             color: white;
             padding: 10px;
-            text-align: center;
             flex: 1;
+            text-align: center;
             font-weight: bold;
+            cursor: pointer;
         }
-        .mt5-btn-blue {
-            background: #007bff;
+        .mt5-mid-box {
+            background: #f1f3f4;
+            color: #333;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        .mt5-buy-box {
+            background: #2196f3;
             color: white;
             padding: 10px;
-            text-align: center;
             flex: 1;
+            text-align: center;
             font-weight: bold;
+            cursor: pointer;
+        }
+        .mt5-pair-info {
+            padding: 8px 15px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
         }
 
         /* Telegram Channel UI */
@@ -173,6 +205,7 @@
             display: flex;
             margin-top: 10px;
             gap: 10px;
+            padding: 0 15px;
         }
         .tg-input-bar input {
             flex: 1;
@@ -180,48 +213,6 @@
             border: 1px solid #ccc;
             border-radius: 20px;
             outline: none;
-        }
-
-        /* For You tab wala bottom bar */
-        .bottom-bar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 60px;
-            background: #ffffff;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #ddd;
-            z-index: 100;
-        }
-        .nav-item {
-            text-align: center;
-            color: #666;
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .nav-item.active {
-            color: #000;
-            font-weight: bold;
-        }
-        .nav-item .icon {
-            display: block;
-            margin: 0 auto 2px auto;
-            font-size: 18px;
-        }
-        .plus-btn {
-            background: linear-gradient(45deg, #007bff, #00f2fe);
-            width: 36px;
-            height: 30px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-weight: bold;
-            font-size: 20px;
         }
     </style>
 </head>
@@ -240,7 +231,6 @@
 
     <!-- Dynamic Bottom Bars Container -->
     <div id="bottomBarContainer">
-        <!-- Forex ke neche wale 5 buttons -->
         <div class="forex-bottom-bar" id="forexBottomBar">
             <button class="forex-nav-item active" onclick="switchForexSub('home', this)">
                 <span class="icon">🏠</span>
@@ -265,7 +255,6 @@
     </div>
 
     <script>
-        // Load default Home view inside Forex on start
         window.onload = function() {
             loadForexHome();
         };
@@ -273,8 +262,8 @@
         function switchTopTab(tab) {
             const forexTab = document.getElementById('forexTab');
             const foryouTab = document.getElementById('foryouTab');
-            const container = document.getElementById('mainContent');
             const bottomBarContainer = document.getElementById('bottomBarContainer');
+            const container = document.getElementById('mainContent');
 
             if (tab === 'forex') {
                 forexTab.classList.add('active');
@@ -309,36 +298,22 @@
                 forexTab.classList.remove('active');
                 
                 bottomBarContainer.innerHTML = `
-                    <div class="bottom-bar" id="bottomBar">
-                        <div class="nav-item" onclick="loadHomeMain()">
-                            <span class="icon">🏠</span>
-                            Home
-                        </div>
-                        <div class="nav-item active" onclick="loadGroup()">
-                            <span class="icon">👥</span>
-                            Official Group
-                        </div>
-                        <div class="nav-item">
-                            <div class="plus-btn">+</div>
-                        </div>
-                        <div class="nav-item" onclick="loadInbox()">
-                            <span class="icon">📥</span>
-                            Inbox
-                        </div>
-                        <div class="nav-item" onclick="loadProfileMain()">
-                            <span class="icon">👤</span>
-                            Profile
-                        </div>
+                    <div class="forex-bottom-bar" style="justify-content:space-around;">
+                        <div class="forex-nav-item" onclick="switchTopTab('forex')"><span class="icon">🏠</span>Home</div>
+                        <div class="forex-nav-item active"><span class="icon">👥</span>Official Group</div>
+                        <div class="forex-nav-item"><div class="forex-plus-btn">+</div></div>
+                        <div class="forex-nav-item"><span class="icon">📥</span>Inbox</div>
+                        <div class="forex-nav-item"><span class="icon">👤</span>Profile</div>
                     </div>
                 `;
 
                 container.innerHTML = `
-                    <div id="forYouView">
+                    <div style="padding: 15px;">
                         <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
-                        <div class="group-card" style="background:#f8f9fa; padding:15px; border-radius:10px; border:1px solid #ddd; margin-bottom:15px;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <div class="signal-box">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
                                 <strong>DIGI ANTI</strong>
-                                <span style="background:#007bff; color:#fff; padding:2px 8px; border-radius:4px; font-size:12px;">admin</span>
+                                <span style="background:#007bff; color:#fff; padding:2px 8px; border-radius:4px; font-size:11px;">admin</span>
                             </div>
                             <div>سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
                         </div>
@@ -352,23 +327,17 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
 
-            if (section === 'home') {
-                loadForexHome();
-            } else if (section === 'market') {
-                loadForexMarket();
-            } else if (section === 'plus') {
-                loadForexPlus();
-            } else if (section === 'profile') {
-                loadForexProfile();
-            } else if (section === 'channel') {
-                loadForexChannel();
-            }
+            if (section === 'home') loadForexHome();
+            else if (section === 'market') loadForexMarket();
+            else if (section === 'plus') loadForexPlus();
+            else if (section === 'profile') loadForexProfile();
+            else if (section === 'channel') loadForexChannel();
         }
 
         function loadForexHome() {
             document.getElementById('mainContent').innerHTML = `
                 <div>
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                    <div style="display:flex; align-items:center; gap:10px; padding: 15px; border-bottom:1px solid #eee;">
                         <div class="avatar">FX</div>
                         <div>
                             <strong>fx_master034211</strong>
@@ -385,7 +354,6 @@
                             <div>Limit 2643</div>
                             <div style="color: #28a745; font-weight: bold;">✅ TP 2637</div>
                             <div style="color: #28a745; font-weight: bold;">✅ TP 2634</div>
-                            <div style="color: #28a745; font-weight: bold;">✅ TP 2631</div>
                         </div>
                     </div>
                 </div>
@@ -395,46 +363,142 @@
         function loadForexMarket() {
             document.getElementById('mainContent').innerHTML = `
                 <div>
-                    <div class="mt5-top-bar">
-                        <span>ETHUSDm - H4</span>
-                        <span>Ethereum vs US Dollar</span>
+                    <!-- MT5 Top Menu Bar -->
+                    <div class="mt5-header-menu">
+                        <span>☰</span>
+                        <div style="display:flex; gap:15px; font-size:18px;">
+                            <span>➕</span>
+                            <span>📈</span>
+                            <span style="font-size:15px; font-weight:bold; background:#e0e0e0; padding:2px 8px; border-radius:4px;">H4</span>
+                            <span>🕒</span>
+                            <span>🔲</span>
+                        </div>
                     </div>
-                    <div style="display:flex;">
-                        <div class="mt5-btn-red">SELL<br>2639.13</div>
-                        <div class="mt5-btn-blue">BUY<br>2640.13</div>
+
+                    <!-- Buy / Sell Panel with Live Price Fluctuations -->
+                    <div class="mt5-trade-panel">
+                        <div class="mt5-sell-box" onclick="alert('Sell Order Executed')">
+                            <div style="font-size:11px; opacity:0.9;">SELL</div>
+                            <span id="sellPrice">2639.45</span>
+                        </div>
+                        <div class="mt5-mid-box">
+                            <span>⌄</span>
+                            <span style="color:#000;">0.1</span>
+                            <span>⌃</span>
+                        </div>
+                        <div class="mt5-buy-box" onclick="alert('Buy Order Executed')">
+                            <div style="font-size:11px; opacity:0.9;">BUY</div>
+                            <span id="buyPrice">2640.45</span>
+                        </div>
                     </div>
-                    <div style="background:#f8f9fa; height:260px; display:flex; align-items:center; justify-content:center; border:1px solid #ddd; margin-top:10px; color:#666; font-weight:bold;">
-                        [ Live Meta 5 Candlestick Chart Area ]
+
+                    <!-- Pair Info -->
+                    <div class="mt5-pair-info">
+                        <strong>ETHUSDm</strong> <span style="color:#666;">▼ H4</span><br>
+                        <span style="color:#666; font-size:11px;">Ethereum vs US Dollar</span>
+                    </div>
+
+                    <!-- Live Moving Candlestick Chart Canvas -->
+                    <div class="chart-container">
+                        <canvas id="mt5Canvas" style="width:100%; height:100%; display:block;"></canvas>
                     </div>
                 </div>
             `;
+            initLiveChart();
+        }
+
+        function initLiveChart() {
+            const canvas = document.getElementById('mt5Canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            let candles = [];
+            let basePrice = 2639.45;
+            for(let i=0; i<25; i++) {
+                let open = basePrice + (Math.random() * 10 - 5);
+                let close = open + (Math.random() * 10 - 5);
+                let high = Math.max(open, close) + Math.random() * 4;
+                let low = Math.min(open, close) - Math.random() * 4;
+                candles.push({open, close, high, low});
+                basePrice = close;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw Grid lines
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 1;
+                for(let x=0; x<canvas.width; x+=40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+                for(let y=0; y<canvas.height; y+=30) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+
+                let candleWidth = canvas.width / 30;
+                candles.forEach((c, index) => {
+                    let x = index * candleWidth + 20;
+                    let isGreen = c.close >= c.open;
+                    ctx.strokeStyle = isGreen ? '#00897b' : '#e53935';
+                    ctx.fillStyle = isGreen ? '#00897b' : '#e53935';
+
+                    // High-Low Wick
+                    let yHigh = canvas.height - ((c.high - 2600) * 5);
+                    let yLow = canvas.height - ((c.low - 2600) * 5);
+                    ctx.beginPath(); ctx.moveTo(x, yHigh); ctx.lineTo(x, yLow); ctx.stroke();
+
+                    // Open-Close Body
+                    let yOpen = canvas.height - ((c.open - 2600) * 5);
+                    let yClose = canvas.height - ((c.close - 2600) * 5);
+                    let bodyY = Math.min(yOpen, yClose);
+                    let bodyHeight = Math.max(Math.abs(yOpen - yClose), 2);
+                    ctx.fillRect(x - candleWidth/3, bodyY, (candleWidth*2)/3, bodyHeight);
+                });
+            }
+
+            draw();
+
+            // Real-time price fluctuations & chart updates
+            setInterval(() => {
+                let lastC = candles[candles.length - 1];
+                let change = (Math.random() * 2 - 0.9);
+                lastC.close += change;
+                lastC.high = Math.max(lastC.high, lastC.close);
+                lastC.low = Math.min(lastC.low, lastC.close);
+
+                let sellP = (lastC.close).toFixed(2);
+                let buyP = (lastC.close + 1.00).toFixed(2);
+                
+                let sElem = document.getElementById('sellPrice');
+                let bElem = document.getElementById('buyPrice');
+                if(sElem) sElem.innerText = sellP;
+                if(bElem) bElem.innerText = buyP;
+
+                draw();
+            }, 1000);
         }
 
         function loadForexPlus() {
             document.getElementById('mainContent').innerHTML = `
                 <div style="text-align:center; padding-top:40px;">
-                    <h3>Add New Trading Tool / Post</h3>
-                    <p style="color:#666;">Publish new signals or custom trading assets here.</p>
+                    <h3>Add Trading Signal</h3>
+                    <p style="color:#666;">Create and broadcast new market insights.</p>
                 </div>
             `;
         }
 
         function loadForexProfile() {
             document.getElementById('mainContent').innerHTML = `
-                <div>
-                    <div style="text-align:center; margin-bottom:15px;">
-                        <div style="width:70px; height:70px; background:#007bff; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 10px auto; font-weight:bold;">FX</div>
-                        <h3 style="margin:0;">FX_MASTER</h3>
-                        <div style="font-size:13px; color:#666;">t.me/FX_MASTER2573</div>
-                    </div>
-                    <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
+                <div style="padding:15px; text-align:center;">
+                    <div style="width:70px; height:70px; background:#007bff; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 10px auto; font-weight:bold;">FX</div>
+                    <h3>FX_MASTER</h3>
+                    <div style="font-size:13px; color:#666; margin-bottom:15px;">t.me/FX_MASTER2573</div>
+                    <div style="display:flex; gap:10px;">
                         <button style="flex:1; padding:8px; background:#f1f1f1; border:1px solid #ccc; border-radius:5px; font-weight:bold;">Edit profile</button>
                         <button style="flex:1; padding:8px; background:#f1f1f1; border:1px solid #ccc; border-radius:5px; font-weight:bold;">Share profile</button>
-                    </div>
-                    <div style="display:flex; justify-content:space-around; border-bottom:1px solid #ddd; padding-bottom:10px; font-weight:bold;">
-                        <span style="color:#007bff; border-bottom:2px solid #007bff;">Threads</span>
-                        <span style="color:#888;">Replies</span>
-                        <span style="color:#888;">Media</span>
                     </div>
                 </div>
             `;
@@ -453,7 +517,7 @@
                     <div class="tg-body">
                         <div class="tg-msg">
                             <div style="font-weight:bold; color:#007bff;">#SIGNLE BUY ENTRY 4380</div>
-                            <div style="font-size:13px; color:#333; margin-top:5px;">Limit 4375<br>✅ TP 4385<br>✅ TP 4390</div>
+                            <div style="font-size:13px; color:#333; margin-top:5px;">Limit 4375<br>✅ TP 4385</div>
                         </div>
                     </div>
                     <div class="tg-input-bar">
@@ -462,19 +526,6 @@
                     </div>
                 </div>
             `;
-        }
-
-        function loadHomeMain() {
-            document.getElementById('mainContent').innerHTML = `<h2>Home Hub</h2>`;
-        }
-        function loadGroup() {
-            switchTopTab('foryou');
-        }
-        function loadInbox() {
-            document.getElementById('mainContent').innerHTML = `<h2>Inbox</h2>`;
-        }
-        function loadProfileMain() {
-            document.getElementById('mainContent').innerHTML = `<h2>Profile Main</h2>`;
         }
     </script>
 </body>
