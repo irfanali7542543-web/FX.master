@@ -151,7 +151,7 @@
     </div>
 
     <!-- Bottom TikTok Style Navigation Bar -->
-    <div class="bottom-bar">
+    <div class="bottom-bar" id="bottomBar">
         <div class="nav-item" onclick="loadHome()">
             <span class="icon">🏠</span>
             Home
@@ -178,23 +178,19 @@
             const forexTab = document.getElementById('forexTab');
             const foryouTab = document.getElementById('foryouTab');
             const container = document.getElementById('mainContent');
+            const bottomBar = document.getElementById('bottomBar');
 
             if (tab === 'forex') {
                 forexTab.classList.add('active');
                 foryouTab.classList.remove('active');
-                // Forex page - Bilkul alag aur clean page jahan kuch nahi hoga
-                container.innerHTML = `
-                    <div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center; color: #555;">
-                        <div>
-                            <h2>Forex Market Clean View</h2>
-                            <p>Yahan koi buttons ya signals nahi hain.</p>
-                        </div>
-                    </div>
-                `;
+                // Forex page - Bilkul khali aur neeche wale buttons gayab
+                container.innerHTML = '';
+                bottomBar.style.display = 'none';
             } else {
                 foryouTab.classList.add('active');
                 forexTab.classList.remove('active');
-                // For You page - Original Group & Signals view
+                // For You page - Original content aur neeche wale buttons wapas
+                bottomBar.style.display = 'flex';
                 container.innerHTML = `
                     <div style="text-align: center; color: #00f2fe; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
                     <div class="group-card">
@@ -223,7 +219,6 @@
         }
 
         function loadGroup() {
-            // Official Group tab click hone par For You view par wapas le aayein
             switchTopTab('foryou');
         }
 
