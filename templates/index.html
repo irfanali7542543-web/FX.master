@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - Live Market Signal & Analysis</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+        }
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.95);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 1px solid #ddd;
+        }
+        .top-nav span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+        }
+        .top-nav span.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 2px;
+        }
+        .content-container {
+            margin-top: 60px;
+            padding: 0;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+        
+        /* Forex Tab ke neche wale 5 buttons */
+        .forex-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #ddd;
+            z-index: 100;
+        }
+        .forex-nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+            background: none;
+            border: none;
+        }
+        .forex-nav-item.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .forex-nav-item .icon {
+            display: block;
+            margin: 0 auto 2px auto;
+            font-size: 18px;
+        }
+        .forex-plus-btn {
+            background: linear-gradient(45deg, #007bff, #00f2fe);
+            width: 36px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* Post & Feed Styles */
+        .post-card {
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .signal-box {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #28a745;
+        }
+
+        /* Authentic MT5 UI Styles */
+        .mt5-header-menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 8px 15px;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+        }
+        .mt5-trade-panel {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .mt5-sell-box {
+            background: #2196f3;
+            color: white;
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .mt5-mid-box {
+            background: #f1f3f4;
+            color: #333;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        .mt5-buy-box {
+            background: #2196f3;
+            color: white;
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .mt5-pair-info {
+            padding: 8px 15px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Telegram Channel UI */
+        .tg-header {
+            background: #517da2;
+            color: white;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 8px 8px 0 0;
+        }
+        .tg-body {
+            background: #e7edeb;
+            padding: 15px;
+            min-height: 250px;
+            border-radius: 0 0 8px 8px;
+        }
+        .tg-msg {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .tg-input-bar {
+            display: flex;
+            margin-top: 10px;
+            gap: 10px;
+            padding: 0 15px;
+        }
+        .tg-input-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <span id="forexTab" class="active" onclick="switchTopTab('forex')">Forex</span>
+        <span id="foryouTab" onclick="switchTopTab('foryou')">For You</span>
+    </div>
+
+    <!-- Main Dynamic Content Area -->
+    <div class="content-container" id="mainContent">
+        <div id="forexSubContent"></div>
+    </div>
+
+    <!-- Dynamic Bottom Bars Container -->
+    <div id="bottomBarContainer">
+        <div class="forex-bottom-bar" id="forexBottomBar">
+            <button class="forex-nav-item active" onclick="switchForexSub('home', this)">
+                <span class="icon">🏠</span>
+                Home
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('market', this)">
+                <span class="icon">📊</span>
+                Market
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('plus', this)">
+                <div class="forex-plus-btn">+</div>
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('profile', this)">
+                <span class="icon">👤</span>
+                Profile
+            </button>
+            <button class="forex-nav-item" onclick="switchForexSub('channel', this)">
+                <span class="icon">📢</span>
+                Channel
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            loadForexHome();
+        };
+
+        function switchTopTab(tab) {
+            const forexTab = document.getElementById('forexTab');
+            const foryouTab = document.getElementById('foryouTab');
+            const bottomBarContainer = document.getElementById('bottomBarContainer');
+            const container = document.getElementById('mainContent');
+
+            if (tab === 'forex') {
+                forexTab.classList.add('active');
+                foryouTab.classList.remove('active');
+                
+                bottomBarContainer.innerHTML = `
+                    <div class="forex-bottom-bar" id="forexBottomBar">
+                        <button class="forex-nav-item active" onclick="switchForexSub('home', this)">
+                            <span class="icon">🏠</span>
+                            Home
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('market', this)">
+                            <span class="icon">📊</span>
+                            Market
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('plus', this)">
+                            <div class="forex-plus-btn">+</div>
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('profile', this)">
+                            <span class="icon">👤</span>
+                            Profile
+                        </button>
+                        <button class="forex-nav-item" onclick="switchForexSub('channel', this)">
+                            <span class="icon">📢</span>
+                            Channel
+                        </button>
+                    </div>
+                `;
+                loadForexHome();
+            } else {
+                foryouTab.classList.add('active');
+                forexTab.classList.remove('active');
+                
+                bottomBarContainer.innerHTML = `
+                    <div class="forex-bottom-bar" style="justify-content:space-around;">
+                        <div class="forex-nav-item" onclick="switchTopTab('forex')"><span class="icon">🏠</span>Home</div>
+                        <div class="forex-nav-item active"><span class="icon">👥</span>Official Group</div>
+                        <div class="forex-nav-item"><div class="forex-plus-btn">+</div></div>
+                        <div class="forex-nav-item"><span class="icon">📥</span>Inbox</div>
+                        <div class="forex-nav-item"><span class="icon">👤</span>Profile</div>
+                    </div>
+                `;
+
+                container.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div style="text-align: center; color: #007bff; font-weight: bold; margin-bottom: 15px;">GROUP TOP (1 members)</div>
+                        <div class="signal-box">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <strong>DIGI ANTI</strong>
+                                <span style="background:#007bff; color:#fff; padding:2px 8px; border-radius:4px; font-size:11px;">admin</span>
+                            </div>
+                            <div>سلام TOP خوش آمدی ❖ عزیز به گروه 🦋</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function switchForexSub(section, btnElement) {
+            const buttons = document.querySelectorAll('.forex-nav-item');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+
+            if (section === 'home') loadForexHome();
+            else if (section === 'market') loadForexMarket();
+            else if (section === 'plus') loadForexPlus();
+            else if (section === 'profile') loadForexProfile();
+            else if (section === 'channel') loadForexChannel();
+        }
+
+        function loadForexHome() {
+            document.getElementById('mainContent').innerHTML = `
+                <div>
+                    <div style="display:flex; align-items:center; gap:10px; padding: 15px; border-bottom:1px solid #eee;">
+                        <div class="avatar">FX</div>
+                        <div>
+                            <strong>fx_master034211</strong>
+                            <div style="font-size:12px; color:#666;">What's new?</div>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar" style="background:#28a745;">GH</div>
+                            <div><strong>ghulamhussainabc12</strong> <span style="font-size:12px; color:#888;">15m</span></div>
+                        </div>
+                        <div style="font-weight:bold; margin-bottom:5px;">ETHUSD SELL ENTRY 2640</div>
+                        <div class="signal-box">
+                            <div>Limit 2643</div>
+                            <div style="color: #28a745; font-weight: bold;">✅ TP 2637</div>
+                            <div style="color: #28a745; font-weight: bold;">✅ TP 2634</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadForexMarket() {
+            document.getElementById('mainContent').innerHTML = `
+                <div>
+                    <!-- MT5 Top Menu Bar -->
+                    <div class="mt5-header-menu">
+                        <span>☰</span>
+                        <div style="display:flex; gap:15px; font-size:18px;">
+                            <span>➕</span>
+                            <span>📈</span>
+                            <span style="font-size:15px; font-weight:bold; background:#e0e0e0; padding:2px 8px; border-radius:4px;">H4</span>
+                            <span>🕒</span>
+                            <span>🔲</span>
+                        </div>
+                    </div>
+
+                    <!-- Buy / Sell Panel with Live Price Fluctuations -->
+                    <div class="mt5-trade-panel">
+                        <div class="mt5-sell-box" onclick="alert('Sell Order Executed')">
+                            <div style="font-size:11px; opacity:0.9;">SELL</div>
+                            <span id="sellPrice">2639.45</span>
+                        </div>
+                        <div class="mt5-mid-box">
+                            <span>⌄</span>
+                            <span style="color:#000;">0.1</span>
+                            <span>⌃</span>
+                        </div>
+                        <div class="mt5-buy-box" onclick="alert('Buy Order Executed')">
+                            <div style="font-size:11px; opacity:0.9;">BUY</div>
+                            <span id="buyPrice">2640.45</span>
+                        </div>
+                    </div>
+
+                    <!-- Pair Info -->
+                    <div class="mt5-pair-info">
+                        <strong>ETHUSDm</strong> <span style="color:#666;">▼ H4</span><br>
+                        <span style="color:#666; font-size:11px;">Ethereum vs US Dollar</span>
+                    </div>
+
+                    <!-- Live Moving Candlestick Chart Canvas -->
+                    <div class="chart-container">
+                        <canvas id="mt5Canvas" style="width:100%; height:100%; display:block;"></canvas>
+                    </div>
+                </div>
+            `;
+            initLiveChart();
+        }
+
+        function initLiveChart() {
+            const canvas = document.getElementById('mt5Canvas');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            let candles = [];
+            let basePrice = 2639.45;
+            for(let i=0; i<25; i++) {
+                let open = basePrice + (Math.random() * 10 - 5);
+                let close = open + (Math.random() * 10 - 5);
+                let high = Math.max(open, close) + Math.random() * 4;
+                let low = Math.min(open, close) - Math.random() * 4;
+                candles.push({open, close, high, low});
+                basePrice = close;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw Grid lines
+                ctx.strokeStyle = '#f0f0f0';
+                ctx.lineWidth = 1;
+                for(let x=0; x<canvas.width; x+=40) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+                for(let y=0; y<canvas.height; y+=30) {
+                    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                }
+
+                let candleWidth = canvas.width / 30;
+                candles.forEach((c, index) => {
+                    let x = index * candleWidth + 20;
+                    let isGreen = c.close >= c.open;
+                    ctx.strokeStyle = isGreen ? '#00897b' : '#e53935';
+                    ctx.fillStyle = isGreen ? '#00897b' : '#e53935';
+
+                    // High-Low Wick
+                    let yHigh = canvas.height - ((c.high - 2600) * 5);
+                    let yLow = canvas.height - ((c.low - 2600) * 5);
+                    ctx.beginPath(); ctx.moveTo(x, yHigh); ctx.lineTo(x, yLow); ctx.stroke();
+
+                    // Open-Close Body
+                    let yOpen = canvas.height - ((c.open - 2600) * 5);
+                    let yClose = canvas.height - ((c.close - 2600) * 5);
+                    let bodyY = Math.min(yOpen, yClose);
+                    let bodyHeight = Math.max(Math.abs(yOpen - yClose), 2);
+                    ctx.fillRect(x - candleWidth/3, bodyY, (candleWidth*2)/3, bodyHeight);
+                });
+            }
+
+            draw();
+
+            // Real-time price fluctuations & chart updates
+            setInterval(() => {
+                let lastC = candles[candles.length - 1];
+                let change = (Math.random() * 2 - 0.9);
+                lastC.close += change;
+                lastC.high = Math.max(lastC.high, lastC.close);
+                lastC.low = Math.min(lastC.low, lastC.close);
+
+                let sellP = (lastC.close).toFixed(2);
+                let buyP = (lastC.close + 1.00).toFixed(2);
+                
+                let sElem = document.getElementById('sellPrice');
+                let bElem = document.getElementById('buyPrice');
+                if(sElem) sElem.innerText = sellP;
+                if(bElem) bElem.innerText = buyP;
+
+                draw();
+            }, 1000);
+        }
+
+        function loadForexPlus() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="text-align:center; padding-top:40px;">
+                    <h3>Add Trading Signal</h3>
+                    <p style="color:#666;">Create and broadcast new market insights.</p>
+                </div>
+            `;
+        }
+
+        function loadForexProfile() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="padding:15px; text-align:center;">
+                    <div style="width:70px; height:70px; background:#007bff; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 10px auto; font-weight:bold;">FX</div>
+                    <h3>FX_MASTER</h3>
+                    <div style="font-size:13px; color:#666; margin-bottom:15px;">t.me/FX_MASTER2573</div>
+                    <div style="display:flex; gap:10px;">
+                        <button style="flex:1; padding:8px; background:#f1f1f1; border:1px solid #ccc; border-radius:5px; font-weight:bold;">Edit profile</button>
+                        <button style="flex:1; padding:8px; background:#f1f1f1; border:1px solid #ccc; border-radius:5px; font-weight:bold;">Share profile</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadForexChannel() {
+            document.getElementById('mainContent').innerHTML = `
+                <div>
+                    <div class="tg-header">
+                        <div style="font-size:22px;">✈️</div>
+                        <div>
+                            <strong>LIVE TRADE 💎💎</strong>
+                            <div style="font-size:12px; opacity:0.9;">150 subscribers</div>
+                        </div>
+                    </div>
+                    <div class="tg-body">
+                        <div class="tg-msg">
+                            <div style="font-weight:bold; color:#007bff;">#SIGNLE BUY ENTRY 4380</div>
+                            <div style="font-size:13px; color:#333; margin-top:5px;">Limit 4375<br>✅ TP 4385</div>
+                        </div>
+                    </div>
+                    <div class="tg-input-bar">
+                        <input type="text" placeholder="Broadcast message...">
+                        <button style="background:#517da2; color:white; border:none; padding:10px 15px; border-radius:20px; font-weight:bold;">Send</button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
