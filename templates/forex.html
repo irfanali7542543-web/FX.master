@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - Forex Live Market</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 10px;
+        }
+        /* Top Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #1e293b;
+            margin-bottom: 15px;
+        }
+        .nav-tabs a {
+            text-decoration: none;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 16px;
+            padding-bottom: 5px;
+        }
+        .nav-tabs a.active {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
+        }
+        
+        /* Header Banner */
+        .fx-header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fx-header h2 {
+            font-size: 18px;
+            color: #38bdf8;
+        }
+        .live-badge {
+            background-color: #ef4444;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Market Cards */
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .market-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid #22c55e;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+        .market-card.sell {
+            border-left-color: #ef4444;
+        }
+        .pair-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .pair-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .signal-type {
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .signal-type.buy {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        .signal-type.sell {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .price-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        .price-val {
+            color: #f1f5f9;
+            font-weight: 600;
+        }
+        
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #0284c7;
+            color: white;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #475569;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <a href="/forex" class="active">Forex</a>
+        <a href="/">For You</a>
+        <a href="/channel">Channel</a>
+    </div>
+
+    <!-- Header -->
+    <div class="fx-header">
+        <div>
+            <h2>🔥 FX Master Live Signals</h2>
+            <p style="font-size: 12px; color: #94a3b8;">XAUUSD & BTC Professional Broadcast</p>
+        </div>
+        <div class="live-badge">LIVE</div>
+    </div>
+
+    <!-- Signals / Market List -->
+    <div class="card-container">
+        
+        <!-- Card 1: XAUUSD -->
+        <div class="market-card">
+            <div class="pair-info">
+                <span class="pair-name">XAUUSD (Gold)</span>
+                <span class="signal-type buy">BUY SIGNAL</span>
+            </div>
+            <div class="price-details">
+                <span>Entry: <span class="price-val">2350.50</span></span>
+                <span>TP: <span class="price-val" style="color: #22c55e;">2365.00</span></span>
+                <span>SL: <span class="price-val" style="color: #ef4444;">2342.00</span></span>
+            </div>
+            <div class="action-btns">
+                <button class="btn btn-primary">Copy Signal</button>
+                <button class="btn btn-outline">Details</button>
+            </div>
+        </div>
+
+        <!-- Card 2: BTCUSD -->
+        <div class="market-card sell">
+            <div class="pair-info">
+                <span class="pair-name">BTCUSD (Bitcoin)</span>
+                <span class="signal-type sell">SELL SIGNAL</span>
+            </div>
+            <div class="price-details">
+                <span>Entry: <span class="price-val">64,200</span></span>
+                <span>TP: <span class="price-val" style="color: #22c55e;">62,800</span></span>
+                <span>SL: <span class="price-val" style="color: #ef4444;">65,000</span></span>
+            </div>
+            <div class="action-btns">
+                <button class="btn btn-primary" style="background-color: #dc2626;">Copy Signal</button>
+                <button class="btn btn-outline">Details</button>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
