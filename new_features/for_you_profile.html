@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Trader - Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            color: #111111;
+            padding-bottom: 70px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px 15px;
+        }
+        /* Top Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .top-header .username-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .top-icons {
+            display: flex;
+            gap: 20px;
+            font-size: 20px;
+        }
+        /* Profile Header Info */
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .avatar-container {
+            position: relative;
+            width: 85px;
+            height: 85px;
+            margin-bottom: 12px;
+        }
+        .avatar-container img, .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: radial-gradient(circle, #ff0050, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .add-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #20d5ec;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            border: 2px solid white;
+        }
+        .profile-name {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .verified-badge {
+            background: #ff2a5f;
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .profile-handle {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+            margin-bottom: 15px;
+        }
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-num {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #777;
+        }
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            background: #f8f8f8;
+            color: #333;
+            text-decoration: none;
+        }
+        .bio-section {
+            font-size: 13px;
+            color: #444;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .bio-tag {
+            background: #f1f1f1;
+            padding: 4px 10px;
+            border-radius: 15px;
+        }
+        /* Tabs Bar */
+        .profile-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            padding: 8px 0;
+            margin-bottom: 2px;
+        }
+        .tab-item {
+            font-size: 18px;
+            color: #888;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+        .tab-item.active {
+            color: #111;
+            border-bottom: 2px solid #111;
+            padding-bottom: 6px;
+        }
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+        .video-thumb {
+            position: relative;
+            background: #111;
+            aspect-ratio: 9/16;
+            display: flex;
+            align-items: flex-end;
+            padding: 6px;
+        }
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.8;
+        }
+        .views-count {
+            position: relative;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            z-index: 2;
+        }
+        .draft-tag {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            z-index: 2;
+        }
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: #ffffff;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item span {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+        .center-add-btn {
+            width: 42px;
+            height: 32px;
+            background: linear-gradient(90deg, #20d5ec, #ff0050);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Header -->
+        <div class="top-header">
+            <span>✏️</span>
+            <span class="username-title">Forex Trader</span>
+            <div class="top-icons">
+                <span>🔍</span>
+                <span>👤+</span>
+                <span>☰</span>
+            </div>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="profile-info">
+            <div class="avatar-container">
+                <div class="avatar-placeholder">FX</div>
+                <div class="add-badge">+</div>
+            </div>
+            <div class="profile-name">
+                Forex Trader <span class="verified-badge">9+</span>
+            </div>
+            <div class="profile-handle">@forex.trader7895</div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-num">231</div>
+                    <div class="stat-label">Following</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">119</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">1,080</div>
+                    <div class="stat-label">Likes</div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="#" class="btn">+ Add bio</a>
+                <a href="#" class="btn">❤️ I'm interested in...</a>
+            </div>
+
+            <div class="bio-section">
+                <span class="bio-tag">⭐ TikTok Studio</span>
+            </div>
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="profile-tabs">
+            <div class="tab-item active">☷</div>
+            <div class="tab-item">🔒</div>
+            <div class="tab-item">🔄</div>
+            <div class="tab-item">🔖</div>
+            <div class="tab-item">❤️</div>
+        </div>
+    </div>
+
+    <!-- Video Grid Section -->
+    <div class="video-grid">
+        <div class="video-thumb">
+            <div class="draft-tag">Drafts: 1</div>
+            <div class="views-count">📁 2.1 MB</div>
+        </div>
+        <div class="video-thumb" style="background: #222;">
+            <div class="views-count">▶ 111</div>
+        </div>
+        <div class="video-thumb" style="background: #181818;">
+            <div class="views-count">▶ 120</div>
+        </div>
+        <div class="video-thumb" style="background: #111;">
+            <div class="views-count">▶ 86</div>
+        </div>
+        <div class="video-thumb" style="background: #202020;">
+            <div class="views-count">▶ 114</div>
+        </div>
+        <div class="video-thumb" style="background: #151515;">
+            <div class="views-count">▶ 108</div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item">
+            <span>🏠</span>
+            Home
+        </a>
+        <a href="#" class="nav-item">
+            <span>👥</span>
+            Friends
+        </a>
+        <a href="/upload" class="nav-item">
+            <div class="center-add-btn">+</div>
+        </a>
+        <a href="#" class="nav-item">
+            <span>💬</span>
+            Inbox <span style="background:#ff0050; color:white; font-size:9px; padding:1px 4px; border-radius:10px; position:relative; top:-6px;">99+</span>
+        </a>
+        <a href="/profile" class="nav-item active">
+            <span>👤</span>
+            Profile
+        </a>
+    </div>
+
+</body>
+</html>
