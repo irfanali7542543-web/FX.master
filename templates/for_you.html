@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You - Forex Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Top Navigation Header with Forex & For You tabs */
+        .top-nav-bar {
+            position: fixed;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            z-index: 100;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .top-nav-bar a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .top-nav-bar a.active {
+            color: #ffffff;
+            font-size: 18px;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 2px;
+        }
+        .search-icon-top {
+            position: absolute;
+            right: 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Feed Video Container */
+        .feed-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+        }
+        .feed-item {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+        }
+
+        /* Center Text Box / Caption */
+        .center-caption-box {
+            position: absolute;
+            bottom: 150px;
+            left: 15px;
+            background: rgba(245, 222, 179, 0.9);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            direction: rtl;
+            max-width: 75%;
+            z-index: 50;
+        }
+
+        /* Video Details */
+        .video-details {
+            position: absolute;
+            bottom: 75px;
+            left: 15px;
+            right: 90px;
+            z-index: 50;
+        }
+        .video-title-main {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .video-tags {
+            font-size: 12px;
+            color: #ddd;
+            line-height: 1.4;
+        }
+
+        /* Right Side Floating Action Buttons */
+        .right-sidebar {
+            position: absolute;
+            right: 12px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            z-index: 60;
+        }
+        .side-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .side-icon-circle {
+            width: 42px;
+            height: 42px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        .profile-avatar-side {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid white;
+            overflow: hidden;
+            position: relative;
+            background: #333;
+        }
+        .profile-avatar-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-plus-badge {
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fe2c55;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 11px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        /* Bottom App Navigation Bar */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: #000000;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+            position: relative;
+        }
+        .nav-link-item.active {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .nav-link-item span {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+        .upload-plus-btn {
+            width: 42px;
+            height: 30px;
+            background: linear-gradient(90deg, #20d5ec, #ff0050);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Header: Forex & For You -->
+    <div class="top-nav-bar">
+        <a href="/">Forex</a>
+        <a href="/for-you" class="active">For You</a>
+        <span class="search-icon-top">🔍</span>
+    </div>
+
+    <!-- Feed Container -->
+    <div class="feed-container">
+        <div class="feed-item">
+            <!-- Background video/image placeholder -->
+            <div style="position: absolute; width:100%; height:100%; background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3') center/cover no-repeat;"></div>
+
+            <!-- Center Text Box -->
+            <div class="center-caption-box">
+                XAUUSD Gold New York Session Breakdown 🚀
+            </div>
+
+            <!-- Video Details -->
+            <div class="video-details">
+                <div class="video-title-main">Forex Master Official</div>
+                <div class="video-tags">#XAUUSD #TradingSignals #GoldAnalysis #MarketUpdate</div>
+            </div>
+
+            <!-- Right Side Interactive Buttons -->
+            <div class="right-sidebar">
+                <div class="profile-avatar-side">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb" alt="Profile">
+                    <div class="avatar-plus-badge">+</div>
+                </div>
+                <button class="side-btn">
+                    <div class="side-icon-circle">❤️</div>
+                    4.5K
+                </button>
+                <button class="side-btn">
+                    <div class="side-icon-circle">💬</div>
+                    230
+                </button>
+                <button class="side-btn">
+                    <div class="side-icon-circle">🔖</div>
+                    512
+                </button>
+                <button class="side-btn">
+                    <div class="side-icon-circle">↗️</div>
+                    1,240
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-navigation">
+        <a href="/for-you" class="nav-link-item active">
+            <span>🏠</span>
+            Home
+        </a>
+        <a href="#" class="nav-link-item">
+            <span>👥</span>
+            Friends <span style="background:#ff0050; color:white; font-size:8px; padding:1px 4px; border-radius:10px; position:absolute; top:2px; right:2px;">70</span>
+        </a>
+        <a href="/upload" class="nav-link-item">
+            <div class="upload-plus-btn">+</div>
+        </a>
+        <a href="#" class="nav-link-item">
+            <span>💬</span>
+            Inbox <span style="background:#ff0050; color:white; font-size:8px; padding:1px 4px; border-radius:10px; position:absolute; top:2px; right:-4px;">99+</span>
+        </a>
+        <a href="/profile" class="nav-link-item">
+            <span>👤</span>
+            Profile
+        </a>
+    </div>
+
+</body>
+</html>
