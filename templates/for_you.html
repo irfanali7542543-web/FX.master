@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - For You</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding-top: 50px;
+            padding-bottom: 70px;
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        /* Top Tabs styling */
+        .top-tabs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+            z-index: 1000;
+        }
+        .top-tab {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding-bottom: 4px;
+        }
+        .top-tab.active {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
+        }
+
+        .feed-container {
+            padding: 15px;
+            text-align: center;
+        }
+        .video-card {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Bottom Navigation Bar styling */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1e293b;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #334155;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            text-align: center;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .nav-item.active, .nav-item:hover {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Tabs -->
+    <div class="top-tabs">
+        <a href="/" class="top-tab">Forex</a>
+        <a href="/for-you" class="top-tab active">For You</a>
+    </div>
+
+    <!-- For You Content Feed -->
+    <div class="feed-container">
+        <h2>For You Feed</h2>
+        <div class="video-card">
+            <p>Yahan aapka TikTok style short-video/posts feed chalega.</p>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/market" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="/for-you" class="nav-item active">
+            <i class="fas fa-video"></i>
+            <span>For You</span>
+        </a>
+        <a href="/channel" class="nav-item">
+            <i class="fas fa-bullhorn"></i>
+            <span>Channel</span>
+        </a>
+        <a href="/inbox" class="nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Inbox</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+</body>
+</html>
