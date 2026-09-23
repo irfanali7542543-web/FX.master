@@ -9,7 +9,8 @@
         body {
             margin: 0;
             padding-top: 50px;
-            background-color: #0f172a;
+            padding-bottom: 70px;
+            background-color: #000000;
             color: #ffffff;
             font-family: Arial, sans-serif;
             overflow: hidden;
@@ -20,12 +21,11 @@
             top: 0;
             left: 0;
             width: 100%;
-            background: #0f172a;
+            background: rgba(0,0,0,0.8);
             display: flex;
             justify-content: center;
             gap: 25px;
             padding: 12px 0;
-            border-bottom: 1px solid #334155;
             z-index: 1000;
         }
         .top-tab {
@@ -33,35 +33,64 @@
             text-decoration: none;
             font-size: 16px;
             font-weight: bold;
-            padding-bottom: 4px;
         }
         .top-tab.active {
-            color: #38bdf8;
-            border-bottom: 2px solid #38bdf8;
+            color: #ffffff;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 4px;
         }
 
-        /* Fullscreen TikTok style container */
         .feed-container {
-            height: calc(100vh - 50px);
+            height: calc(100vh - 120px);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
             text-align: center;
+            padding: 15px;
         }
-        .video-card {
-            background: #1e293b;
-            border-radius: 12px;
+
+        /* TikTok Style Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            max-width: 400px;
-            height: 75vh;
+            background: #000000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #222;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: #888;
+            text-decoration: none;
+            text-align: center;
+            font-size: 11px;
             display: flex;
             flex-direction: column;
+            align-items: center;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+        .nav-item.active {
+            color: #ffffff;
+        }
+        /* Plus Upload Button */
+        .nav-plus {
+            background: linear-gradient(135deg, #25f4ee, #fe2c55);
+            color: white;
+            width: 38px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -73,13 +102,35 @@
         <a href="/for-you" class="top-tab active">For You</a>
     </div>
 
-    <!-- For You Dedicated Fullscreen Feed -->
+    <!-- Feed Content -->
     <div class="feed-container">
-        <div class="video-card">
-            <i class="fas fa-video" style="font-size: 48px; color: #38bdf8; margin-bottom: 15px;"></i>
-            <h3 style="margin-bottom: 10px;">For You Feed</h3>
-            <p style="color: #94a3b8;">Yahan aapka TikTok style short-video aur interactive posts ka alag feed chalega.</p>
+        <div>
+            <h3>TikTok Style For You Video Feed</h3>
+            <p style="color: #888;">Yahan aapki short videos show hongi.</p>
         </div>
+    </div>
+
+    <!-- TikTok Style Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="/for-you" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/friends" class="nav-item">
+            <i class="fas fa-user-friends"></i>
+            <span>Friends</span>
+        </a>
+        <a href="/upload" class="nav-item">
+            <div class="nav-plus">+</div>
+        </a>
+        <a href="/inbox" class="nav-item">
+            <i class="fas fa-comment-dots"></i>
+            <span>Inbox</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
     </div>
 
 </body>
