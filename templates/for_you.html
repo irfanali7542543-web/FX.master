@@ -9,10 +9,10 @@
         body {
             margin: 0;
             padding-top: 50px;
-            padding-bottom: 70px;
             background-color: #0f172a;
             color: #ffffff;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
         /* Top Tabs styling */
         .top-tabs {
@@ -40,50 +40,28 @@
             border-bottom: 2px solid #38bdf8;
         }
 
+        /* Fullscreen TikTok style container */
         .feed-container {
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: 15px;
             text-align: center;
         }
         .video-card {
             background: #1e293b;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            min-height: 250px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            height: 75vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        /* Bottom Navigation Bar styling */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #1e293b;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #334155;
-            z-index: 1000;
-        }
-        .nav-item {
-            color: #94a3b8;
-            text-decoration: none;
-            text-align: center;
-            font-size: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        .nav-item.active, .nav-item:hover {
-            color: #38bdf8;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -95,40 +73,13 @@
         <a href="/for-you" class="top-tab active">For You</a>
     </div>
 
-    <!-- For You Content Feed -->
+    <!-- For You Dedicated Fullscreen Feed -->
     <div class="feed-container">
-        <h2>For You Feed</h2>
         <div class="video-card">
-            <p>Yahan aapka TikTok style short-video/posts feed chalega.</p>
+            <i class="fas fa-video" style="font-size: 48px; color: #38bdf8; margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 10px;">For You Feed</h3>
+            <p style="color: #94a3b8;">Yahan aapka TikTok style short-video aur interactive posts ka alag feed chalega.</p>
         </div>
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="bottom-nav">
-        <a href="/" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="/market" class="nav-item">
-            <i class="fas fa-chart-line"></i>
-            <span>Market</span>
-        </a>
-        <a href="/for-you" class="nav-item active">
-            <i class="fas fa-video"></i>
-            <span>For You</span>
-        </a>
-        <a href="/channel" class="nav-item">
-            <i class="fas fa-bullhorn"></i>
-            <span>Channel</span>
-        </a>
-        <a href="/inbox" class="nav-item">
-            <i class="fas fa-envelope"></i>
-            <span>Inbox</span>
-        </a>
-        <a href="/profile" class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
     </div>
 
 </body>
