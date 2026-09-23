@@ -10,9 +10,9 @@ def home():
 def for_you():
     return render_template('for_you.html')
 
-@app.route('/friends')
-def friends():
-    return render_template('friends.html')
+@app.route('/official-group')
+def official_group():
+    return render_template('official_group.html')
 
 @app.route('/upload')
 def upload():
