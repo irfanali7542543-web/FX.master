@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You Group</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            color: #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Header with For You & Group Title */
+        .top-header-section {
+            background: #ffffff;
+            padding: 10px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eaeaea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .top-switch-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .top-switch-tabs span.active {
+            color: #000;
+            border-bottom: 2px solid #000;
+            padding-bottom: 2px;
+        }
+        .group-main-heading {
+            font-size: 13px;
+            font-weight: bold;
+            color: #0066cc;
+            text-transform: uppercase;
+        }
+
+        /* Group Content Area */
+        .group-content-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #fafafa;
+        }
+
+        /* Admin Message Card */
+        .msg-box-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #2ecc71;
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .msg-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .msg-username {
+            font-weight: bold;
+            font-size: 14px;
+            color: #222;
+        }
+        .msg-admin-tag {
+            background-color: #007aff;
+            color: white;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .msg-content-text {
+            font-size: 14px;
+            color: #333;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* Bottom Join / Chat Input Area */
+        .bottom-action-box {
+            background: #ffffff;
+            border-top: 1px solid #e5e5e5;
+            padding: 10px 15px;
+        }
+        .join-btn-container {
+            text-align: center;
+        }
+        .join-group-action-btn {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 122, 255, 0.3);
+        }
+        .chat-input-container {
+            display: none;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .chat-text-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        .chat-send-btn {
+            background-color: #007aff;
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Bottom Navigation Bar (as per screenshot) */
+        .bottom-nav-bar {
+            height: 55px;
+            background: #ffffff;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+        }
+        .nav-item-link.active {
+            color: #007aff;
+            font-weight: bold;
+        }
+        .nav-item-link span {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+        .upload-center-btn {
+            width: 42px;
+            height: 30px;
+            background: linear-gradient(90deg, #20d5ec, #ff0050);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header -->
+    <div class="top-header-section">
+        <div class="top-switch-tabs">
+            <span>Forex</span>
+            <span class="active">For You</span>
+        </div>
+        <div class="group-main-heading">GROUP TOP (<span id="members-count">1</span> members)</div>
+    </div>
+
+    <!-- Group Messages Area -->
+    <div class="group-content-body">
+        <div class="msg-box-card">
+            <div class="msg-row-top">
+                <span class="msg-username">DIGI ANTI</span>
+                <span class="msg-admin-tag">admin</span>
+            </div>
+            <div class="msg-content-text">
+                خوش آمدی ❖ عزیز به گروه TOP سلام 🦋
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Join or Message Input Box -->
+    <div class="bottom-action-box">
+        <div id="joinArea" class="join-btn-container">
+            <button class="join-group-action-btn" onclick="joinForYouGroup()">Join Group</button>
+        </div>
+        <div id="msgArea" class="chat-input-container" style="display: none;">
+            <input type="text" id="messageBoxInput" class="chat-text-input" placeholder="Type a message to the group...">
+            <button class="chat-send-btn" onclick="sendGroupMessage()">➤</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav-bar">
+        <a href="/for-you" class="nav-item-link">
+            <span>🏠</span>
+            Home
+        </a>
+        <a href="/for-you-group" class="nav-item-link active">
+            <span>👥</span>
+            Official Group
+        </a>
+        <a href="/upload" class="nav-item-link">
+            <div class="upload-center-btn">+</div>
+        </a>
+        <a href="/inbox" class="nav-item-link">
+            <span>💬</span>
+            Inbox
+        </a>
+        <a href="/profile" class="nav-item-link">
+            <span>👤</span>
+            Profile
+        </a>
+    </div>
+
+    <script>
+        function joinForYouGroup() {
+            document.getElementById('joinArea').style.display = 'none';
+            document.getElementById('msgArea').style.display = 'flex';
+            
+            let countEl = document.getElementById('members-count');
+            countEl.innerText = parseInt(countEl.innerText) + 1;
+        }
+
+        function sendGroupMessage() {
+            let inputField = document.getElementById('messageBoxInput');
+            if (inputField.value.trim() !== "") {
+                let bodyContainer = document.querySelector('.group-content-body');
+                let newCard = document.createElement('div');
+                newCard.className = 'msg-box-card';
+                newCard.style.borderLeftColor = '#007aff';
+                newCard.innerHTML = `
+                    <div class="msg-row-top">
+                        <span class="msg-username">You</span>
+                    </div>
+                    <div class="msg-content-text" style="direction: ltr; text-align: left;">
+                        ${inputField.value}
+                    </div>
+                `;
+                bodyContainer.appendChild(newCard);
+                inputField.value = "";
+                bodyContainer.scrollTop = bodyContainer.scrollHeight;
+            }
+        }
+    </script>
+
+</body>
+</html>
