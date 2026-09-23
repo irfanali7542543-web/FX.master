@@ -4,16 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FX Master - Home</title>
-    <!-- FontAwesome icons for buttons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             margin: 0;
+            padding-top: 50px; /* Space for top tabs */
             padding-bottom: 70px; /* Space for bottom nav */
             background-color: #0f172a;
             color: #ffffff;
             font-family: Arial, sans-serif;
         }
+        /* Top Tabs styling */
+        .top-tabs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 12px 0;
+            border-bottom: 1px solid #334155;
+            z-index: 1000;
+        }
+        .top-tab {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding-bottom: 4px;
+        }
+        .top-tab.active {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
+        }
+
+        /* Content area */
+        .content-section {
+            padding: 15px;
+        }
+
+        /* Bottom Navigation Bar styling */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -46,9 +78,29 @@
 </head>
 <body>
 
-    <div style="padding: 20px;">
-        <h1>Welcome to FX Master</h1>
-        <p>Aapka Forex aur For You home feed yahan hai.</p>
+    <!-- Top Tabs (Forex & For You) -->
+    <div class="top-tabs">
+        <a href="/" class="top-tab active">Forex</a>
+        <a href="/for-you" class="top-tab">For You</a>
+    </div>
+
+    <!-- Main Content Feed -->
+    <div class="content-section">
+        <div style="background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <div style="background: #3b82f6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px;">FX</div>
+                <div>
+                    <div style="font-weight: bold;">fx_master034211</div>
+                    <div style="font-size: 12px; color: #94a3b8;">What's new?</div>
+                </div>
+            </div>
+            <div>ETHUSD SELL ENTRY 2640</div>
+            <div style="background: #f8fafc; color: #0f172a; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                <div>Limit 2643</div>
+                <div style="color: #16a34a; font-weight: bold;">✔ TP 2637</div>
+                <div style="color: #16a34a; font-weight: bold;">✔ TP 2634</div>
+            </div>
+        </div>
     </div>
 
     <!-- Bottom Navigation Bar -->
