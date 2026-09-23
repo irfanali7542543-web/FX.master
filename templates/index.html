@@ -8,8 +8,8 @@
     <style>
         body {
             margin: 0;
-            padding-top: 50px; /* Space for top tabs */
-            padding-bottom: 70px; /* Space for bottom nav */
+            padding-top: 50px;
+            padding-bottom: 70px;
             background-color: #0f172a;
             color: #ffffff;
             font-family: Arial, sans-serif;
@@ -33,19 +33,18 @@
             text-decoration: none;
             font-size: 16px;
             font-weight: bold;
-            padding-bottom: 4px;
         }
         .top-tab.active {
             color: #38bdf8;
             border-bottom: 2px solid #38bdf8;
+            padding-bottom: 4px;
         }
 
-        /* Content area */
         .content-section {
             padding: 15px;
         }
 
-        /* Bottom Navigation Bar styling */
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -62,7 +61,7 @@
             color: #94a3b8;
             text-decoration: none;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,39 +70,28 @@
             font-size: 20px;
             margin-bottom: 4px;
         }
-        .nav-item.active, .nav-item:hover {
+        .nav-item.active {
             color: #38bdf8;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Tabs (Forex & For You) -->
+    <!-- Top Tabs -->
     <div class="top-tabs">
         <a href="/" class="top-tab active">Forex</a>
         <a href="/for-you" class="top-tab">For You</a>
     </div>
 
-    <!-- Main Content Feed -->
+    <!-- Main Content -->
     <div class="content-section">
-        <div style="background: #1e293b; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <div style="background: #3b82f6; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px;">FX</div>
-                <div>
-                    <div style="font-weight: bold;">fx_master034211</div>
-                    <div style="font-size: 12px; color: #94a3b8;">What's new?</div>
-                </div>
-            </div>
+        <div style="background: #1e293b; padding: 15px; border-radius: 8px;">
+            <div style="font-weight: bold; margin-bottom: 5px;">fx_master034211</div>
             <div>ETHUSD SELL ENTRY 2640</div>
-            <div style="background: #f8fafc; color: #0f172a; padding: 10px; border-radius: 6px; margin-top: 10px;">
-                <div>Limit 2643</div>
-                <div style="color: #16a34a; font-weight: bold;">✔ TP 2637</div>
-                <div style="color: #16a34a; font-weight: bold;">✔ TP 2634</div>
-            </div>
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Navigation Bar (Only on Forex/Home page) -->
     <div class="bottom-nav">
         <a href="/" class="nav-item active">
             <i class="fas fa-home"></i>
@@ -117,17 +105,13 @@
             <i class="fas fa-video"></i>
             <span>For You</span>
         </a>
-        <a href="/channel" class="nav-item">
-            <i class="fas fa-bullhorn"></i>
-            <span>Channel</span>
-        </a>
-        <a href="/inbox" class="nav-item">
-            <i class="fas fa-envelope"></i>
-            <span>Inbox</span>
-        </a>
         <a href="/profile" class="nav-item">
             <i class="fas fa-user"></i>
             <span>Profile</span>
+        </a>
+        <a href="/channel" class="nav-item">
+            <i class="fas fa-bullhorn"></i>
+            <span>Channel</span>
         </a>
     </div>
 
