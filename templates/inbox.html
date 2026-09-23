@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox - TikTok Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            color: #111111;
+            padding-bottom: 70px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px 15px;
+        }
+        /* Top Header */
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        .inbox-title-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .green-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+        }
+        .search-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Stories / Top Circular Row */
+        .stories-row {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0 15px 0;
+            scrollbar-width: none;
+        }
+        .stories-row::-webkit-scrollbar {
+            display: none;
+        }
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 65px;
+            text-align: center;
+        }
+        .story-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #20d5ec;
+            padding: 2px;
+            margin-bottom: 5px;
+        }
+        .story-circle img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .story-name {
+            font-size: 11px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 65px;
+        }
+
+        /* Menu Rows with Like, Follower, Reply, Repost action tags */
+        .menu-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 5px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+        .menu-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 0;
+            cursor: pointer;
+        }
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .menu-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+        .menu-info h4 {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+        }
+        .menu-info p {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+        }
+        /* Action Badges on the right (Like, Follower, Reply, Repost) */
+        .action-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tag-follower { background: #e0f7fa; color: #00838f; }
+        .tag-like { background: #ffebee; color: #c62828; }
+        .tag-reply { background: #e8f5e9; color: #2e7d32; }
+        .tag-repost { background: #fff3e0; color: #ef6c00; }
+
+        /* Chat List Section */
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .chat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .chat-details h5 {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+        }
+        .chat-details p {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .camera-action-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+            padding: 5px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: #ffffff;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+            position: relative;
+        }
+        .nav-item.active {
+            color: #000;
+            font-weight: bold;
+        }
+        .nav-item span {
+            font-size: 18px;
+            margin-bottom: 1px;
+        }
+        .center-add-btn {
+            width: 42px;
+            height: 32px;
+            background: linear-gradient(90deg, #20d5ec, #ff0050);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Header -->
+        <div class="inbox-header">
+            <div style="font-size: 18px;">👤+</div>
+            <div class="inbox-title-area">
+                Inbox <div class="green-dot"></div>
+            </div>
+            <div class="search-icon">🔍</div>
+        </div>
+
+        <!-- Stories / Top Horizontal Circles -->
+        <div class="stories-row">
+            <div class="story-item">
+                <div class="story-circle" style="border-color: #ccc; display: flex; justify-content: center; align-items: center; background: #000;">
+                    <span style="color: white; font-size: 20px;">+</span>
+                </div>
+                <div class="story-name">Create</div>
+            </div>
+            <div class="story-item">
+                <div class="story-circle">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" alt="User">
+                </div>
+                <div class="story-name">Rafiq</div>
+            </div>
+            <div class="story-item">
+                <div class="story-circle" style="border-color: #ff0050;">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330" alt="Teacher">
+                </div>
+                <div class="story-name">Quran Academy</div>
+            </div>
+            <div class="story-item">
+                <div class="story-circle">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb" alt="User">
+                </div>
+                <div class="story-name">Bint Ghaza</div>
+            </div>
+        </div>
+
+        <!-- Notifications Section with Follower, Like, Reply, Repost tags -->
+        <div class="menu-section">
+            <div class="menu-row">
+                <div class="menu-left">
+                    <div class="menu-icon-box" style="background: #00bfff;">👥</div>
+                    <div class="menu-info">
+                        <h4>New followers</h4>
+                        <p>hunting started following you.</p>
+                    </div>
+                </div>
+                <div class="action-tag tag-follower">Follower</div>
+            </div>
+
+            <div class="menu-row">
+                <div class="menu-left">
+                    <div class="menu-icon-box" style="background: #ff2a5f;">❤️</div>
+                    <div class="menu-info">
+                        <h4>Activity</h4>
+                        <p>Saraikistan Empire liked your co...</p>
+                    </div>
+                </div>
+                <div class="action-tag tag-like">Like</div>
+            </div>
+
+            <div class="menu-row">
+                <div class="menu-left">
+                    <div class="menu-icon-box" style="background: #2ecc71;">💬</div>
+                    <div class="menu-info">
+                        <h4>Comments & Replies</h4>
+                        <p>Rafiq replied to your comment.</p>
+                    </div>
+                </div>
+                <div class="action-tag tag-reply">Reply</div>
+            </div>
+
+            <div class="menu-row">
+                <div class="menu-left">
+                    <div class="menu-icon-box" style="background: #ff9800;">🔄</div>
+                    <div class="menu-info">
+                        <h4>Reposts</h4>
+                        <p>Muzamil reposted your video.</p>
+                    </div>
+                </div>
+                <div class="action-tag tag-repost">Repost</div>
+            </div>
+        </div>
+
+        <!-- Chat List -->
+        <div class="chat-list">
+            <div class="chat-item">
+                <div class="chat-left">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" class="chat-avatar" alt="Rafiq">
+                    <div class="chat-details">
+                        <h5>Rafiq X Amir 👑 🛡️</h5>
+                        <p>Sent 5d ago</p>
+                    </div>
+                </div>
+                <button class="camera-action-btn">📷</button>
+            </div>
+
+            <div class="chat-item">
+                <div class="chat-left">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9" class="chat-avatar" alt="g">
+                    <div class="chat-details">
+                        <h5>g</h5>
+                        <p>You shared a video · 23 mins</p>
+                    </div>
+                </div>
+                <button class="camera-action-btn">📷</button>
+            </div>
+
+            <div class="chat-item">
+                <div class="chat-left">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" class="chat-avatar" alt="Baloch">
+                    <div class="chat-details">
+                        <h5>BALOCH 775, THE FOREX COMP...</h5>
+                        <p>MRBALOCH781 shared a video · 3h</p>
+                    </div>
+                </div>
+                <button class="camera-action-btn">📷</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="/for-you" class="nav-item">
+            <span>🏠</span>
+            Home
+        </a>
+        <a href="#" class="nav-item">
+            <span>👥</span>
+            Friends <span style="background:#ff0050; color:white; font-size:8px; padding:1px 4px; border-radius:10px; position:absolute; top:2px; right:2px;">70</span>
+        </a>
+        <a href="/upload" class="nav-item">
+            <div class="center-add-btn">+</div>
+        </a>
+        <a href="/inbox" class="nav-item active">
+            <span>💬</span>
+            Inbox <span style="background:#ff0050; color:white; font-size:8px; padding:1px 4px; border-radius:10px; position:absolute; top:2px; right:-4px;">1</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <span>👤</span>
+            Profile
+        </a>
+    </div>
+
+</body>
+</html>
