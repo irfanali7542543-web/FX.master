@@ -1,27 +1,83 @@
-<!-- Bottom Navigation Bar Example -->
-<div class="bottom-nav">
-    <a href="/" class="nav-item active">
-        <i class="fas fa-home"></i>
-        <span>Home</span>
-    </a>
-    <a href="/market" class="nav-item">
-        <i class="fas fa-chart-line"></i>
-        <span>Market</span>
-    </a>
-    <a href="/for-you" class="nav-item">
-        <i class="fas fa-video"></i>
-        <span>For You</span>
-    </a>
-    <a href="/channel" class="nav-item">
-        <i class="fas fa-bullhorn"></i>
-        <span>Channel</span>
-    </a>
-    <a href="/inbox" class="nav-item">
-        <i class="fas fa-envelope"></i>
-        <span>Inbox</span>
-    </a>
-    <a href="/profile" class="nav-item">
-        <i class="fas fa-user"></i>
-        <span>Profile</span>
-    </a>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Master - Home</title>
+    <!-- FontAwesome icons for buttons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 70px; /* Space for bottom nav */
+            background-color: #0f172a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1e293b;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #334155;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            text-align: center;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .nav-item.active, .nav-item:hover {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <div style="padding: 20px;">
+        <h1>Welcome to FX Master</h1>
+        <p>Aapka Forex aur For You home feed yahan hai.</p>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="/" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="/market" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Market</span>
+        </a>
+        <a href="/for-you" class="nav-item">
+            <i class="fas fa-video"></i>
+            <span>For You</span>
+        </a>
+        <a href="/channel" class="nav-item">
+            <i class="fas fa-bullhorn"></i>
+            <span>Channel</span>
+        </a>
+        <a href="/inbox" class="nav-item">
+            <i class="fas fa-envelope"></i>
+            <span>Inbox</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+</body>
+</html>
