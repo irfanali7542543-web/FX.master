@@ -1,16 +1,33 @@
+cat << 'EOF' > templates/index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FX Master</title>
+    <title>Home - FX Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding-top: 50px; }
-        h1 { color: #00e676; }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;display:flex;flex-direction:column;justify-content:space-between;}
+        .content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+        .bottom-nav{position:fixed;bottom:0;width:100%;height:60px;background:#000;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;}
+        .nav-item{color:#8e8e8e;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:11px;}
+        .nav-item i{font-size:20px;margin-bottom:3px;}
+        .nav-item.active{color:#fff;}
+        .post-btn{background:linear-gradient(45deg,#00f2fe,#4facfe);color:#000;width:42px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;}
     </style>
 </head>
 <body>
-    <h1>FX Master Backend</h1>
-    <p>Server running smoothly on Vercel!</p>
+    <div class="content">
+        <h2 style="color:#00e676;">Home Page</h2>
+    </div>
+    <div class="bottom-nav">
+        <a href="/" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="/group" class="nav-item"><i class="fas fa-users"></i><span>Group</span></a>
+        <a href="/post" class="nav-item post-btn"><i class="fas fa-plus"></i></a>
+        <a href="/inbox" class="nav-item"><i class="fas fa-comment-dots"></i><span>Inbox</span></a>
+        <a href="/profile" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    </div>
 </body>
 </html>
+EOF
