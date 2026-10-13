@@ -3,25 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Home</title>
+<title>Group Chat</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;overflow:hidden;}
-.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;z-index:9999;}
-.nav-item{color:#8e8e8e;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:11px;}
-.nav-item i{font-size:20px;margin-bottom:3px;}
-.nav-item.active{color:#fff;}
-.post-btn{background:linear-gradient(45deg,#00f2fe,#4facfe);color:#000;width:42px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;}
+body, html{background:#eef1f5;color:#000;font-family:Arial,sans-serif;height:100vh;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
+
+/* Top Header */
+.chat-header{position:fixed;top:0;left:0;width:100%;height:60px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;padding:0 12px;z-index:1000;}
+.back-btn{font-size:18px;color:#333;margin-right:12px;text-decoration:none;}
+.group-avatar{width:40px;height:40px;border-radius:50%;background:#333;margin-right:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px;}
+.group-info{flex:1;}
+.group-title{font-size:15px;font-weight:bold;color:#111;display:flex;align-items:center;gap:4px;}
+.group-subtitle{font-size:12px;color:#777;}
+.menu-btn{font-size:18px;color:#555;}
+
+/* Messages Container */
+.chat-body{flex:1;padding:70px 12px 80px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+
+/* Message Row */
+.msg-row{display:flex;align-items:flex-start;gap:8px;}
+.user-avatar{width:36px;height:36px;border-radius:50%;background-color:#4a90e2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;flex-shrink:0;}
+.msg-bubble{background:#fff;padding:8px 12px;border-radius:14px;border-top-left-radius:2px;max-width:78%;box-shadow:0 1px 2px rgba(0,0,0,0.08);position:relative;}
+.user-name{font-size:12px;font-weight:bold;color:#e54242;margin-bottom:3px;}
+.msg-text{font-size:14px;color:#222;line-height:1.3;}
+.msg-time{font-size:10px;color:#888;text-align:right;margin-top:4px;}
+
+/* Admin Tag / Highlight */
+.admin-tag{background:#e2f5ea;color:#27ae60;font-size:10px;padding:2px 6px;border-radius:4px;float:right;font-weight:bold;}
+
+/* System Notification Pill */
+.sys-pill{align-self:center;background:rgba(0,0,0,0.12);color:#fff;font-size:11px;padding:4px 12px;border-radius:12px;margin:4px 0;}
+
+/* Bottom Join Bar */
+.bottom-bar{position:fixed;bottom:0;left:0;width:100%;height:65px;background:#fff;border-top:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;padding:0 16px;z-index:1000;}
+.join-btn{width:100%;height:45px;background:#7b61ff;color:#fff;border:none;border-radius:25px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(123,97,255,0.3);}
 </style>
 </head>
 <body>
-<div class="bottom-nav">
-<a href="/" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
-<a href="/group" class="nav-item active"><i class="fas fa-users"></i><span>Group</span></a>
-<a href="/post" class="nav-item post-btn"><i class="fas fa-plus"></i></a>
-<a href="/inbox" class="nav-item"><i class="fas fa-comment-dots"></i><span>Inbox</span></a>
-<a href="/profile" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+
+<!-- Header -->
+<div class="chat-header">
+  <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+  <div class="group-avatar">❖</div>
+  <div class="group-info">
+    <div class="group-title">❖ GROUP TOP</div>
+    <div class="group-subtitle">874 members, 3 online</div>
+  </div>
+  <div class="menu-btn"><i class="fas fa-ellipsis-v"></i></div>
 </div>
+
+<!-- Chat Body -->
+<div class="chat-body">
+  <div class="msg-row">
+    <div class="user-avatar" style="background:#f39c12;">M</div>
+    <div class="msg-bubble">
+      <div class="user-name">Maari</div>
+      <div class="msg-text">U from</div>
+      <div class="msg-time">5:15 PM</div>
+    </div>
+  </div>
+
+  <div class="msg-row">
+    <div class="user-avatar" style="background:#e74c3c;">MM</div>
+    <div class="msg-bubble">
+      <div class="user-name" style="color:#d35400;">Met Mini</div>
+      <div class="msg-text">Ai có gruop nào máu lửa ko giới thiệu cho tui với</div>
+      <div class="msg-time">5:23 PM</div>
+    </div>
+  </div>
+
+  <div class="msg-row">
+    <div class="user-avatar" style="background:#1abc9c;"><i class="fas fa-spider"></i></div>
+    <div class="msg-bubble">
+      <div class="user-name" style="color:#2980b9;">Arif <sup>a</sup></div>
+      <div class="msg-text">Hi</div>
+      <div class="msg-time">6:44 PM</div>
+    </div>
+  </div>
+
+  <div class="sys-pill">Lavaro Crus joined the group</div>
+
+  <div class="msg-row">
+    <div class="user-avatar" style="background:#34495e;">DA</div>
+    <div class="msg-bubble">
+      <span class="admin-tag">Admin</span>
+      <div class="user-name" style="color:#27ae60;">⟲ DIGI ANTI ⟯</div>
+      <div class="msg-text">سلام Lavaro عزیز<br>به گروه ❖ GROUP TOP ❖ خوش آمدید 🌸<br><br>⏰ ساعت: ( ۲۰:۵۳ )<br>📅 تاریخ: ( دوشنبه ۲۰ مهر ۱۴۰۵ )</div>
+      <div class="msg-time">10:23 PM</div>
+    </div>
+  </div>
+
+  <div class="sys-pill">October 13</div>
+
+  <div class="msg-row">
+    <div class="user-avatar" style="background:#8e44ad;">A</div>
+    <div class="msg-bubble">
+      <div class="user-name" style="color:#8e44ad;">Ab</div>
+      <div class="msg-text">Hi</div>
+      <div class="msg-time">9:56 AM</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Join Button Bar -->
+<div class="bottom-bar">
+  <button class="join-btn">Join</button>
+</div>
+
 </body>
 </html>
