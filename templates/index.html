@@ -3,12 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Home</title>
+<title>FX Master - Home</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;overflow:hidden;}
-.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:1px solid #222;display:flex;justify-content:space-around;align-items:center;z-index:9999;}
+
+/* Video Container */
+.video-container{position:relative;width:100%;height:100vh;background:#000;}
+video{width:100%;height:100%;object-fit:cover;}
+
+/* Top Tabs Header */
+.top-header{position:absolute;top:15px;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 16px;z-index:100;}
+.tabs{display:flex;gap:15px;font-size:15px;font-weight:600;color:rgba(255,255,255,0.7);}
+.tab.active{color:#fff;border-bottom:2px solid #fff;padding-bottom:2px;}
+.search-icon{font-size:18px;color:#fff;}
+
+/* Right Side Actions */
+.right-actions{position:absolute;right:12px;bottom:90px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:100;}
+.action-item{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:600;}
+.action-item i{font-size:28px;margin-bottom:3px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
+.profile-avatar{width:45px;height:45px;border-radius:50%;border:2px solid #fff;background:#fff;margin-bottom:10px;background-size:cover;background-position:center;}
+
+/* Bottom Left User Details */
+.bottom-details{position:absolute;bottom:80px;left:15px;z-index:100;max-width:75%;}
+.user-name{font-size:16px;font-weight:bold;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+
+/* Spinning Audio Disc */
+.disc-icon{position:absolute;right:15px;bottom:30px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,#333 30%,#111 70%);border:2px solid #222;display:flex;align-items:center;justify-content:center;animation:spin 3s linear infinite;z-index:100;}
+.disc-icon::after{content:'';width:10px;height:10px;background:#f1c40f;border-radius:50%;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+/* Bottom Navigation Bar */
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;z-index:999;}
 .nav-item{color:#8e8e8e;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:11px;}
 .nav-item i{font-size:20px;margin-bottom:3px;}
 .nav-item.active{color:#fff;}
@@ -16,12 +43,48 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
 </style>
 </head>
 <body>
-<div class="bottom-nav">
-<a href="/" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
-<a href="/group" class="nav-item"><i class="fas fa-users"></i><span>Group</span></a>
-<a href="/post" class="nav-item post-btn"><i class="fas fa-plus"></i></a>
-<a href="/inbox" class="nav-item"><i class="fas fa-comment-dots"></i><span>Inbox</span></a>
-<a href="/profile" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+
+<div class="video-container">
+  <!-- Top Header Navigation -->
+  <div class="top-header">
+    <div class="tabs">
+      <span class="tab">TEM</span>
+      <span class="tab">Community</span>
+      <span class="tab">Following</span>
+      <span class="tab active">For You</span>
+    </div>
+    <div class="search-icon"><i class="fas fa-search"></i></div>
+  </div>
+
+  <!-- Background Video -->
+  <video autoplay loop muted playsinline src="https://assets.mixkit.co/videos/preview/mixkit-vertical-video-of-a-scenic-mountain-landscape-42289-large.mp4"></video>
+
+  <!-- Right Side Interaction Buttons -->
+  <div class="right-actions">
+    <div class="profile-avatar" style="background-image:url('https://picsum.photos/100');"></div>
+    <div class="action-item"><i class="fas fa-heart"></i><span>1,138</span></div>
+    <div class="action-item"><i class="fas fa-comment-dots"></i><span>64</span></div>
+    <div class="action-item"><i class="fas fa-bookmark"></i><span>60</span></div>
+    <div class="action-item"><i class="fas fa-share"></i><span>16</span></div>
+  </div>
+
+  <!-- Bottom Left User Info -->
+  <div class="bottom-details">
+    <div class="user-name">🔥 ꧁Tayyab Jutt꧂ 🔥</div>
+  </div>
+
+  <!-- Spinning Disc -->
+  <div class="disc-icon"></div>
 </div>
+
+<!-- Bottom Navigation Bar -->
+<div class="bottom-nav">
+  <a href="/" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+  <a href="/group" class="nav-item"><i class="fas fa-users"></i><span>Group</span></a>
+  <a href="/post" class="nav-item post-btn"><i class="fas fa-plus"></i></a>
+  <a href="/inbox" class="nav-item"><i class="fas fa-comment-dots"></i><span>Inbox</span></a>
+  <a href="/profile" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+</div>
+
 </body>
 </html>
