@@ -13,11 +13,11 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
 .video-container{position:relative;width:100%;height:100vh;background:#000;}
 video{width:100%;height:100%;object-fit:cover;}
 
-/* Top Tabs Header */
-.top-header{position:absolute;top:15px;left:0;width:100%;display:flex;justify-content:space-between;align-items:center;padding:0 16px;z-index:100;}
-.tabs{display:flex;gap:15px;font-size:15px;font-weight:600;color:rgba(255,255,255,0.7);}
-.tab.active{color:#fff;border-bottom:2px solid #fff;padding-bottom:2px;}
-.search-icon{font-size:18px;color:#fff;}
+/* Top Tabs Header - Only 2 Buttons */
+.top-header{position:absolute;top:15px;left:0;width:100%;display:flex;justify-content:center;align-items:center;padding:0 16px;z-index:100;}
+.tabs{display:flex;gap:25px;font-size:16px;font-weight:700;}
+.tab{color:rgba(255,255,255,0.6);cursor:pointer;padding-bottom:3px;}
+.tab.active{color:#fff;border-bottom:3px solid #fff;}
 
 /* Right Side Actions */
 .right-actions{position:absolute;right:12px;bottom:90px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:100;}
@@ -45,19 +45,16 @@ video{width:100%;height:100%;object-fit:cover;}
 <body>
 
 <div class="video-container">
-  <!-- Top Header Navigation -->
+  <!-- Top Header Navigation (Only For You & Forex) -->
   <div class="top-header">
     <div class="tabs">
-      <span class="tab">TEM</span>
-      <span class="tab">Community</span>
-      <span class="tab">Following</span>
       <span class="tab active">For You</span>
+      <span class="tab">Forex</span>
     </div>
-    <div class="search-icon"><i class="fas fa-search"></i></div>
   </div>
 
   <!-- Background Video -->
-  <video autoplay loop muted playsinline src="https://assets.mixkit.co/videos/preview/mixkit-vertical-video-of-a-scenic-mountain-landscape-42289-large.mp4"></video>
+  <video autoplay loop muted playsinline src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
 
   <!-- Right Side Interaction Buttons -->
   <div class="right-actions">
