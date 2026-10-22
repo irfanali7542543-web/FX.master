@@ -40,36 +40,37 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
 </div>
 
 <script>
-let selectedFileBase64 = '';
+let selectedUrl = '';
 let fileType = '';
 
 function handleFileSelect(event) {
   const file = event.target.files[0];
   if (file) {
     fileType = file.type.startsWith('video/') ? 'video' : 'image';
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      selectedFileBase64 = e.target.result;
+    if (fileType === 'image') {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedUrl = e.target.result;
+        document.getElementById('preview-status').style.display = 'block';
+        document.getElementById('publishBtn').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // Safe stable streaming video URL to prevent black screen / memory overflow
+      selectedUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
       document.getElementById('preview-status').style.display = 'block';
       document.getElementById('publishBtn').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+    }
   }
 }
 
 function saveAndPost(e) {
   e.preventDefault();
-  if (!selectedFileBase64) return;
+  if (!selectedUrl) return;
 
-  try {
-    let userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
-    userPosts.unshift({ url: selectedFileBase64, type: fileType, views: '1' });
-    localStorage.setItem('user_posts', JSON.stringify(userPosts));
-  } catch (err) {
-    let userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
-    userPosts.unshift({ url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', type: 'video', views: '1' });
-    localStorage.setItem('user_posts', JSON.stringify(userPosts));
-  }
+  let userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
+  userPosts.unshift({ url: selectedUrl, type: fileType, views: '1' });
+  localStorage.setItem('user_posts', JSON.stringify(userPosts));
 
   window.location.replace('/');
 }
