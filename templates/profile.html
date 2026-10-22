@@ -9,47 +9,34 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#fff;color:#000;font-family:Arial,sans-serif;padding-bottom:80px;}
 
-/* Top Header */
 .profile-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0;}
 .profile-header i{font-size:20px;color:#111;cursor:pointer;}
 
-/* Profile Info Section */
 .profile-info{display:flex;flex-direction:column;align-items:center;padding:15px 16px;text-align:center;}
 .avatar-container{position:relative;width:90px;height:90px;margin-bottom:12px;cursor:pointer;}
 .profile-avatar{width:100%;height:100%;border-radius:50%;background:#ddd;background-size:cover;background-position:center;border:2px solid #eee;}
 .camera-badge{position:absolute;bottom:0;right:0;background:#fe2c55;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #fff;}
 
-/* Editable Fields */
-.editable{outline:none;border-bottom:1px dashed transparent;transition:0.2s;}
-.editable:focus{border-bottom:1px dashed #fe2c55;}
-
 .username-title{font-size:20px;font-weight:bold;color:#111;margin-bottom:2px;}
 .handle-text{font-size:13px;color:#666;margin-bottom:12px;}
 
-/* Stats Row */
 .stats-row{display:flex;gap:25px;margin-bottom:15px;}
 .stat-box{text-align:center;}
 .stat-num{font-size:16px;font-weight:bold;color:#111;}
 .stat-label{font-size:12px;color:#666;}
 
-/* Bio & Link */
 .bio-box{font-size:13px;color:#333;margin-bottom:6px;max-width:85%;line-height:1.4;}
 .link-box{font-size:13px;color:#1877f2;margin-bottom:15px;display:flex;align-items:center;gap:5px;}
-
-/* Edit Profile Button */
 .edit-btn{background:#f1f1f1;color:#111;border:none;padding:8px 30px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;}
 
-/* Tabs Bar */
 .tabs-bar{display:flex;justify-content:space-around;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:10px;}
 .tab-icon{flex:1;text-align:center;padding:12px 0;font-size:18px;color:#999;cursor:pointer;border-bottom:2px solid transparent;}
 .tab-icon.active{color:#111;border-bottom:2px solid #111;}
 
-/* Video Grid */
 .video-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:2px;background:#eee;}
 .video-thumb{position:relative;background:#222;aspect-ratio:9/16;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:6px;}
 .video-views{color:#fff;font-size:11px;font-weight:bold;display:flex;align-items:center;gap:4px;text-shadow:0 1px 2px rgba(0,0,0,0.8);}
 
-/* Bottom Navigation Bar */
 .bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;z-index:999;}
 .nav-item{color:#8e8e8e;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:11px;}
 .nav-item i{font-size:20px;margin-bottom:3px;}
@@ -59,41 +46,34 @@ body{background:#fff;color:#000;font-family:Arial,sans-serif;padding-bottom:80px
 </head>
 <body>
 
-<!-- Header -->
 <div class="profile-header">
   <i class="fas fa-user-plus"></i>
   <div style="font-weight:bold;font-size:15px;">Profile</div>
   <i class="fas fa-bars"></i>
 </div>
 
-<!-- Profile Main Section -->
 <div class="profile-info">
-  <!-- Center Avatar with Gallery Trigger -->
   <div class="avatar-container" onclick="document.getElementById('fileInput').click()">
     <div class="profile-avatar" id="profileImg" style="background-image:url('https://picsum.photos/200');"></div>
     <div class="camera-badge"><i class="fas fa-camera"></i></div>
-    <input type="file" id="fileInput" style="display:none;" accept="image/*" onchange="previewImage(event)">
+    <input type="file" id="fileInput" style="display:none;" accept="image/*" onchange="previewAvatar(event)">
   </div>
 
-  <!-- Editable Name -->
-  <div class="username-title editable" contenteditable="true">Trader</div>
+  <div class="username-title" contenteditable="true">Trader</div>
   <div class="handle-text">@user705739570</div>
 
-  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-box"><div class="stat-num">32</div><div class="stat-label">Following</div></div>
     <div class="stat-box"><div class="stat-num">6</div><div class="stat-label">Followers</div></div>
     <div class="stat-box"><div class="stat-num">81</div><div class="stat-label">Likes</div></div>
   </div>
 
-  <!-- Editable Bio & Link -->
-  <div class="bio-box editable" contenteditable="true">Tap to edit bio... Add your description here.</div>
-  <div class="link-box"><i class="fas fa-link"></i> <span class="editable" contenteditable="true">https://t.me/yourlink</span></div>
+  <div class="bio-box" contenteditable="true">Tap to edit bio...</div>
+  <div class="link-box"><i class="fas fa-link"></i> <span contenteditable="true">https://t.me/yourlink</span></div>
 
   <button class="edit-btn">Edit profile</button>
 </div>
 
-<!-- Tabs Bar -->
 <div class="tabs-bar">
   <div class="tab-icon active"><i class="fas fa-th-large"></i></div>
   <div class="tab-icon"><i class="fas fa-lock"></i></div>
@@ -102,34 +82,52 @@ body{background:#fff;color:#000;font-family:Arial,sans-serif;padding-bottom:80px
   <div class="tab-icon"><i class="fas fa-heart"></i></div>
 </div>
 
-<!-- Video Grid -->
-<div class="video-grid">
+<!-- Dynamic Video Grid -->
+<div class="video-grid" id="profileGrid">
   <div class="video-thumb" style="background-image:url('https://picsum.photos/300/500?1');">
     <div class="video-views"><i class="fas fa-play"></i> 63</div>
   </div>
-  <div class="video-thumb" style="background-image:url('https://picsum.photos/300/500?2');">
-    <div class="video-views"><i class="fas fa-play"></i> 259</div>
-  </div>
-  <div class="video-thumb" style="background-image:url('https://picsum.photos/300/500?3');">
-    <div class="video-views"><i class="fas fa-play"></i> 249</div>
-  </div>
-  <div class="video-thumb" style="background-image:url('https://picsum.photos/300/500?4');">
-    <div class="video-views"><i class="fas fa-play"></i> 86</div>
-  </div>
 </div>
 
-<!-- Image Upload Script -->
 <script>
-function previewImage(event) {
+function previewAvatar(event) {
   const reader = new FileReader();
   reader.onload = function(){
     document.getElementById('profileImg').style.backgroundImage = 'url(' + reader.result + ')';
   }
   reader.readAsDataURL(event.target.files[0]);
 }
+
+// Load posted videos into profile grid
+window.addEventListener('DOMContentLoaded', () => {
+  const userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
+  const grid = document.getElementById('profileGrid');
+  
+  userPosts.forEach(post => {
+    const thumb = document.createElement('div');
+    thumb.className = 'video-thumb';
+    if(post.type === 'video') {
+      thumb.style.background = '#000';
+      const v = document.createElement('video');
+      v.src = post.url;
+      v.style.width = '100%';
+      v.style.height = '100%';
+      v.style.objectFit = 'cover';
+      thumb.appendChild(v);
+    } else {
+      thumb.style.backgroundImage = `url(${post.url})`;
+    }
+    
+    const views = document.createElement('div');
+    views.className = 'video-views';
+    views.innerHTML = `<i class="fas fa-play"></i> ${post.views}`;
+    thumb.appendChild(views);
+    
+    grid.prepend(thumb);
+  });
+});
 </script>
 
-<!-- Bottom Navigation Bar -->
 <div class="bottom-nav">
   <a href="/" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
   <a href="/group" class="nav-item"><i class="fas fa-users"></i><span>Group</span></a>
