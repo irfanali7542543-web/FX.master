@@ -40,7 +40,7 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
 </div>
 
 <script>
-let selectedFileUrl = '';
+let selectedFileBase64 = '';
 let fileType = '';
 
 function handleFileSelect(event) {
@@ -49,7 +49,7 @@ function handleFileSelect(event) {
     fileType = file.type.startsWith('video/') ? 'video' : 'image';
     const reader = new FileReader();
     reader.onload = function(e) {
-      selectedFileUrl = e.target.result;
+      selectedFileBase64 = e.target.result;
       document.getElementById('preview-status').style.display = 'block';
       document.getElementById('publishBtn').style.display = 'block';
     };
@@ -59,14 +59,13 @@ function handleFileSelect(event) {
 
 function saveAndPost(e) {
   e.preventDefault();
-  if (!selectedFileUrl) return;
+  if (!selectedFileBase64) return;
 
   try {
     let userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
-    userPosts.unshift({ url: selectedFileUrl, type: fileType, views: '1' });
+    userPosts.unshift({ url: selectedFileBase64, type: fileType, views: '1' });
     localStorage.setItem('user_posts', JSON.stringify(userPosts));
   } catch (err) {
-    // Agar file size bohot bada ho aur storage bhar jaye, toh fallback video use hoga taaki app crash na ho
     let userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
     userPosts.unshift({ url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', type: 'video', views: '1' });
     localStorage.setItem('user_posts', JSON.stringify(userPosts));
