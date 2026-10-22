@@ -16,8 +16,7 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
 .upload-title{font-size:16px;font-weight:bold;color:#fff;}
 .upload-subtitle{font-size:12px;color:#888;}
 
-#preview-container{margin-top:15px;max-width:100%;max-height:220px;border-radius:8px;overflow:hidden;display:none;}
-#preview-container img, #preview-container video{width:100%;max-height:200px;object-fit:contain;border-radius:8px;}
+#preview-status{margin-top:15px;font-size:14px;color:#00f2fe;font-weight:bold;display:none;}
 
 .post-btn-action{margin-top:20px;background:#fe2c55;color:#fff;border:none;padding:12px 32px;border-radius:25px;font-size:15px;font-weight:bold;cursor:pointer;display:none;width:100%;max-width:280px;box-shadow:0 4px 12px rgba(254,44,85,0.4);}
 
@@ -38,7 +37,7 @@ body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;
     <div class="upload-subtitle">Tap to open gallery</div>
     <input type="file" id="mediaInput" style="display:none;" accept="image/*,video/*" onchange="handleFileSelect(event)">
   </div>
-  <div id="preview-container"></div>
+  <div id="preview-status">Media selected! Tap post below.</div>
   <button id="publishBtn" class="post-btn-action" onclick="saveAndPost(event)">Post to For You & Profile</button>
 </div>
 
@@ -54,21 +53,7 @@ function handleFileSelect(event) {
       selectedFileUrl = e.target.result;
       fileType = file.type.startsWith('video/') ? 'video' : 'image';
       
-      const previewContainer = document.getElementById('preview-container');
-      previewContainer.style.display = 'block';
-      previewContainer.innerHTML = '';
-      
-      if (fileType === 'video') {
-        const vid = document.createElement('video');
-        vid.src = selectedFileUrl;
-        vid.controls = true;
-        vid.autoplay = true;
-        previewContainer.appendChild(vid);
-      } else {
-        const img = document.createElement('img');
-        img.src = selectedFileUrl;
-        previewContainer.appendChild(img);
-      }
+      document.getElementById('preview-status').style.display = 'block';
       document.getElementById('publishBtn').style.display = 'block';
     }
     reader.readAsDataURL(file);
@@ -83,7 +68,7 @@ function saveAndPost(e) {
   userPosts.unshift({ url: selectedFileUrl, type: fileType, views: '1' });
   localStorage.setItem('user_posts', JSON.stringify(userPosts));
   
-  // Direct redirect to Home Feed
+  // Instant redirect to Home
   window.location.replace('/');
 }
 </script>
