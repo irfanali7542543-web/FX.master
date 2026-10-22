@@ -9,32 +9,32 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body, html{background:#000;color:#fff;font-family:Arial,sans-serif;height:100vh;overflow:hidden;}
 
-/* Video Container */
-.video-container{position:relative;width:100%;height:100vh;background:#000;}
-video{width:100%;height:100%;object-fit:cover;}
+.video-container{position:relative;width:100%;height:100vh;background:#000;display:flex;align-items:center;justify-content:center;}
+.media-element{width:100%;height:100%;object-fit:cover;}
 
-/* Top Tabs Header - Only 2 Buttons */
 .top-header{position:absolute;top:15px;left:0;width:100%;display:flex;justify-content:center;align-items:center;padding:0 16px;z-index:100;}
 .tabs{display:flex;gap:25px;font-size:16px;font-weight:700;}
 .tab{color:rgba(255,255,255,0.6);cursor:pointer;padding-bottom:3px;}
 .tab.active{color:#fff;border-bottom:3px solid #fff;}
 
-/* Right Side Actions */
+.market-card{position:absolute;top:75px;left:15px;background:rgba(0,0,0,0.75);border:1px solid rgba(255,215,0,0.4);padding:12px 16px;border-radius:12px;backdrop-filter:blur(6px);z-index:100;max-width:280px;}
+.market-title{font-size:15px;font-weight:bold;color:#f1c40f;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.market-price{font-size:20px;font-weight:bold;color:#fff;margin-bottom:6px;}
+.market-details{font-size:11px;color:#ccc;display:flex;flex-direction:column;gap:3px;}
+.trend-down{color:#e74c3c;font-weight:bold;}
+
 .right-actions{position:absolute;right:12px;bottom:90px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:100;}
 .action-item{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:600;}
 .action-item i{font-size:28px;margin-bottom:3px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
 .profile-avatar{width:45px;height:45px;border-radius:50%;border:2px solid #fff;background:#fff;margin-bottom:10px;background-size:cover;background-position:center;}
 
-/* Bottom Left User Details */
 .bottom-details{position:absolute;bottom:80px;left:15px;z-index:100;max-width:75%;}
 .user-name{font-size:16px;font-weight:bold;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 
-/* Spinning Audio Disc */
 .disc-icon{position:absolute;right:15px;bottom:30px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,#333 30%,#111 70%);border:2px solid #222;display:flex;align-items:center;justify-content:center;animation:spin 3s linear infinite;z-index:100;}
 .disc-icon::after{content:'';width:10px;height:10px;background:#f1c40f;border-radius:50%;}
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
-/* Bottom Navigation Bar */
 .bottom-nav{position:fixed;bottom:0;left:0;width:100%;height:60px;background:#000;border-top:1px solid #1a1a1a;display:flex;justify-content:space-around;align-items:center;z-index:999;}
 .nav-item{color:#8e8e8e;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:11px;}
 .nav-item i{font-size:20px;margin-bottom:3px;}
@@ -44,8 +44,7 @@ video{width:100%;height:100%;object-fit:cover;}
 </head>
 <body>
 
-<div class="video-container">
-  <!-- Top Header Navigation (Only For You & Forex) -->
+<div class="video-container" id="feedContainer">
   <div class="top-header">
     <div class="tabs">
       <span class="tab active">For You</span>
@@ -53,28 +52,51 @@ video{width:100%;height:100%;object-fit:cover;}
     </div>
   </div>
 
-  <!-- Background Video -->
-  <video autoplay loop muted playsinline src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
-
-  <!-- Right Side Interaction Buttons -->
-  <div class="right-actions">
-    <div class="profile-avatar" style="background-image:url('https://picsum.photos/100');"></div>
-    <div class="action-item"><i class="fas fa-heart"></i><span>1,138</span></div>
-    <div class="action-item"><i class="fas fa-comment-dots"></i><span>64</span></div>
-    <div class="action-item"><i class="fas fa-bookmark"></i><span>60</span></div>
-    <div class="action-item"><i class="fas fa-share"></i><span>16</span></div>
+  <div class="market-card">
+    <div class="market-title"><i class="fas fa-coins"></i> GOLD (XAUUSD)</div>
+    <div class="market-price">$4,164.67</div>
+    <div class="market-details">
+      <div>High: $4,171 | Low: $4,159</div>
+      <div>Resistance: $4,370 | Support: $4,340</div>
+      <div>Trend: <span class="trend-down">Upar jaake neeche aa raha hai 📉</span></div>
+    </div>
   </div>
 
-  <!-- Bottom Left User Info -->
+  <!-- Media feed player -->
+  <div id="mediaBox" style="width:100%;height:100%;">
+    <video class="media-element" autoplay loop muted playsinline src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+  </div>
+
+  <div class="right-actions">
+    <div class="profile-avatar" style="background-image:url('https://picsum.photos/100');"></div>
+    <div class="action-item"><i class="fas fa-heart" style="color:#fe2c55;"></i><span>2,450</span></div>
+    <div class="action-item"><i class="fas fa-comment-dots"></i><span>128</span></div>
+    <div class="action-item"><i class="fas fa-bookmark"></i><span>310</span></div>
+    <div class="action-item"><i class="fas fa-share"></i><span>45</span></div>
+  </div>
+
   <div class="bottom-details">
     <div class="user-name">🔥 ꧁Tayyab Jutt꧂ 🔥</div>
   </div>
 
-  <!-- Spinning Disc -->
   <div class="disc-icon"></div>
 </div>
 
-<!-- Bottom Navigation Bar -->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const userPosts = JSON.parse(localStorage.getItem('user_posts') || '[]');
+  if (userPosts.length > 0) {
+    const latest = userPosts[0];
+    const mediaBox = document.getElementById('mediaBox');
+    if (latest.type === 'video') {
+      mediaBox.innerHTML = `<video class="media-element" autoplay loop muted playsinline src="${latest.url}"></video>`;
+    } else {
+      mediaBox.innerHTML = `<img class="media-element" src="${latest.url}" alt="Post">`;
+    }
+  }
+});
+</script>
+
 <div class="bottom-nav">
   <a href="/" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
   <a href="/group" class="nav-item"><i class="fas fa-users"></i><span>Group</span></a>
